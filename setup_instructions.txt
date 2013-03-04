@@ -1,9 +1,20 @@
-PostgreSQL Setup
+== PostgreSQL Setup ==
 1. Get the actual dbms: http://www.postgresql.org/download/
+   Make sure to get version 9.2.2
+
 2. Install the python connector:
   >> pip install psycopg2
   
   But this will fail, so do this instead (get the correct/latest url):
   >> easy_install http://www.stickpeople.com/projects/python/win-psycopg/2.4.6/psycopg2-2.4.6.win32-py2.7-pg9.2.2-release.exe
+  The 32/64-ness of this must match your Python installation.
   
-  
+3. Make sure the PostgreSQL  
+== Local environment setup ==
+https://devcenter.heroku.com/articles/config-vars#local-setup
+
+1. (optional) Get configs using the config plugin
+   >> heroku plugins:install git://github.com/ddollar/heroku-config.git
+   >> heroku config:pull --overwrite --interactive        
+
+2. Or add DATABASE_URL=... to ".env" file

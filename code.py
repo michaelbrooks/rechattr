@@ -1,9 +1,14 @@
-import web
-import dj_database_url
+import web, os
 
-DATABASE =  dj_database_url.config()
-print DATABASE
+from sqlalchemy import create_engine
 
+DATABASE_URL = os.environ.get('DATABASE_URL', None)
+if DATABASE_URL == None:
+    print "DATABASE_URL not in environment"
+    
+    
+engine = create_engine(DATABASE_URL, echo=True)
+print engine.execute("select 1").scalar()
 urls = (
     '/', 'index'
 )
