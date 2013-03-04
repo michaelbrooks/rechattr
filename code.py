@@ -1,4 +1,8 @@
 import web
+import dj_database_url
+
+DATABASE =  dj_database_url.config()
+print DATABASE
 
 urls = (
     '/', 'index'

@@ -1,5 +1,6 @@
 SQLAlchemy==0.8.0b2
 distribute==0.6.31
+dj-database-url==0.2.1
 gunicorn==0.17.2
 psycopg2==2.4.6
 web.py==0.37
