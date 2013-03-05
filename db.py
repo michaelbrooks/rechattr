@@ -11,8 +11,8 @@ def load_sqla(handler):
     try:
         return handler()
     except web.HTTPError:
-       web.ctx.orm.commit()
-       raise
+        web.ctx.orm.commit()
+        raise
     except:
         web.ctx.orm.rollback()
         raise
