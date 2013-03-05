@@ -1,0 +1,19 @@
+$def with (emails)
+
+$if emails and len(emails) > 0:
+    <ol>
+    $for email in emails:
+        <li>
+        $email
+        </li>
+    </ol>
+$else:
+    <p>No emails... :(</p>
+
+
+<form method="post" action="">
+    <p>
+        Email: <input type="text" name="email" />
+        <input type="submit" value="Add" />
+    </p>
+</form>
