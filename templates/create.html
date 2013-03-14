@@ -1,4 +1,5 @@
 $def with (form)
+$var js_app: CreateApp
 
 <div class="container">
     <div class="row">
@@ -20,33 +21,55 @@ $def with (form)
                 </div>
                 
                 <div class="control-group">
-                    <label class="control-label">
+                    <label class="control-label" for="$:form.start_date.id">
                         Event Timing
                     </label>
                     <div class="controls">
-                        $:form.start.render()
+                        $:form.start_date.render()
+                        $:form.start_time.render()
+                        
                         <span class="help-inline">
-                            $:form.start.note
+                            $:form.start_date.note
+                            $:form.start_time.note
                         </span>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        $:form.stop.render()
+                        $:form.stop_date.render()
+                        $:form.stop_time.render()
                         <span class="help-inline">
-                            $:form.stop.note
+                            $:form.stop_date.note
+                            $:form.stop_time.note
                         </span>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="terms">
-                        $:form.terms.description
+                    <label class="control-label" for="twitter_user">
+                        $:form.twitter_user.description
                     </label>
                     <div class="controls">
-                        $:form.terms.render()
-                        <span class="help-inline">$:form.terms.note</span>
+                        <div class="input-prepend">
+                            <span class="add-on">@</span>
+                            $:form.twitter_user.render()
+                        </div>
+                        <span class="help-inline">$:form.twitter_user.note</span>
                     </div>
-                </div>    
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="twitter_hashtag">
+                        $:form.twitter_hashtag.description
+                    </label>
+                    <div class="controls">
+                        <div class="input-prepend">
+                            <span class="add-on">#</span>
+                            $:form.twitter_hashtag.render()
+                        </div>
+                        <span class="help-inline">$:form.twitter_hashtag.note</span>
+                    </div>
+                </div> 
+                
+                $:form.gmt_offset.render()
                 
                 <div class="form-actions">
                     $:form.submit.render()

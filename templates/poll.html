@@ -1,2 +1,42 @@
 $def with (poll)
-<h2>Respond to Poll</h2>
+$var js_app: PollApp
+
+<div class="row">
+    <div class="span12">
+        <h2 class="banner">$poll.twitter_terms</h2>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12 questions-row clearfix">
+        <form method="POST">
+            $code: hideClass = ""
+            $for question in poll.definition_object()['questions']:
+            
+                <div class="answer-list $hideClass" data-question-name="$question['name']">
+                $code: hideClass="fade hide"
+            
+                $for choice in question['choices']:
+                    <button type="button" class="answer-btn" data-option="$choice['value']">$choice['label']</button>
+                
+                </div>
+                
+                <!--     <button type="button" class="answer-btn" data-option="0">motivation</button>
+                    <button type="button" class="answer-btn" data-option="1">analysis</button>
+                    <button type="button" class="answer-btn" data-option="2">findings</button>
+                    <button type="button" class="answer-btn" data-option="3">visuals</button>
+                    <button type="button" class="answer-btn" data-option="4">quotes</button>
+                    <button type="button" class="answer-btn" data-option="5">Q&amp;A</button>
+                    <button type="button" class="answer-btn" data-option="6">quotes</button>
+                </div>
+            
+            <div class="answer-list fade hide" data-question="opinion">
+                <button type="button" class="answer-btn" data-option="0">:)</button>
+                <button type="button" class="answer-btn" data-option="1">:|</button>
+                <button type="button" class="answer-btn" data-option="2">:(</button>
+                <button type="button" class="answer-btn" data-option="3">!!!</button>
+                <button type="button" class="answer-btn" data-option="4">???</button>
+                <button type="button" class="answer-btn" data-option="5">...</button>
+            </div> -->
+        </form>
+    </div>
+</div>
