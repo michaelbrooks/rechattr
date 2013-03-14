@@ -8,12 +8,16 @@ urls = (
     '/new',                 'create',
     '/r(\w+)/edit/(\w+)',   'edit',
     '/r(\w+)',              'poll',
-    '/r(\w+)/results',      'results'
+    '/r(\w+)/results',      'results',
+    '/clear_db',            'clear_db'
 )
 
 web.config.debug = conf.DEBUG
 
 app = web.application(urls, globals())
+
+app.notfound = controllers.notfound
+
 app.add_processor(db.load_sqla)
 app.add_processor(controllers.load_notfound)
 
