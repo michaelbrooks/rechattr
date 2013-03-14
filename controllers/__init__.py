@@ -9,3 +9,10 @@ from edit import edit
 from poll import poll
 from results import results
 from index import index
+
+def notfound():
+    return web.notfound(render.notfound())
+
+def load_notfound(handler):
+    web.ctx.notfound = notfound
+    return handler()
