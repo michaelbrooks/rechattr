@@ -1,2 +1,27 @@
 $def with (poll)
-<h2>Results</h2>
+
+<h2>Poll Results</h2>
+
+<p>Email: $poll.user_email</p>
+<p>Start: $poll.event_start</p>
+<p>Stop: $poll.event_stop</p>
+
+<table>
+    <tr><th>id</th><th>time</th><th>answers</th><th>comment</th></tr>
+    $for response in poll.responses:
+        <tr>
+        <td>$response.id</td>
+        <td>$response.created</td>
+        <td>$response.answers</td>
+        <td>$response.comment</td>
+        </tr>
+</table>
+
+<style>
+    table {
+        width: 100%;
+    }
+    th, td {
+        text-align: center;
+    }
+</style>
