@@ -1,19 +1,30 @@
-$def with (emails)
+$def with (polls)
 
-$if emails and len(emails) > 0:
-    <ol>
-    $for email in emails:
-        <li>
-        $email
-        </li>
-    </ol>
-$else:
-    <p>No emails... :(</p>
+<h1>re:chattr</h1>
 
+<table>
+<tr><th>id</th><th>email</th><th>start</th><th>stop</th><th>respond</th><th>results</th><th>edit</th></tr>
+$for poll in polls:
+    <tr>
+        <td>$poll.id</td>
+        <td>$poll.user_email</td>
+        <td>$poll.event_start</td>
+        <td>$poll.event_stop</td>
+        <td><a class="btn" href="$poll.poll_url()">Respond</a></td>
+        <td><a class="btn" href="$poll.results_url()">Results</a></td>
+        <td><a class="btn" href="$poll.edit_url()">Edit</a></td>
+    </tr>
+</table>
 
-<form method="post" action="">
-    <p>
-        Email: <input type="text" name="email" />
-        <input type="submit" value="Add" />
-    </p>
-</form>
+<p>
+<a class="btn btn-primary" href="new">New poll</a>
+</p>
+
+<style>
+    table {
+        width: 100%;
+    }
+    th, td {
+        text-align: center;
+    }
+</style>
