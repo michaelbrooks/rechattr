@@ -1,0 +1,13 @@
+@import url("bootstrap-datepicker.css");
+
+.date-picker {
+    display: inline-block;
+    *display: inline;
+    margin-bottom: 0;
+    vertical-align: middle;
+    *zoom: 1;
+}
+
+input.date-box {
+    width: 70px;
+}
