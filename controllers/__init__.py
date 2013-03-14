@@ -9,6 +9,7 @@ from edit import edit
 from poll import poll
 from results import results
 from index import index
+from clear_db import clear_db
 
 def notfound():
     return web.notfound(render.notfound())
