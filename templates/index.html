@@ -11,7 +11,7 @@ $for poll in polls:
         <td>$poll.event_start</td>
         <td>$poll.event_stop</td>
         <td><a class="btn" href="$poll.poll_url()">Respond</a></td>
-        <td><a class="btn" href="$poll.results_url()">Results</a></td>
+        <td><a class="btn" href="$poll.results_url()">Results ($len(poll.responses))</a></td>
         <td><a class="btn" href="$poll.edit_url()">Edit</a></td>
     </tr>
 </table>
