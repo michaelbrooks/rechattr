@@ -6,11 +6,14 @@ class JsonStreamListener(StreamListener):
     def on_data(self, data):
         try:
             entity = json.loads(data)
+            keys = entity.keys()
         except ValueError:
             print "Invalid data received: %s" % (data)
             return True
+        except AttributeError:
+            print "Non-object received: %s" % (data)
+            return True
             
-        keys = entity.keys()
         if 'delete' in keys:
             status = entity['delete']['status']
             return self.on_delete(status['id'], status['user_id'])
