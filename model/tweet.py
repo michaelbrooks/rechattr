@@ -1,4 +1,4 @@
-from sqlalchemy import Column
+from sqlalchemy import Column, Table
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer, String, DateTime, BigInteger
 from sqlalchemy.orm import relationship, backref    
@@ -6,16 +6,24 @@ from datetime import datetime
 
 # Get the shared base class for declarative ORM
 from . import Base
-    
+from decorators import UTCDateTime
+
+poll_tweets = Table(
+    'poll_tweets', 
+    Base.metadata,
+    Column('poll_id', Integer, ForeignKey('polls.id')),
+    Column('tweet_id', Integer, ForeignKey('tweets.id'))
+)
+
 class Tweet(Base):
     __tablename__ = 'tweets'
     
     id = Column(BigInteger, primary_key=True)
-    created = Column(DateTime(timezone=True), default=datetime.utcnow)
+    created = Column(UTCDateTime, default=datetime.utcnow)
     
-    poll_id = Column(Integer, ForeignKey('polls.id'))
-    poll = relationship('Poll', 
-                        backref=backref('tweets', order_by=created))
+    polls = relationship('Poll', 
+                         secondary='poll_tweets',
+                         backref=backref('tweets', order_by=created))
                         
     user_id = Column(BigInteger)
     screen_name = Column(String)

@@ -6,12 +6,13 @@ from datetime import datetime
 
 # Get the shared base class for declarative ORM
 from . import Base
+from decorators import UTCDateTime
 
 class Response(Base):
     __tablename__ = 'responses'
     
     id = Column(Integer, primary_key=True)
-    created = Column(DateTime(timezone=True), default=datetime.utcnow)
+    created = Column(UTCDateTime, default=datetime.utcnow)
     
     poll_id = Column(Integer, ForeignKey('polls.id'))
     poll = relationship('Poll', 
