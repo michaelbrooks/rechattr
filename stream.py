@@ -115,30 +115,30 @@ class PollTermChecker(TermChecker):
             if 'retweet_of_status_id' in status:
                 tweet.retweet_of_status_id = status['retweet_of_status_id']
             
-            # for key, polls in termsToPolls.iteritems():
-                # match = False
+            for key, polls in self.termsToPolls.iteritems():
+                match = False
                 
-                # for ht_entity in status['entities']['hashtags']:
-                    # if '#' + ht_entity['text'] == key:
-                        # match = True
-                        # break
+                for ht_entity in status['entities']['hashtags']:
+                    if '#' + ht_entity['text'] == key:
+                        match = True
+                        break
                 
-                # if not match:
-                    # for mention in status['entities']['user_mentions']:
-                        # if '@' + mention['screen_name'] == key:
-                            # match = True
-                            # break
+                if not match:
+                    for mention in status['entities']['user_mentions']:
+                        if '@' + mention['screen_name'] == key:
+                            match = True
+                            break
                 
-                # if not match:
-                    # if '@' + status['user']['screen_name'] == key:
-                        # match = True
+                if not match:
+                    if '@' + status['user']['screen_name'] == key:
+                        match = True
                 
-                # if not match:
-                    # if key in status['text']:
-                        # match = True
+                if not match:
+                    if key in status['text']:
+                        match = True
                 
-                # if match:
-                    # tweet.polls.extend(polls)
+                if match:
+                    tweet.polls.extend(polls)
                 
             if len(tweet.polls) == 0:
                 unmapped += 1
@@ -151,6 +151,11 @@ class PollTermChecker(TermChecker):
         self.orm.commit()
         
     def _get_tracking_terms(self):
+        # any tweets currently in the queue were retrieve
+        # with previous track list, so process them before
+        # updating the track list
+        self.process_tweet_queue()
+    
         # Check the database for events that are happening right now
         activePolls = Poll.get_active(self.orm)
         
@@ -180,8 +185,6 @@ class PollTermChecker(TermChecker):
         # Go ahead and store the new data (polls may have changed)
         self.trackingPolls = newTrackingPolls
         self.termsToPolls = newTermsToPolls
-        
-        self.process_tweet_queue()
         
         return newTrackingTerms
         
