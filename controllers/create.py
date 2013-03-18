@@ -2,6 +2,7 @@ import web
 from web import form
 
 import simplejson as json
+import re
 
 from datetime import datetime
 from dateutil.tz import tzoffset, tzutc
@@ -19,6 +20,12 @@ valid_date = form.regexp(r'\d{1,2}/\d{1,2}/\d{2,4}',
                          'Must be a valid date')
 valid_time = form.regexp(r'\d{1,2}:\d{2}(am|pm)?',
                          'Must be a valid time')
+#optional atsign, any number of non-whitespace chars
+valid_username = form.regexp(r'^\s*@?\S+\s*$',
+                         'Not a valid username')
+#optional hash, any number of non-whitespace chars
+valid_hashtag = form.regexp(r'^\s*#?\S+\s*$',
+                         'Not a valid hashtag')
 valid_terms = form.regexp(r'^\s*[#@\w+]+(\s*,\s*[#@\w+]+)*\s*$',
                           'Must be a comma-separated list of terms')
 
@@ -54,19 +61,30 @@ create_form = form.Form(
     form.Textbox('email', form.notnull, valid_email, 
                  description='Your email',
                  class_="input-large", placeholder="Email"),
+    form.Textbox('title', form.notnull,
+                 description='Event Name',
+                 class_='input-large', placeholder="My Awesome Event"),
     Datebox('start_date', 'Event Start', 'start-date'),
     Timebox('start_time', '', 'start-time'),
     Datebox('stop_date', 'Event Stop', 'stop-date'),
     Timebox('stop_time', '', 'stop-time'),
-    form.Textbox('twitter_user', 
+    form.Textbox('twitter_user', form.notnull, valid_username,
                  description='Twitter username'),
-    form.Textbox('twitter_hashtag', 
+    form.Textbox('twitter_hashtag', form.notnull, valid_hashtag,
                  description='Hashtag'),
+    form.Textbox('twitter_other_terms', 
+                 description='Other usernames / hashtags (Optional)'),
     form.Hidden('gmt_offset', type='hidden'),
     form.Button('submit', type='submit', 
                 class_="btn btn-primary",
                 description='Create')
 )
+
+def clean_term(term, prefix):
+    term = term.strip()
+    if term.startswith(prefix):
+        return term[len(prefix):]
+    return term
 
 utc = tzutc()
 
@@ -78,6 +96,27 @@ class create:
         code = code.hexdigest()
         return code[:length].lower()
 
+    def _url_code(self, poll):
+    
+        # combine the user and hashtag
+        prefix = "%s-%s" %(poll.twitter_user, poll.twitter_hashtag)
+        
+        # remove all non alphanumeric
+        prefix = re.sub(r'[^\w]','-', prefix)
+        
+        append = 0
+        code = prefix
+        
+        # check for uniqueness, increment append counter on failures
+        match = web.ctx.orm.query(Poll).filter(Poll.poll_url_code == code).first()
+        while match is not None:
+            append += 1
+            code = "%s-%s" %(prefix, append)
+            match = web.ctx.orm.query(Poll).filter(Poll.poll_url_code == code).first()
+            
+        return code
+        
+        
     def _parse_date_time(self, date_str, time_str, gmt_offset_seconds):
         
         tzinfo = tzoffset(None, gmt_offset_seconds);
@@ -118,9 +157,12 @@ class create:
         poll.user_email = i.email
         poll.event_start = event_start
         poll.event_stop = event_stop
-        poll.twitter_terms = i.twitter_user + ', ' + i.twitter_hashtag
         
-        poll.poll_url_code = self._random_code(Poll.POLL_URL_CODE_LENGTH)
+        poll.twitter_user = clean_term(i.twitter_user, '@')
+        poll.twitter_hashtag = clean_term(i.twitter_hashtag, '#')
+        poll.twitter_other_terms = i.twitter_other_terms
+        
+        poll.poll_url_code = self._url_code(poll)
         poll.results_url_code = self._random_code(Poll.RESULTS_URL_CODE_LENGTH)
         poll.edit_url_code = self._random_code(Poll.EDIT_URL_CODE_LENGTH)
         #poll.short_url = ???

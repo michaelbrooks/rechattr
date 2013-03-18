@@ -6,19 +6,36 @@ import controllers
 urls = (
     '/',                    'index',
     '/new',                 'create',
-    '/r(\w+)/edit/(\w+)',   'edit',
-    '/r(\w+)',              'poll',
-    '/r(\w+)/results',      'results',
-    '/clear_db',            'clear_db'
+    '/clear_db',            'clear_db',
+    '/([\w-]+)',               'poll',
+    '/([\w-]+)/edit/(\w+)',    'edit',
+    '/([\w-]+)/results',       'results'
 )
 
 web.config.debug = conf.DEBUG
 
 app = web.application(urls, globals())
 
-app.notfound = controllers.notfound
+def load_sqla(handler):
+    web.ctx.orm = db.db_session()
+    try:
+        return handler()
+    except web.HTTPError:
+        web.ctx.orm.commit()
+        raise
+    except:
+        web.ctx.orm.rollback()
+        raise
+    finally:
+        web.ctx.orm.commit()
+        # If the above alone doesn't work, uncomment 
+        # the following line:
+        #web.ctx.orm.expunge_all() 
 
-app.add_processor(db.load_sqla)
+
+app.add_processor(load_sqla)
+
+app.notfound = controllers.notfound
 app.add_processor(controllers.load_notfound)
 
 from controllers import *

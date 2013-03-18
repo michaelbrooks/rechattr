@@ -21,6 +21,16 @@ $var js_app: CreateApp
                 </div>
                 
                 <div class="control-group">
+                    <label class="control-label" for="title">
+                        $:form.title.description
+                    </label>
+                    <div class="controls">
+                        $:form.title.render()
+                        <span class="help-inline">$:form.title.note</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
                     <label class="control-label" for="$:form.start_date.id">
                         Event Timing
                     </label>
@@ -66,6 +76,16 @@ $var js_app: CreateApp
                             $:form.twitter_hashtag.render()
                         </div>
                         <span class="help-inline">$:form.twitter_hashtag.note</span>
+                    </div>
+                </div> 
+                <div class="control-group">
+                    <label class="control-label" for="twitter_other_terms">
+                        $:form.twitter_other_terms.description
+                    </label>
+                    <div class="controls">
+                        $:form.twitter_other_terms.render()
+                        <span class="help-inline">$:form.twitter_other_terms.note</span>
+                        <span class="help-block">Separate with commas.</span>
                     </div>
                 </div> 
                 
