@@ -5,69 +5,28 @@ from model import Tweet, Poll
 
 from datetime import datetime
 from dateutil import parser
-#import threading
+from threading import Lock
+import time
 
 from twittermon import TermChecker, DynamicTwitterStream, JsonStreamListener
 from tweepy import OAuthHandler
 
 class DbListener(JsonStreamListener):
 
-    def __init__(self, dbsession, checker):
+    def __init__(self, checker):
         super(DbListener, self).__init__()
-        
-        self.orm = dbsession
         self.checker = checker
         
     def on_status(self, status):
         """Called when a new status arrives"""
-        print "status %s received" % (status['id'])
         
-        #self.checker.lock()
-        # termsToPolls = self.checker.get_terms_to_polls()
-        #self.checker.unlock()
-        
-        tweet = Tweet()
-        self.orm.add(tweet)
-        
-        tweet.id = status['id']
-        tweet.created = parser.parse(status['created_at'])
-        tweet.user_id = status['user']['id']
-        tweet.screen_name = status['user']['screen_name']
-        tweet.user_name = status['user']['name']
-        tweet.text = status['text']
-        tweet.reply_to_tweet_id = status['in_reply_to_status_id']
-        if 'retweet_of_status_id' in status:
-            tweet.retweet_of_status_id = status['retweet_of_status_id']
-        
-        # for key, polls in termsToPolls.iteritems():
-            # match = False
-            
-            # for ht_entity in status['entities']['hashtags']:
-                # if '#' + ht_entity['text'] == key:
-                    # match = True
-                    # break
-            
-            # if not match:
-                # for mention in status['entities']['user_mentions']:
-                    # if '@' + mention['screen_name'] == key:
-                        # match = True
-                        # break
-            
-            # if not match:
-                # if '@' + status['user']['screen_name'] == key:
-                    # match = True
-            
-            # if not match:
-                # if key in status['text']:
-                    # match = True
-            
-            # if match:
-                # tweet.polls.extend(polls)
-            
-        if len(tweet.polls) == 0:
-            print "Received tweet with no polls? %s" %(tweet.text)
-        
-        self.orm.commit()
+        # add the status to the queue on the checker
+        if not self.checker.lock.acquire(False):
+            self.backlog.append(status)
+            print "putting status %s in backlog" % (status['id'])
+        else:
+            self.checker.tweets.append(status)
+            self.checker.lock.release()
         
         return True
 
@@ -116,20 +75,80 @@ class PollTermChecker(TermChecker):
     def __init__(self, dbsession):
         super(PollTermChecker, self).__init__()
         
+        self.lock = Lock()
+        self.tweets = []
         self.trackingPolls = set()
         self.termsToPolls = dict()
-        #self.termsToPollsLock = threading.Lock()
+        self.time = time.time()
         
         self.orm = dbsession
         
-    # def lock(self):
-        # self.termsToPollsLock.acquire()
-        
-    # def unlock(self):
-        # self.termsToPollsLock.release()
-        
     def get_terms_to_polls(self):
         return self.termsToPolls;
+        
+    def process_tweet_queue(self):
+        
+        now = time.time()
+        diff = now - self.time
+        self.time = now
+        
+        self.lock.acquire()
+        tweets = list(self.tweets)
+        self.tweets = []
+        self.lock.release()
+        
+        if len(tweets) == 0:
+            return
+            
+        unmapped = 0
+            
+        for status in tweets:
+            tweet = Tweet()
+            
+            tweet.id = status['id']
+            tweet.created = parser.parse(status['created_at'])
+            tweet.user_id = status['user']['id']
+            tweet.screen_name = status['user']['screen_name']
+            tweet.user_name = status['user']['name']
+            tweet.text = status['text']
+            tweet.reply_to_tweet_id = status['in_reply_to_status_id']
+            if 'retweet_of_status_id' in status:
+                tweet.retweet_of_status_id = status['retweet_of_status_id']
+            
+            # for key, polls in termsToPolls.iteritems():
+                # match = False
+                
+                # for ht_entity in status['entities']['hashtags']:
+                    # if '#' + ht_entity['text'] == key:
+                        # match = True
+                        # break
+                
+                # if not match:
+                    # for mention in status['entities']['user_mentions']:
+                        # if '@' + mention['screen_name'] == key:
+                            # match = True
+                            # break
+                
+                # if not match:
+                    # if '@' + status['user']['screen_name'] == key:
+                        # match = True
+                
+                # if not match:
+                    # if key in status['text']:
+                        # match = True
+                
+                # if match:
+                    # tweet.polls.extend(polls)
+                
+            if len(tweet.polls) == 0:
+                unmapped += 1
+                print "Received tweet with no polls? %s" %(tweet.text.encode('ascii', 'replace'))
+                
+            self.orm.merge(tweet)
+        
+        print "Inserted %s tweets, %s unmapped, at %s tps" %(len(tweets), unmapped, len(tweets) / diff)
+        
+        self.orm.commit()
         
     def _get_tracking_terms(self):
         # Check the database for events that are happening right now
@@ -160,11 +179,9 @@ class PollTermChecker(TermChecker):
         
         # Go ahead and store the new data (polls may have changed)
         self.trackingPolls = newTrackingPolls
-        
-        # we need to lock this because the listener looks at this object also
-        #self.lock()
         self.termsToPolls = newTermsToPolls
-        #self.unlock()
+        
+        self.process_tweet_queue()
         
         return newTrackingTerms
         
@@ -174,7 +191,7 @@ if __name__ == '__main__':
     
     checker = PollTermChecker(dbsession)
     
-    listener = DbListener(dbsession, checker)
+    listener = DbListener(checker)
     
     
     auth = OAuthHandler(conf.TWITTER_STREAM_CONSUMER_KEY, conf.TWITTER_STREAM_CONSUMER_SECRET)
