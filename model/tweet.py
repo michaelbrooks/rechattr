@@ -12,7 +12,7 @@ poll_tweets = Table(
     'poll_tweets', 
     Base.metadata,
     Column('poll_id', Integer, ForeignKey('polls.id')),
-    Column('tweet_id', Integer, ForeignKey('tweets.id'))
+    Column('tweet_id', BigInteger, ForeignKey('tweets.id'))
 )
 
 class Tweet(Base):
