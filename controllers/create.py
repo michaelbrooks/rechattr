@@ -158,7 +158,7 @@ class create:
         
         poll.twitter_user = clean_term(i.twitter_user, '@')
         poll.twitter_hashtag = clean_term(i.twitter_hashtag, '#')
-        poll.twitter_other_terms = i.twitter_other_terms
+        # poll.twitter_other_terms = i.twitter_other_terms
         
         poll.poll_url_code = self._url_code(poll)
         poll.results_url_code = self._random_code(Poll.RESULTS_URL_CODE_LENGTH)
