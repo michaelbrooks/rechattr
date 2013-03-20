@@ -6,6 +6,7 @@ $def with (poll)
 <p>Start: $poll.event_start</p>
 <p>Stop: $poll.event_stop</p>
 
+<h3>Responses</h3>
 <table>
     <tr><th>id</th><th>time</th><th>answers</th><th>comment</th></tr>
     $for response in poll.responses:
@@ -14,6 +15,18 @@ $def with (poll)
         <td>$response.created</td>
         <td>$response.answers</td>
         <td>$response.comment</td>
+        </tr>
+</table>
+
+<h3>Tweets</h3>
+<table>
+    <tr><th>id</th><th>time</th><th>username</th><th>tweet</th></tr>
+    $for tweet in poll.tweets:
+        <tr>
+        <td>$tweet.id</td>
+        <td>$tweet.created</td>
+        <td>$tweet.screen_name</td>
+        <td>$tweet.text</td>
         </tr>
 </table>
 
