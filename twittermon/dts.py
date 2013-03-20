@@ -65,6 +65,7 @@ class DynamicTwitterStream(object):
     
         # get updated terms
         print "Starting new twitter stream with %s terms" %(len(self.trackingTerms))
+        print self.trackingTerms
         
         # run the stream
         try:
