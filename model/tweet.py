@@ -12,8 +12,8 @@ from decorators import UTCDateTime
 poll_tweets = Table(
     'poll_tweets', 
     Base.metadata,
-    Column('poll_id', Integer, ForeignKey('polls.id')),
-    Column('tweet_id', BigInteger, ForeignKey('tweets.id'))
+    Column('poll_id', Integer, ForeignKey('polls.id'), nullable=False),
+    Column('tweet_id', BigInteger, ForeignKey('tweets.id'), nullable=False)
 )
 
 class Tweet(Base):
