@@ -4,7 +4,6 @@ import appconfig as conf
 from model import Tweet, Poll
 
 from datetime import datetime
-from dateutil import parser
 from threading import Lock
 import time
 
@@ -86,7 +85,99 @@ class PollTermChecker(TermChecker):
     def get_terms_to_polls(self):
         return self.termsToPolls;
         
-    def process_tweet_queue(self):
+        
+    def _normalize_entities(self, status):
+        for ht_entity in status['entities']['hashtags']:
+            ht_entity['text_n'] = '#' + ht_entity['text'].lower()
+        
+        for mention in status['entities']['user_mentions']:
+            mention['screen_name_n'] = '@' + mention['screen_name'].lower()
+        
+        status['user']['screen_name_n'] = '@' + status['user']['screen_name'].lower()
+        status['text_n'] = status['text'].lower()
+        
+    def _process_tweet(self, status, rt_status=None):
+        new_tweet = False
+        new_retweet = False
+        self._normalize_entities(status)
+        
+        # look in database first to see if it is there already
+        tweet = self.orm.query(Tweet).get(status['id'])
+        if tweet is None:
+            tweet = Tweet(status)
+            new_tweet = True
+        
+        if rt_status is not None:
+            self._normalize_entities(rt_status)
+            # look in database first to see if it is there already
+            retweet = self.orm.query(Tweet).get(rt_status['id'])
+            if retweet is None:
+                retweet = Tweet(rt_status)
+                new_retweet = True
+        
+        matches = 0
+        for key, polls in self.termsToPolls.iteritems():
+            
+            key = key.lower()
+            
+            # match the key against the main tweet
+            match = self._status_matches(key, status)
+            
+            # if there is a retweet, also match against it separately
+            if rt_status is not None:
+                match = match or self._status_matches(key, rt_status)
+        
+            if match:
+                # add these polls to the tweet's matches
+                tweet.polls.extend(polls)
+                matches += 1
+                
+        if matches == 0:
+            print "No matches for: %s" %(tweet.text.encode('ascii', 'replace'))
+            if rt_status is not None:
+                print "with RT: %s" %(retweet.text.encode('ascii', 'replace'))
+        else:
+            # uniquify poll list so we don't try to insert duplicates
+            uniquePolls = set(tweet.polls)
+            tweet.polls = list(uniquePolls)
+            if rt_status is not None:
+                # the retweet inherits all polls from the original
+                retweet.polls = list(uniquePolls)
+        
+        if matches > 0 or new_tweet:
+            self.orm.merge(tweet)
+        if rt_status is not None and (matches > 0 or new_retweet):
+            self.orm.merge(retweet)
+        
+        # we mapped the tweet to polls
+        return matches > 0
+        
+    def _status_matches(self, key, status):
+
+        match = False
+        
+        for ht_entity in status['entities']['hashtags']:
+            if ht_entity['text_n'] == key:
+                match = True
+                break
+        
+        if not match:
+            for mention in status['entities']['user_mentions']:
+                if mention['screen_name_n'] == key:
+                    match = True
+                    break
+        
+        if not match:
+            if status['user']['screen_name_n'] == key:
+                match = True
+        
+        if not match:
+            if key in status['text_n']:
+                match = True
+            
+        return match
+        
+    def _process_tweet_queue(self):
         
         now = time.time()
         diff = now - self.time
@@ -101,50 +192,18 @@ class PollTermChecker(TermChecker):
             return
             
         unmapped = 0
-            
+        
         for status in tweets:
-            tweet = Tweet()
-            
-            tweet.id = status['id']
-            tweet.created = parser.parse(status['created_at'])
-            tweet.user_id = status['user']['id']
-            tweet.screen_name = status['user']['screen_name']
-            tweet.user_name = status['user']['name']
-            tweet.text = status['text']
-            tweet.reply_to_tweet_id = status['in_reply_to_status_id']
-            if 'retweet_of_status_id' in status:
-                tweet.retweet_of_status_id = status['retweet_of_status_id']
-            
-            for key, polls in self.termsToPolls.iteritems():
-                match = False
-                
-                for ht_entity in status['entities']['hashtags']:
-                    if '#' + ht_entity['text'] == key:
-                        match = True
-                        break
-                
-                if not match:
-                    for mention in status['entities']['user_mentions']:
-                        if '@' + mention['screen_name'] == key:
-                            match = True
-                            break
-                
-                if not match:
-                    if '@' + status['user']['screen_name'] == key:
-                        match = True
-                
-                if not match:
-                    if key in status['text']:
-                        match = True
-                
-                if match:
-                    tweet.polls.extend(polls)
-                
-            if len(tweet.polls) == 0:
-                unmapped += 1
-                print "Received tweet with no polls? %s" %(tweet.text.encode('ascii', 'replace'))
-                
-            self.orm.merge(tweet)
+            # process the embedded tweets first
+            if 'retweeted_status' in status:
+                original = status['retweeted_status']
+                # and any terms associated with the original will also get put on the retweet
+                if not self._process_tweet(original, status):
+                    unmapped += 1
+            else:
+                # otherwise just the one tweet
+                if not self._process_tweet(status):
+                    unmapped += 1
         
         print "Inserted %s tweets, %s unmapped, at %s tps" %(len(tweets), unmapped, len(tweets) / diff)
         
@@ -154,7 +213,7 @@ class PollTermChecker(TermChecker):
         # any tweets currently in the queue were retrieve
         # with previous track list, so process them before
         # updating the track list
-        self.process_tweet_queue()
+        self._process_tweet_queue()
     
         # Check the database for events that are happening right now
         activePolls = Poll.get_active(self.orm)
