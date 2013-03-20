@@ -59,11 +59,8 @@ class Poll(Base):
             
     def twitter_track_list(self):
         
-        track_list = self.twitter_other_terms_list()
-        track_list.append(self.twitter_user)
-        track_list.append(self.twitter_hashtag)
-        
-        return track_list
+        # track_list = self.twitter_other_terms_list()
+        return [self.twitter_user.lower(), self.twitter_hashtag.lower()]
     
     @staticmethod
     def get_active(session):

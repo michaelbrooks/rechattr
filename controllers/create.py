@@ -72,8 +72,8 @@ create_form = form.Form(
                  description='Twitter username'),
     form.Textbox('twitter_hashtag', form.notnull, valid_hashtag,
                  description='Hashtag'),
-    form.Textbox('twitter_other_terms', 
-                 description='Other usernames / hashtags (Optional)'),
+    # form.Textbox('twitter_other_terms', 
+                 # description='Other usernames / hashtags (Optional)'),
     form.Hidden('gmt_offset', type='hidden'),
     form.Button('submit', type='submit', 
                 class_="btn btn-primary",
@@ -83,8 +83,8 @@ create_form = form.Form(
 def clean_term(term, prefix):
     term = term.strip()
     if term.startswith(prefix):
-        return term[len(prefix):]
-    return term
+        return term
+    return "%s%s" %(prefix, term)
 
 utc = tzutc()
 
@@ -152,8 +152,6 @@ class create:
         event_start = self._parse_date_time(i.start_date, i.start_time, gmt_offset_seconds)
         event_stop = self._parse_date_time(i.stop_date, i.stop_time, gmt_offset_seconds)
         
-        print event_start
-        print event_stop
         poll.user_email = i.email
         poll.event_start = event_start
         poll.event_stop = event_stop
