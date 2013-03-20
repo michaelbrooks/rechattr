@@ -6,7 +6,7 @@ from model import Poll, Response
 
 class poll:
     def _get_poll(self, poll_url_code):
-        poll = web.ctx.orm.query(Poll).filter(Poll.poll_url_code == poll_url_code).first();
+        poll = Poll.get_by_url(web.ctx.orm, poll_url_code)
         if poll is None:
             raise web.ctx.notfound()
         return poll

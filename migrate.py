@@ -3,6 +3,7 @@ from alembic import command
 
 def migrate(version="head"):
     alembic_cfg = Config("alembic.ini")
+    print "making sure db is upgraded to %s" %(version)
     command.upgrade(alembic_cfg, version)
     
 if __name__ == "__main__":

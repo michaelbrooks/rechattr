@@ -96,23 +96,26 @@ class create:
         code = code.hexdigest()
         return code[:length].lower()
 
-    def _url_code(self, poll):
-    
-        # combine the user and hashtag
-        prefix = "%s-%s" %(poll.twitter_user, poll.twitter_hashtag)
+    def _create_poll_url(self, poll):
+        #remove the @ and #
+        user = poll.twitter_user[1:]
+        hashtag = poll.twitter_hashtag[1:]
         
-        # remove all non alphanumeric
+        # combine the user and hashtag
+        prefix = "%s-%s" %(user, hashtag)
+        
+        # remove all non alphanumeric and lowercase it
         prefix = re.sub(r'[^\w]','-', prefix)
         
         append = 0
         code = prefix
         
         # check for uniqueness, increment append counter on failures
-        match = web.ctx.orm.query(Poll).filter(Poll.poll_url_code == code).first()
+        match = Poll.get_by_url(web.ctx.orm, code)
         while match is not None:
             append += 1
             code = "%s-%s" %(prefix, append)
-            match = web.ctx.orm.query(Poll).filter(Poll.poll_url_code == code).first()
+            match = Poll.get_by_url(web.ctx.orm, code)
             
         return code
         
@@ -160,7 +163,9 @@ class create:
         poll.twitter_hashtag = clean_term(i.twitter_hashtag, '#')
         # poll.twitter_other_terms = i.twitter_other_terms
         
-        poll.poll_url_code = self._url_code(poll)
+        poll.poll_url_human = self._create_poll_url(poll)
+        poll.poll_url_code = poll.poll_url_human.lower()
+        
         poll.results_url_code = self._random_code(Poll.RESULTS_URL_CODE_LENGTH)
         poll.edit_url_code = self._random_code(Poll.EDIT_URL_CODE_LENGTH)
         #poll.short_url = ???

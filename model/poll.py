@@ -31,6 +31,7 @@ class Poll(Base):
     twitter_other_terms = Column(String)
     
     # Urls
+    poll_url_human = Column(String)
     poll_url_code = Column(String)
     results_url_code = Column(String)
     edit_url_code = Column(String)
@@ -40,13 +41,13 @@ class Poll(Base):
     definition = Column(String)
 
     def results_url(self):
-        return '/%s/results' % (self.poll_url_code)
+        return '/%s/results' % (self.poll_url_human)
     
     def poll_url(self):
-        return '/%s' % (self.poll_url_code)
+        return '/%s' % (self.poll_url_human)
         
     def edit_url(self):
-        return '/%s/edit/%s' % (self.poll_url_code, self.edit_url_code)
+        return '/%s/edit/%s' % (self.poll_url_human, self.edit_url_code)
         
     def definition_object(self):
         return json.loads(self.definition)
@@ -67,6 +68,12 @@ class Poll(Base):
         # Check the database for events that are happening right now
         now = datetime.utcnow()
         
+        #TODO: add buffer to beginning and end
         return session.query(Poll).\
                        filter(Poll.event_start <= now, Poll.event_stop >= now).\
                        all()
+    @staticmethod
+    def get_by_url(session, poll_url_code):
+        return session.query(Poll).\
+                       filter(Poll.poll_url_code == poll_url_code.lower()).\
+                       first()
