@@ -2,6 +2,10 @@ import web
 import db, model
 import appconfig as conf
 import controllers
+import migrate
+
+# migrate the database before starting
+migrate.migrate(conf.ALEMBIC_VERSION)
 
 urls = (
     '/',                    'index',
