@@ -4,15 +4,15 @@ from sqlalchemy.ext.declarative import declarative_base
 # Base class for declarative ORM classes
 Base = declarative_base()
 
-# Load all of the models into the package
-from poll import Poll
-from tweet import Tweet
-from response import Response
-from visit import Visit
-
 from dateutil.tz import tzoffset, tzutc
 utc = tzutc()
 
 # Forces a datetime into utc
 def utc_aware(dt):
     return dt.replace(tzinfo=utc)
+
+# Load all of the models into the package
+from poll import Poll
+from tweet import Tweet
+from response import Response
+from visit import Visit
