@@ -1,0 +1,42 @@
+from sqlalchemy import Column
+from sqlalchemy import Integer, String, DateTime, BigInteger
+from datetime import datetime
+import simplejson as json
+
+# Get the shared base class for declarative ORM
+from . import Base
+from decorators import UTCDateTime
+
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    created = Column(UTCDateTime, default=datetime.utcnow)
+    
+    oauth_key = Column(String)
+    oauth_secret = Column(String)
+    
+    oauth_user_id = Column(BigInteger)
+    oauth_provider = Column(String)
+    username = Column(String)
+    full_name = Column(String)
+    
+    last_signed_in = Column(UTCDateTime, default=datetime.utcnow)
+    tweet_count = Column(Integer, default=0)
+    response_count = Column(Integer, default=0)
+    
+    user_cache = Column(String)
+    
+    def __init__(self, oauth_user_id, oauth_provider='Twitter'):
+        self.oauth_user_id = oauth_user_id
+        self.oauth_provider = oauth_provider
+        
+    def update(self, user_info, oauth_token):
+        self.oauth_key = oauth_token.key
+        self.oauth_secret = oauth_token.secret
+        
+        self.user_cache = json.dumps(user_info)
+        
+        if oauth_provider == "Twitter":
+            self.username = user_info.screen_name
+            self.full_name = user_info.name
