@@ -1,4 +1,4 @@
-import os
+import os, random, hashlib, time
 
 # Get the database connection url
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
@@ -17,3 +17,6 @@ TWITTER_STREAM_ACCESS_SECRET = os.environ.get('TWITTER_STREAM_ACCESS_SECRET', No
 STREAM_TERM_POLLING_INTERVAL = int(os.environ.get('STREAM_TERM_POLLING_INTERVAL', 60))
 
 ALEMBIC_VERSION = os.environ.get('ALEMBIC_VERSION', 'head')
+
+_default_key = hashlib.sha1("%s%s" %(random.random(), time.time())).hexdigest()
+SESSION_ENCRYPTION_KEY = os.environ.get('SESSION_ENCRYPTION_KEY', _default_key)
