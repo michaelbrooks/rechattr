@@ -1,4 +1,4 @@
-$def with (polls)
+$def with (polls, user)
 
 <h1>re:chattr</h1>
 
@@ -20,7 +20,12 @@ $for poll in polls:
 </table>
 
 <p>
-<a class="btn btn-primary" href="new">New poll</a> <a class="btn" href="clear_db">Clear Database</a>
+<a class="btn btn-primary" href="new">New poll</a>
+<a class="btn" href="clear_db">Clear Database</a>
+$if user is None:
+    <a class="btn btn-success" href="sign_in">Sign in with Twitter!</a>
+$else:
+    <button class="btn btn-success" disabled="disabled">Already signed in</button>
 </p>
 
 <style>
