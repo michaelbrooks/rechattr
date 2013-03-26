@@ -1,32 +1,24 @@
 import web
 import tweepy
 from datetime import datetime
-
+from utils import utc_aware
 from model import User
-import appconfig as conf
 
 class Auth(object):
 
-    def __init__(self):
-        self._oauth = None
+    def __init__(self, oauth_key, oauth_secret):
+        self._oauth = tweepy.OAuthHandler(oauth_key, oauth_secret)
         self._user = None
     
-    def get_auth(self, return_url=None):
-        if self._oauth is None:
-            consumer_token = conf.TWITTER_STREAM_CONSUMER_KEY
-            consumer_secret = conf.TWITTER_STREAM_CONSUMER_SECRET
-            self._oauth = tweepy.OAuthHandler(consumer_token, consumer_secret, return_url)
-            
-        return self._oauth
-    
     def get_redirect_url(self, return_url):
+    
         # Get a request token from Twitter
-        auth = self.get_auth(return_url)
-        
+        auth = self._oauth
+        auth.callback = return_url
         redirect_url = auth.get_authorization_url(signin_with_twitter=True)
             
         web.ctx.session['twitter_request_token'] = (auth.request_token.key,
-                                                   auth.request_token.secret)
+                                                    auth.request_token.secret)
         
         return redirect_url
         
@@ -35,7 +27,7 @@ class Auth(object):
         
         request_key, request_secret = web.ctx.session['twitter_request_token']
         
-        auth = self.get_auth()
+        auth = self._oauth
         auth.set_request_token(request_key, request_secret)
         auth.get_access_token(verifier)
         
@@ -55,8 +47,14 @@ class Auth(object):
             
         # update with any changes from Twitter
         self._user.update(twitter_user, auth.access_token)
-        self._user.last_signed_in = datetime.utcnow()
-        web.ctx.orm.commit()
+        self._user.last_signed_in = utc_aware()
+        
+        try:
+            web.ctx.orm.commit()
+        except:
+            web.ctx.orm.rollback()
+            raise
+        
         
         # sign them in
         web.ctx.session['user_id'] = self._user.id
@@ -66,18 +64,10 @@ class Auth(object):
         
         return self._user
         
-    def cancel_auth(self, input):
-        denied_key = input['denied']
-        request_key, request_secret = web.ctx.session['twitter_request_token']
-        if denied_key == request_key:
-            del web.ctx.session['twitter_request_token']
-        else:
-            raise 'Denied wrong key'
-    
     def current_user(self):
-        if (self._user is None) and ('user_id' in web.ctx.session):
+        # Check for a signed in user
+        if self._user is None and 'user_id' in web.ctx.session:
             user_id = web.ctx.session['user_id']
             self._user = web.ctx.orm.query(User).get(user_id)
         
         return self._user
-        
