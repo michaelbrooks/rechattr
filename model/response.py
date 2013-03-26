@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship, backref
 from datetime import datetime
 
 # Get the shared base class for declarative ORM
-from . import Base
+from model import Base
 from decorators import UTCDateTime
 
 class Response(Base):

@@ -1,10 +1,10 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime, BigInteger
 from datetime import datetime
-import simplejson as json
+import cPickle as pickle
 
 # Get the shared base class for declarative ORM
-from . import Base
+from model import Base
 from decorators import UTCDateTime
 
 class User(Base):
@@ -35,8 +35,9 @@ class User(Base):
         self.oauth_key = oauth_token.key
         self.oauth_secret = oauth_token.secret
         
-        self.user_cache = json.dumps(user_info)
+        self.user_cache = pickle.dumps(user_info)
         
-        if oauth_provider == "Twitter":
+        # retrieve some important fields from the user info
+        if self.oauth_provider == "Twitter":
             self.username = user_info.screen_name
             self.full_name = user_info.name

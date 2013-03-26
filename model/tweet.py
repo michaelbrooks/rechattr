@@ -9,7 +9,8 @@ from string import Template
 from cgi import escape
 
 # Get the shared base class for declarative ORM
-from . import Base, utc_aware
+from model import Base
+from utils import utc_aware
 from decorators import UTCDateTime
 
 urlTemplate = Template('<a target="_blank" href="${url}" title="${expanded_url}">${display_url}</a>')
@@ -143,7 +144,7 @@ class Tweet(Base):
         
     def time_ago(self):
         
-        now = utc_aware(datetime.utcnow())
+        now = utc_aware()
         delta = now - self.created
         
         if delta < oneMinute:

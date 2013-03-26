@@ -4,7 +4,7 @@ from datetime import datetime
 import simplejson as json
 
 # Get the shared base class for declarative ORM
-from . import Base
+from model import Base
 from decorators import UTCDateTime
 
 class Poll(Base):
