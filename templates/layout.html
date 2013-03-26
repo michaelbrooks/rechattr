@@ -13,11 +13,11 @@ $def with (content)
 		<script src="/static/js/vendor/modernizr.js"></script>
         <script type="text/javascript">
             window.rechattr = {
-                $if 'js_app' in content:
-                    js_app: "$content.js_app",
-                $else:
-                    js_app: undefined,
-                    
+                config: {
+                    app_name: "$content.get('js_app', 'undefined')",
+                    poll: "$content.get('poll', 'undefined')",
+                    time: $time.time()
+                },
                 classes: {}
             };
         </script>
@@ -48,6 +48,7 @@ $def with (content)
         <script src="/static/js/vendor/moment.js"></script>
         
         <script src="/static/js/util.js"></script>
+        <script src="/static/js/stream.js"></script>
         <script src="/static/js/poll.js"></script>
         <script src="/static/js/create.js"></script>
         <script src="/static/js/main.js"></script>

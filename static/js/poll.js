@@ -10,6 +10,8 @@
     
     var SUBMIT_MESSAGE = 'Sending feedback...';
     
+    var TWEET_LIST_CONTENT_CLASS = 'tweet-list-content';
+    
     var PollApp = function() {
         this.questions = this.getQuestions();
         
@@ -36,7 +38,26 @@
             
             self.pollComplete();
         });
+        
+        this.stream = new rechattr.util.Stream({
+            poll: rechattr.config.poll,
+            time: rechattr.config.time
+        });
+        
+        this.stream.done(function(itemCount, html) {
+            self.newItems(itemCount, html);
+        })
+        .start();
     };
+    
+    PollApp.prototype.newItems = function(itemCount, html) {
+        var content = this.getStreamContentList();
+        content.prepend(html);
+    }
+    
+    PollApp.prototype.getStreamContentList = function() {
+        return $('.' + TWEET_LIST_CONTENT_CLASS);
+    }
     
     PollApp.prototype.updateAnswerSelection = function(question, selected) {
         //Reset current active setting

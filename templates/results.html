@@ -27,18 +27,7 @@ $def with (poll)
             <h2 class="tweet-list-header">Tweets</h2>
             <div class="tweet-list-content">
             $for tweet in poll.tweets:
-                <div class="tweet">
-                    <div class="tweet-content">
-                        <a class="tweet-author" target="_blank" href="https://twitter.com/${tweet.screen_name}">
-                            <img class="avatar" src="${tweet.profile_image_url}" alt="${tweet.user_name}" />
-                            <strong class="full-name">${tweet.user_name}</strong>
-                            <span class="screen-name">@${tweet.screen_name}</span></a>
-                        <small class="tweet-time">
-                            <a target="_blank" href="https://twitter.com/${tweet.screen_name}/status/${tweet.id}">$tweet.time_ago()</a>
-                        </small>
-                        <div class="tweet-text">$:tweet.enriched_tweet_text()</div>
-                    </div>
-                </div>
+                $:elements.tweet(tweet)
             </div>
         </div>
     </div>
@@ -49,91 +38,6 @@ $def with (poll)
     }
     th, td {
         text-align: center;
-    }
-    
-    .tweet-list {
-        border: 1px solid #e8e8e8;
-        -webkit-border-radius: 6px;
-        -moz-border-radius: 6px;
-        border-radius: 6px;
-    }
-    
-    .tweet-list-header {
-        padding: 12px;
-        border-bottom: 1px solid #e8e8e8;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 20px;
-        margin: 0;
-    }
-    
-    .tweet-list-content {
-        
-    }
-    
-    .tweet {
-        position: relative;
-        min-height: 51px;
-        padding: 9px 12px;
-        border-bottom: 1px solid #e8e8e8;
-    }
-    .tweet:last-child {
-        border-bottom: none;
-    }
-    
-    .tweet-content {
-        margin-left: 58px;
-    }
-    
-    .tweet-author {
-        color: #999;
-        text-decoration: none;
-    }
-    .tweet-author:hover {
-        text-decoration: none;
-    }
-    
-    .tweet-author .avatar {
-        border: 0;
-        width: 48px;
-        height: 48px;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
-        
-        position: absolute;
-        top: 12px;
-        left: 12px;
-    }
-    
-    .tweet-author .full-name {
-        font-weight: bold;
-        color: #333;
-    }
-    .tweet-author:hover .full-name {
-        color: #0084B4;
-        text-decoration: underline;
-    }
-    
-    .tweet-author .screen-name {
-        font-size: 12px;
-    }
-    
-    .tweet-time {
-        position: relative;
-        float: right;
-        margin-top: 1px;
-        color: #bbb;
-    }
-    
-    .tweet-time a {
-        font-size: 12px;
-        color: #999;
-    }
-    
-    .tweet-text {
-        white-space: pre-wrap;
-        word-wrap: break-word;
     }
     
 </style>

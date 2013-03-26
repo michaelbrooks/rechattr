@@ -19,6 +19,7 @@ urls = (
     '/sign_in',             'sign_in',
     '/([\w-]+)',            'poll',
     '/([\w-]+)/edit/(\w+)', 'edit',
+    '/([\w-]+)/stream',     'stream',
     '/([\w-]+)/results',    'results'
 )
 

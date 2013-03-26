@@ -1,0 +1,13 @@
+$def with (tweet)
+<div class="tweet">
+    <div class="tweet-content">
+        <a class="tweet-author" target="_blank" href="https://twitter.com/${tweet.screen_name}">
+            <img class="avatar" src="${tweet.profile_image_url}" alt="${tweet.user_name}" />
+            <strong class="full-name">${tweet.user_name}</strong>
+            <span class="screen-name">@${tweet.screen_name}</span></a>
+        <small class="tweet-time">
+            <a target="_blank" href="https://twitter.com/${tweet.screen_name}/status/${tweet.id}">$tweet.time_ago()</a>
+        </small>
+        <div class="tweet-text">$:tweet.enriched_tweet_text()</div>
+    </div>
+</div>

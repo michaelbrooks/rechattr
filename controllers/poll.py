@@ -2,7 +2,7 @@ import web
 import simplejson as json
 
 from . import pagerender as render
-from model import Poll, Response
+from model import Poll, Response, Tweet
 
 class poll:
     def _get_poll(self, poll_url_code):
@@ -10,13 +10,19 @@ class poll:
         if poll is None:
             raise web.ctx.notfound()
         return poll
-
+    
+    def _poll_stream(self, poll):
+        query = web.ctx.orm.query(Tweet).\
+                            filter(Tweet.polls.contains(poll)).\
+                            order_by(Tweet.created.desc())
+        return query.all()
     def GET(self, poll_url):
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
+        items = self._poll_stream(poll)
         
         # display the poll
-        return render.poll(poll)
+        return render.poll(poll, items)
     
     def POST(self, poll_url):
         # look up the poll based on the url
