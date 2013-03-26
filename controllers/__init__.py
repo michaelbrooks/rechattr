@@ -1,7 +1,11 @@
 import web
 
-render = web.template.render('templates/')
-pagerender = web.template.render('templates/', base='layout')
+helpers = {
+    'web': web
+}
+
+render = web.template.render('templates/', globals=helpers)
+pagerender = web.template.render('templates/', base='layout', globals=helpers)
 
 
 from create import create
