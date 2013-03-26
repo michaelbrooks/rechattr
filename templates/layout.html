@@ -25,6 +25,14 @@ $def with (content)
     <body>
 
         <div class="container">
+            $ flash = web.ctx.flash.get(clear=True)
+            $if flash is not None:
+                $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info'}
+                $ cls = type_map[flash['type']]
+                <div class="flash alert $cls">
+                    $flash['message']
+                </div>
+        
             $:content
         </div>
         

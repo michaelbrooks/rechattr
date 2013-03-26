@@ -9,11 +9,11 @@ $var js_app: PollApp
 <div class="row-fluid">
     <div class="span12 questions-row clearfix">
         <form method="POST">
-            $code: hideClass = ""
+            $ hideClass = ""
             $for question in poll.definition_object()['questions']:
             
                 <div class="answer-list $hideClass" data-question-name="$question['name']">
-                $code: hideClass="fade hide"
+                $ hideClass="fade hide"
             
                 $for choice in question['choices']:
                     <button type="button" class="answer-btn" data-option="$choice['value']">$choice['label']</button>
