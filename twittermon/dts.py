@@ -72,7 +72,7 @@ class DynamicTwitterStream(object):
             self.stream.filter(track=self.trackingTerms, async=False)
             
         except Exception, exception:
-            print "Forwarding exception from treaming thread."
+            print "Forwarding exception from streaming thread."
             self.streamException = exception
             
             # interrupt the main polling thread
