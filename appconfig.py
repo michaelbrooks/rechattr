@@ -8,6 +8,7 @@ if DATABASE_URL == None:
 
 DEBUG = bool(os.environ.get('DEBUG', False))
 DB_DEBUG = bool(os.environ.get('DB_DEBUG', False))
+LOG_LEVEL = bool(os.environ.get('LOG_LEVEL', 'INFO' if DEBUG else 'ERROR'))
 
 TWITTER_STREAM_CONSUMER_KEY = os.environ.get('TWITTER_STREAM_CONSUMER_KEY', None)
 TWITTER_STREAM_CONSUMER_SECRET = os.environ.get('TWITTER_STREAM_CONSUMER_SECRET', None)
