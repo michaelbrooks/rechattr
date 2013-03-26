@@ -19,4 +19,7 @@ class UTCDateTime(types.TypeDecorator):
 
     def process_result_value(self, value, engine):
         if value is not None:
-            return value.replace(tzinfo=utc)
+            if value.tzinfo is None:
+                return value.replace(tzinfo=utc)
+            else:
+                return value.astimezone(utc)
