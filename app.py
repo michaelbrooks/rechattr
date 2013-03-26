@@ -3,7 +3,11 @@ import db, model
 import appconfig as conf
 import controllers
 import migrate
-from libs import AlchemyStore
+from model import User
+from utils.auth import Auth
+from utils.alchemystore import AlchemyStore
+from utils.flash import Flash
+from utils.logger import Logger
 
 # migrate the database before starting
 migrate.migrate(conf.ALEMBIC_VERSION)
@@ -43,8 +47,20 @@ def load_sqla(handler):
         #web.ctx.orm.expunge_all() 
 
 def load_session(handler):
+    # set up the session
     sessionStore.set_db(web.ctx.orm)
     web.ctx.session = session
+    
+    # set up the flash util
+    web.ctx.flash = Flash()
+    
+    # Set up for oauth
+    consumer_token = conf.TWITTER_STREAM_CONSUMER_KEY
+    consumer_secret = conf.TWITTER_STREAM_CONSUMER_SECRET
+    web.ctx.auth = Auth(consumer_token, consumer_secret)
+
+    # Set up the logger
+    web.ctx.log = Logger()
     
     return handler()
         
