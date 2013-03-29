@@ -43,7 +43,7 @@ def load_sqla(handler):
         raise
     finally:
         web.ctx.orm.commit()
-        web.ctx.orm.expunge_all() 
+        # web.ctx.orm.expunge_all() 
 
 def load_session(handler):
     # set up the session

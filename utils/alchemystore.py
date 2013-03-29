@@ -2,6 +2,7 @@ import web
 from datetime import datetime, timedelta
 from model import Session
 from utils import utc_aware
+from sqlalchemy.orm.session import Session as sess
 
 class AlchemyStore(web.session.Store):
     """Store for saving a session in database using SQLAlchemy
@@ -14,6 +15,8 @@ class AlchemyStore(web.session.Store):
             self._cache = None
         
     def set_db(self, orm):
+        # have to clear the cache because this object is re-used
+        self._cache = dict()
         self.orm = orm
     
     def __contains__(self, key):
@@ -37,18 +40,12 @@ class AlchemyStore(web.session.Store):
         
     def __getitem__(self, key):
         session = self._cache_get(key)
-            
+
         if session is not None:
             value = self.decode(session.data)
             # print 'RETREIVING',key, value
             session.atime = utc_aware(datetime.utcnow())
-            
-            try:
-                self.orm.commit()
-            except:
-                self.orm.rollback()
-                raise
-                
+
             return value
         else:
             raise KeyError, key
@@ -65,11 +62,6 @@ class AlchemyStore(web.session.Store):
             self._cache_put(key, session)
         
         # print 'STORING',key, value
-        try:
-            self.orm.commit()
-        except:
-            self.orm.rollback()
-            raise
                 
     def __delitem__(self, key):
         self.orm.query(Session).filter(Session.id==key).delete()
