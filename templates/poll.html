@@ -3,51 +3,52 @@ $var js_app: MobilePoll
 $var poll: $poll.poll_url_code
 <div class="row-fluid">
     <div class="feedback in">
-        <div class="segment-title rotate fade">
+        <div class="segment-title rotate slow-fade">
             <span class="brand">re:chattr</span>
             <span class="poll-title">$poll.title</span>
             <span class="twitter-info">$poll.twitter_hashtag $poll.twitter_user</span>
         </div>
-        <div class="feedback-content">
-        
+        <div class="feedback-content slow-fade" style="color: #eee; padding: 10px">
+            <p>Blah blah blah blah</p>
+            <p>blah blah asdf asdf asdf </p>
+            <p>this is some placeholder text</p>
         </div>
-        <!--<div class="questions-row clearfix">
-            <form method="POST">
-                $ hideClass = ""
-                $for question in poll.definition_object()['questions']:
-                
-                    <div class="answer-list $hideClass" data-question-name="$question['name']">
-                    $ hideClass="fade hide"
-                
-                    $for choice in question['choices']:
-                        <button type="button" class="answer-btn" data-option="$choice['value']">$choice['label']</button>
-                    
-                    </div>
-
-            </form>
-        </div>-->
-        
     </div>
     
     <div class="feedback-notify glow-notify"></div>
     
     <div class="chatter">
-        <div class="segment-title rotate fade">
+        <div class="segment-title rotate slow-fade">
                 <span class="brand">re:chattr</span>
                 <span class="poll-title">$poll.title</span>
                 <span class="twitter-info">$poll.twitter_hashtag $poll.twitter_user</span>
         </div>
-        <div class="chatter-content">
-        </div>
-        <!--<div class="tweet-list">
-            <h2 class="tweet-list-header">Tweets</h2>
-            <div class="tweet-list-content">
-            $for item in items:
-                $:render_stream_item(item)
+        <div class="chatter-content slow-fade">
+            <div class="tweet-list">
+                <!-- <h2 class="tweet-list-header">Tweets</h2> -->
+                <div class="tweet-list-content">
+                $for item in items:
+                    $:render_stream_item(item)
+                </div>
             </div>
-        </div>-->
+        </div>
     </div>
     
     <div class="chatter-notify glow-notify"></div>
+    
+    <div class="modal-box">
+        <form method="POST">
+            $ hideClass = ""
+            $for question in poll.definition_object()['questions']:
+            
+                <div class="answer-list $hideClass" data-question-name="$question['name']">
+                $ hideClass="fade hide"
+            
+                $for choice in question['choices']:
+                    <button type="button" class="answer-btn" data-option="$choice['value']">$choice['label']</button>
+                </div>
+
+        </form>
+    </div>
 </div>
 
