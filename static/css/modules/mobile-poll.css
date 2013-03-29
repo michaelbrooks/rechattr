@@ -1,0 +1,154 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.container, .row-fluid {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.feedback {
+    background-color: #404040;
+    width: 100%;
+    height: 100%;
+}
+
+.feedback-content {
+    /* Padding for the chatter tab on the right so content doesn't go behind */
+    padding-right: 32px;
+    
+    height: 100%;
+    position: relative;
+}
+
+.chatter {
+    background-color: #ebebeb;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    
+    /* Pull it over so it hangs in the side */
+    margin-left: -32px;
+    
+    -webkit-transition: left 300ms ease-in-out;
+    -moz-transition: left 300ms ease-in-out;
+    -ms-transition: left 300ms ease-in-out;
+    -o-transition: left 300ms ease-in-out;
+    transition: left 300ms ease-in-out;
+    
+    -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+}
+
+.chatter.in {
+    /* 64px because of the -32 left margin */
+    left: 64px;
+}
+
+.chatter-content {
+    height: 100%;
+    position: relative;
+    
+    /* Padding for the title on the left so content doesn't hang out */
+    margin-right: 32px;
+}
+
+.segment-title {
+    height: 32px;
+    white-space: nowrap;
+	overflow: hidden;
+    line-height: 32px;
+    font-size: 14px;
+    
+    position: absolute;
+    bottom: -18px;
+    left: 0;
+
+    -webkit-transform-origin: left top;
+    -moz-transform-origin: left top;
+    -ms-transform-origin: left top;
+    -o-transform-origin: left top;
+    transform-origin: left top;
+}
+
+.segment-title.fade {
+    -webkit-transition: opacity 300ms linear;
+     -moz-transition: opacity 300ms linear;
+       -o-transition: opacity 300ms linear;
+          transition: opacity 300ms linear;
+}
+
+.feedback .segment-title {
+    color: #eee;
+    opacity: 1;
+}
+
+.feedback.in .segment-title {
+    opacity: 0;
+}
+
+.chatter .segment-title {
+    color: #333;
+    opacity: 1;
+}
+
+.chatter.in .segment-title {
+    opacity: 0;
+}
+
+.segment-title .poll-title {
+    font-weight: bold;
+}
+
+.rotate {
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    
+    /* Should be unset in IE9+ I think. */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+
+.glow-notify {
+    position: absolute;
+    top: 50%;
+    height: 0;
+    
+    width: 200px;
+    border-radius: 100px;
+    
+    -webkit-transition: all 1s ease-in-out;
+     -moz-transition: all 1s ease-in-out;
+       -o-transition: all 1s ease-in-out;
+          transition: all 1s ease-in-out;
+          
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.glow-notify.in {
+    height: 100%;
+    top: 0;
+    
+    -webkit-box-shadow: 0px 0px 10px 10px rgba(255, 248, 46, 1);
+    box-shadow: 0px 0px 10px 10px rgba(255, 248, 46, 1);
+}
+
+.chatter-notify {
+    left: 100%;
+}
+
+.feedback-notify {
+    right: 100%;    
+}
