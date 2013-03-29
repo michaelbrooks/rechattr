@@ -81,6 +81,8 @@ html, body {
     
     /* Padding for the title on the left so content doesn't hang out */
     margin-right: 32px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .chatter.in .chatter-content, .chatter.moving .chatter-content {
