@@ -1,43 +1,65 @@
 (function() {
-    var QUESTION_CLASS = 'answer-list';
-    var BUTTON_CLASS = 'answer-btn';
+    var CHATTER_SELECTOR = '.chatter';
+    var FEEDBACK_SELECTOR = '.feedback';
+    var CONTAINER_SELECTOR = '.container';
+    var CHATTER_POLL_TITLE_SELECTOR = '.chatter .segment-title';
+    var FEEDBACK_POLL_TITLE_SELECTOR = '.feedback .segment-title';
+    var CHATTER_NOTIFY_SELECTOR = '.chatter-notify';
+    var FEEDBACK_NOTIFY_SELECTOR = '.feedback-notify';
+    var STREAM_LIST_ITEMS_SELECTOR = '.stream-list';
+    var STREAM_HEADER_SELECTOR = '.stream-header';
+    var STREAM_NOTIFY_SELECTOR = '.stream-notify';
     
-    var BUTTON_ACTIVE_CLASS = 'active';
-    var QUESTION_ANSWERED_CLASS = 'selection-made';
+    // var QUESTION_CLASS = 'answer-list';
+    // var BUTTON_CLASS = 'answer-btn';
     
-    var QUESTION_NAME_DATA = 'question-name';
-    var ANSWER_VALUE_DATA = 'option'
+    // var BUTTON_ACTIVE_CLASS = 'active';
+    // var QUESTION_ANSWERED_CLASS = 'selection-made';
     
-    var SUBMIT_MESSAGE = 'Sending feedback...';
+    // var QUESTION_NAME_DATA = 'question-name';
+    // var ANSWER_VALUE_DATA = 'option'
     
-    var TWEET_LIST_CONTENT_CLASS = 'tweet-list-content';
+    // var SUBMIT_MESSAGE = 'Sending feedback...';
+    
+    // var TWEET_LIST_CONTENT_CLASS = 'tweet-list-content';
     
     var PollApp = function() {
-        this.questions = this.getQuestions();
+        this.initUI();
         
-        var firstQuestion = this.questions.first();
-        var lastQuestion = this.questions.last();
+        var tweets = this.ui.streamList.children().slice(0,5);
+        tweets.remove();
+        tweets.addClass('new-item');
         
         var self = this;
+        setTimeout(function() {
+            self.newItems(tweets.size(), tweets);
+        }, 5000);
         
-        //If there are two questions, show the next one on click
-        if (this.questions.length > 1) {
-            this.getButtonsFor(firstQuestion).on('click', function() {
-                self.showHidden(lastQuestion);
-                
-                var selectedButton = $(this);
-                self.updateAnswerSelection(firstQuestion, selectedButton);
-                self.updateAnswerSelection(lastQuestion, null);
-            });
-        }
+        this.initStream();
         
-        //The last question submits the form
-        this.getButtonsFor(lastQuestion).on('click', function() {
-            var selectedButton = $(this);
-            self.updateAnswerSelection(lastQuestion, selectedButton);
+        rechattr.extension.MobilePanels.call(this);
+        
+        this.attachInteractions();
+    };
+    
+    PollApp.prototype.processItems = function(selection) {
+        selection.each(function(index, element) {
+            var $this = $(this);
             
-            self.pollComplete();
+            var itemType = $this.data('stream-item-type');
+            switch (itemType) {
+                case 'tweet':
+                    rechattr.extension.Tweet($this);
+                    break;
+                case 'request':
+                    rechattr.extension.FeedbackRequest($this);
+                    break;
+            }
         });
+    }
+    
+    PollApp.prototype.initStream = function() {
+        var self = this;
         
         this.stream = new rechattr.util.Stream({
             poll: rechattr.config.poll,
@@ -48,73 +70,73 @@
             self.newItems(itemCount, html);
         })
         .start();
-    };
+        
+        this.processItems(this.ui.streamList.children());
+    }
+    
+    PollApp.prototype.initUI = function() {
+        this.ui = {};
+        
+        this.ui.container = $(CONTAINER_SELECTOR);
+        this.ui.feedback = $(FEEDBACK_SELECTOR);
+        this.ui.chatter = $(CHATTER_SELECTOR);
+        this.ui.chatterPollTitle = $(CHATTER_POLL_TITLE_SELECTOR);
+        this.ui.feedbackPollTitle = $(FEEDBACK_POLL_TITLE_SELECTOR);
+        this.ui.chatterNotify = $(CHATTER_NOTIFY_SELECTOR);
+        this.ui.feedbackNotify = $(FEEDBACK_NOTIFY_SELECTOR);
+        this.ui.streamList = $(STREAM_LIST_ITEMS_SELECTOR);
+        this.ui.streamHeader = $(STREAM_HEADER_SELECTOR);
+    }
+    
+    PollApp.prototype.attachInteractions = function() {
+        var self = this;
+        var showPendingItemsProxy = function() {
+            self.showPendingItems();
+        };
+    
+        this.ui.streamHeader.delegate(STREAM_NOTIFY_SELECTOR, 'click', showPendingItemsProxy);
+    }
     
     PollApp.prototype.newItems = function(itemCount, html) {
-        var content = this.getStreamContentList();
-        content.prepend(html);
+        this._pendingItems = $(html);
+        this.notifyNewItems(this._pendingItems);
     }
     
-    PollApp.prototype.getStreamContentList = function() {
-        return $('.' + TWEET_LIST_CONTENT_CLASS);
+    PollApp.prototype.notifyNewItems = function(items) {
+        console.log("Received", items.size(), "new items");
+        debugger;
+        var notify = getNotify(items.size() + " new tweets");
+        this.ui.streamHeader.html(notify);
+        this.ui.streamHeader.addClass('in');
     }
     
-    PollApp.prototype.updateAnswerSelection = function(question, selected) {
-        //Reset current active setting
-        var buttons = this.getButtonsFor(question);
-        buttons.removeClass(BUTTON_ACTIVE_CLASS);
-        question.removeClass(QUESTION_ANSWERED_CLASS);
+    var getNotify = function(message) {
+        return $('<div>')
+        .addClass('stream-notify')
+        .text(message);
+    }
+    
+    PollApp.prototype.showPendingItems = function() {
+        // Remove any notification
+        this.ui.streamHeader.removeClass('in').empty();
         
-        if (selected) {
-            question.addClass(QUESTION_ANSWERED_CLASS);
-            selected.addClass(BUTTON_ACTIVE_CLASS);
+        if (this._pendingItems) {
+            var pending = this._pendingItems;
+            this._pendingItems = null;
+            
+            // Add the items to the stream list
+            this.ui.streamList.prepend(pending);
+            
+            // Do any remaining processing on the items
+            this.processItems(pending);
+            
+            
+            //Remove the new marking after initial render
+            var self = this;
+            setTimeout(function() {
+                pending.removeClass('new-item');
+            }, 1);
         }
-    }
-    
-    PollApp.prototype.showHidden = function(selection) {
-        selection.show();
-        setTimeout(function() {
-            selection.addClass('in');
-        }, 1);
-    }
-    
-    PollApp.prototype.pollComplete = function() {
-        var self = this;
-        rechattr.util.showOverlay(SUBMIT_MESSAGE);
-        
-        var response = {};
-        this.questions.each(function(index, element) {
-            var question = $(element)
-            var key = question.data(QUESTION_NAME_DATA)
-            
-            var buttons = self.getButtonsFor(question);
-            var value = buttons.filter('.' + BUTTON_ACTIVE_CLASS).data(ANSWER_VALUE_DATA)
-            
-            response[key] = value;
-        });
-        
-        this.submitResponse(response);
-    }
-    
-    PollApp.prototype.getQuestions = function() {
-        return $('.' + QUESTION_CLASS);
-    }
-    
-    PollApp.prototype.getButtonsFor = function(question) {
-        return question.find('.' + BUTTON_CLASS);
-    }
-    
-    PollApp.prototype.submitResponse = function(response) {
-        var form = $('form');
-        $.each(response, function(key, value) {
-            $('<input>', {
-                type: 'hidden',
-                name: key,
-                value: value
-            })
-            .appendTo(form);
-        });
-        form.submit();
     }
     
     rechattr.classes.PollApp = PollApp;

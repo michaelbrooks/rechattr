@@ -1,31 +1,66 @@
-.tweet-list {
-    border: 1px solid #e8e8e8;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
+.stream {
 }
 
-.tweet-list-header {
-    padding: 12px;
-    border-bottom: 1px solid #e8e8e8;
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 20px;
-    margin: 0;
+.stream-header {
+    overflow: hidden;
+
+    height: 0;
+    visibility: hidden;
 }
 
-.tweet-list-content {
+.stream-header.in {
+    height: 40px;
+    visibility: visible;
     
+    -webkit-transition: height 300ms ease-in-out;
+     -moz-transition: height 300ms ease-in-out;
+       -o-transition: height 300ms ease-in-out;
+          transition: height 300ms ease-in-out;
+    
+    border-bottom: 1px solid #ddd;
+}
+
+.stream-header div {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    
+    background-color: #BBDEFF;
+    cursor: pointer;
+}
+
+.stream-header div:hover {
+    background-color: #A0D1FF;
+}
+
+.stream-list {
+}
+
+.stream-list .stream-item {
+    position: relative;
+    padding: 9px 12px;
+    border-bottom: 1px solid #ddd;
+    opacity: 1;
+    -webkit-transition: opacity 200ms linear, background 3s ease-in-out 2s;
+     -moz-transition: opacity 200ms linear, background 3s ease-in-out 2s;
+       -o-transition: opacity 200ms linear, background 3s ease-in-out 2s;
+          transition: opacity 200ms linear, background 3s ease-in-out 2s;
+}
+.stream-list .stream-item:last-child {
+    border-bottom: none;
+}
+
+.stream-list .stream-item.new-item {
+    background-color: #BBDEFF;
+    opacity: 0;
 }
 
 .tweet {
-    position: relative;
     min-height: 51px;
-    padding: 9px 12px;
-    border-bottom: 1px solid #e8e8e8;
-}
-.tweet:last-child {
-    border-bottom: none;
 }
 
 .tweet-content {
