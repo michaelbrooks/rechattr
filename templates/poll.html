@@ -9,6 +9,7 @@ $var poll: $poll.poll_url_code
             <span class="twitter-info">$poll.twitter_hashtag $poll.twitter_user</span>
         </div>
         <div class="feedback-content panel-content">
+            <p><button class="btn btn-primary new-tweet-button">Tweet!</button></p>
             <p>Blah blah blah blah</p>
             <p>blah blah asdf asdf asdf </p>
             <p>this is some placeholder text</p>
@@ -37,6 +38,18 @@ $var poll: $poll.poll_url_code
     
     <div class="chatter-notify glow-notify"></div>
     
+    <div class="modal tweet-modal fade hide">
+        <div class="modal-header">
+            <h3>Write a new tweet</h3>
+        </div>
+        <div class="modal-body">
+            <form method="POST" class="tweet-form">
+                <textarea class="tweet-input"></textarea>
+                <button class="btn btn-primary tweet-submit">Send</button>
+                <div class="tweet-length-message"></div>
+            </form>
+        </div>
+    </div>
     <div class="modal-box">
         <form method="POST">
             $ hideClass = ""

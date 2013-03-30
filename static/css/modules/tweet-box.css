@@ -1,0 +1,36 @@
+.tweet-submit {
+    float: right;
+}
+
+.tweet-length-message {
+    float: right;
+    margin-right: 10px;
+    color: green;
+    
+    font-size: 18px;
+    line-height: 30px; /* as high as the submit button */
+}
+
+.tweet-input {
+    min-height: 80px;
+    display: inline-block;
+    resize: vertical;
+    
+    width: 100%;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.tweet-length-message.length-warning {
+    color: orange;
+}
+
+.tweet-length-message.length-invalid {
+    color: red;
+}
+
+.tweet-modal .modal-header h3 {
+    font-size: 16px;
+    line-height: 20px;
+}

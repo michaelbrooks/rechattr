@@ -9,6 +9,14 @@
     var STREAM_LIST_ITEMS_SELECTOR = '.stream-list';
     var STREAM_HEADER_SELECTOR = '.stream-header';
     
+    var MODAL_BACKDROP_SELECTOR = '.modal-backdrop';
+    
+    var NEW_TWEET_BUTTON_SELECTOR = '.new-tweet-button';
+    var TWEET_MODAL_SELECTOR = '.tweet-modal';
+    var TWEET_INPUT_SELECTOR = '.tweet-input';
+    var TWEET_LENGTH_MESSAGE_SELECTOR = '.tweet-length-message';
+    var TWEET_SUBMIT_BUTTON_SELECTOR = '.tweet-submit';
+    var TWEET_FORM_SELECTOR = '.tweet-form';
     // var QUESTION_CLASS = 'answer-list';
     // var BUTTON_CLASS = 'answer-btn';
     
@@ -29,6 +37,7 @@
         
         rechattr.extension.StreamPanel.call(this);
         rechattr.extension.MobilePanels.call(this);
+        rechattr.extension.TweetBox.call(this);
         
         this.attachInteractions();
     };
@@ -45,6 +54,15 @@
         this.ui.feedbackNotify = $(FEEDBACK_NOTIFY_SELECTOR);
         this.ui.streamList = $(STREAM_LIST_ITEMS_SELECTOR);
         this.ui.streamHeader = $(STREAM_HEADER_SELECTOR);
+        
+        this.ui.modalBackdrop = $(MODAL_BACKDROP_SELECTOR);
+        
+        this.ui.newTweetButton = $(NEW_TWEET_BUTTON_SELECTOR);
+        this.ui.tweetBox = $(TWEET_MODAL_SELECTOR);
+        this.ui.tweetInput = $(TWEET_INPUT_SELECTOR);
+        this.ui.tweetLengthMessage = $(TWEET_LENGTH_MESSAGE_SELECTOR);
+        this.ui.tweetSubmitButton = $(TWEET_SUBMIT_BUTTON_SELECTOR);
+        this.ui.tweetForm = $(TWEET_FORM_SELECTOR);
     }
     
     PollApp.prototype.on = function(event, fun, context) {
