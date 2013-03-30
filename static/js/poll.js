@@ -8,7 +8,6 @@
     var FEEDBACK_NOTIFY_SELECTOR = '.feedback-notify';
     var STREAM_LIST_ITEMS_SELECTOR = '.stream-list';
     var STREAM_HEADER_SELECTOR = '.stream-header';
-    var STREAM_NOTIFY_SELECTOR = '.stream-notify';
     
     // var QUESTION_CLASS = 'answer-list';
     // var BUTTON_CLASS = 'answer-btn';
@@ -26,53 +25,13 @@
     var PollApp = function() {
         this.initUI();
         
-        var tweets = this.ui.streamList.children().slice(0,5);
-        tweets.remove();
-        tweets.addClass('new-item');
+        this.$ = $(this);
         
-        var self = this;
-        setTimeout(function() {
-            self.newItems(tweets.size(), tweets);
-        }, 5000);
-        
-        this.initStream();
-        
+        rechattr.extension.StreamPanel.call(this);
         rechattr.extension.MobilePanels.call(this);
         
         this.attachInteractions();
     };
-    
-    PollApp.prototype.processItems = function(selection) {
-        selection.each(function(index, element) {
-            var $this = $(this);
-            
-            var itemType = $this.data('stream-item-type');
-            switch (itemType) {
-                case 'tweet':
-                    rechattr.extension.Tweet($this);
-                    break;
-                case 'request':
-                    rechattr.extension.FeedbackRequest($this);
-                    break;
-            }
-        });
-    }
-    
-    PollApp.prototype.initStream = function() {
-        var self = this;
-        
-        this.stream = new rechattr.util.Stream({
-            poll: rechattr.config.poll,
-            time: rechattr.config.time
-        });
-        
-        this.stream.done(function(itemCount, html) {
-            self.newItems(itemCount, html);
-        })
-        .start();
-        
-        this.processItems(this.ui.streamList.children());
-    }
     
     PollApp.prototype.initUI = function() {
         this.ui = {};
@@ -88,55 +47,22 @@
         this.ui.streamHeader = $(STREAM_HEADER_SELECTOR);
     }
     
-    PollApp.prototype.attachInteractions = function() {
-        var self = this;
-        var showPendingItemsProxy = function() {
-            self.showPendingItems();
-        };
-    
-        this.ui.streamHeader.delegate(STREAM_NOTIFY_SELECTOR, 'click', showPendingItemsProxy);
-    }
-    
-    PollApp.prototype.newItems = function(itemCount, html) {
-        this._pendingItems = $(html);
-        this.notifyNewItems(this._pendingItems);
-    }
-    
-    PollApp.prototype.notifyNewItems = function(items) {
-        console.log("Received", items.size(), "new items");
-        debugger;
-        var notify = getNotify(items.size() + " new tweets");
-        this.ui.streamHeader.html(notify);
-        this.ui.streamHeader.addClass('in');
-    }
-    
-    var getNotify = function(message) {
-        return $('<div>')
-        .addClass('stream-notify')
-        .text(message);
-    }
-    
-    PollApp.prototype.showPendingItems = function() {
-        // Remove any notification
-        this.ui.streamHeader.removeClass('in').empty();
-        
-        if (this._pendingItems) {
-            var pending = this._pendingItems;
-            this._pendingItems = null;
-            
-            // Add the items to the stream list
-            this.ui.streamList.prepend(pending);
-            
-            // Do any remaining processing on the items
-            this.processItems(pending);
-            
-            
-            //Remove the new marking after initial render
-            var self = this;
-            setTimeout(function() {
-                pending.removeClass('new-item');
-            }, 1);
+    PollApp.prototype.on = function(event, fun, context) {
+        if (context) {
+            return this.$.on(event, function() {
+                fun.apply(context, arguments);
+            });
+        } else {
+            return this.$.on.apply(this.$, arguments);
         }
+    }
+    
+    PollApp.prototype.trigger = function() {
+        return this.$.trigger.apply(this.$, arguments);
+    }
+    
+    PollApp.prototype.attachInteractions = function() {
+        
     }
     
     rechattr.classes.PollApp = PollApp;

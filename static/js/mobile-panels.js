@@ -16,7 +16,7 @@
     }
     
     var updateInOut = function() {
-        if (this.showing == 'feedback') {
+        if (showing == 'feedback') {
             this.ui.feedback.toggleClass(IN_CLASS, true);
             this.ui.feedback.toggleClass(OUT_CLASS, false);
             this.ui.chatter.toggleClass(IN_CLASS, false);
@@ -30,20 +30,20 @@
     }
     
     var showChatter = function() {
-        if (this.showing != 'chatter') {
-            this.showing = 'chatter';
+        if (showing != 'chatter') {
+            showing = 'chatter';
             
             updateInOut.call(this);
             
             this.ui.chatterNotify.toggleClass(IN_CLASS, false);
             
-            this.showPendingItems();
+            this.trigger('show-pending-items');
         }
     }
     
     var showFeedback = function() {
-        if (this.showing != 'feedback') {
-            this.showing = 'feedback';
+        if (showing != 'feedback') {
+            showing = 'feedback';
             
             updateInOut.call(this);
             
@@ -72,7 +72,7 @@
             }
 
             // If feedback panel is active and is the target, don't continue
-            if (self.showing == 'feedback' &&
+            if (showing == 'feedback' &&
                 (self.ui.feedback[0] == e.target || self.ui.feedback.find(e.target).size() > 0)) {
                 e.preventDefault();
                 return;
@@ -91,7 +91,7 @@
             margin = getTitleHeight.call(self);
             leftBoundary = 100 * 2 * margin / width - squeezeRoom;
             rightBoundary = 100 + squeezeRoom;
-            if (self.showing == 'chatter') {
+            if (showing == 'chatter') {
                 self.ui.feedback.toggleClass(ALMOST_IN_CLASS, false);
                 self.ui.feedback.toggleClass(ALMOST_OUT_CLASS, true);
                 
@@ -155,8 +155,8 @@
         }
         
         var onSwipeDown = function() {
-            if (this.showing = 'chatter') {
-                this.showPendingItems();
+            if (showing = 'chatter') {
+                this.trigger('show-pending-items');
             }
         }
         
@@ -176,21 +176,17 @@
     }
     
     var onNewItems = function(items) {
-        if (this.showing == 'feedback') {
+        if (showing == 'feedback') {
             this.ui.chatterNotify.toggleClass(IN_CLASS, true);
         }
-        
-        //Call the default handler also
-        this.constructor.prototype.notifyNewItems.call(this, items);
     }
     
     var attachNotificationHandler = function() {
-        this.notifyNewItems = onNewItems;
+        this.on('new-items', onNewItems, this);
     }
     
+    var showing = null;
     var MobilePanels = function() {
-        this.showing = null;
-        
         showFeedback.call(this);
         attachInteractions.call(this);
         attachNotificationHandler.call(this);
