@@ -1,4 +1,4 @@
-$def with (poll, items)
+$def with (poll, items, tweetForm)
 $var js_app: PollApp
 $var poll: $poll.poll_url_code
 <div class="row-fluid">
@@ -44,8 +44,9 @@ $var poll: $poll.poll_url_code
         </div>
         <div class="modal-body">
             <form method="POST" class="tweet-form">
-                <textarea class="tweet-input"></textarea>
-                <button class="btn btn-primary tweet-submit">Send</button>
+                $:tweetForm.tweet.render()
+                $:tweetForm.form_submit.render()
+                $:tweetForm.submit.render()
                 <div class="tweet-length-message"></div>
             </form>
         </div>

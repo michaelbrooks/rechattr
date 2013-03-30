@@ -35,6 +35,8 @@
         
         this.$ = $(this);
         
+        rechattr.util.initFlash();
+        
         rechattr.extension.StreamPanel.call(this);
         rechattr.extension.MobilePanels.call(this);
         rechattr.extension.TweetBox.call(this);

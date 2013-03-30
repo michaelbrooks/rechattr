@@ -7,6 +7,23 @@ html, body {
     padding: 0;
 }
 
+.flash {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 1000;
+}
+.flash .alert {
+    display: inline-block;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+.flash .alert .close {
+    top: 0;
+}
+
 .panel .panel-content, .panel .panel-title {
     -webkit-transition: visibility 0s linear 0.4s, opacity 0.4s linear;
      -moz-transition: visibility 0s linear 0.4s, opacity 0.4s linear;

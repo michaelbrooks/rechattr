@@ -10,8 +10,12 @@ class Flash(object):
             
         return flash
     
-    def set(self, **kargs):
-        web.ctx.session['flash'] = kargs
+    def set(self, obj=None, **kargs):
+        if obj is not None:
+            web.ctx.session['flash'] = obj
+        else:
+            web.ctx.session['flash'] = kargs
+        print web.ctx.session['flash']
     
     def error(self, message):
         self.set(type="error", message=message)
@@ -22,4 +26,5 @@ class Flash(object):
     def info(self, message):
         self.set(type="info", message=message)
         
-        
+    def success(self, message):
+        self.set(type='success', message=message)
