@@ -38,7 +38,7 @@ class stream:
         # render any stream items
         html = ''
         for item in items:
-            html += str(render_stream_item(item))
+            html += str(render_stream_item(item, True))
         
         response = {
             'html': html,
