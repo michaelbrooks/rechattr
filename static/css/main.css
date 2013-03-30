@@ -2,8 +2,8 @@
 @import url("bootstrap-responsive.css");
 @import url("modules/date-picker.css");
 @import url("modules/time-picker.css");
-@import url("modules/poll.css");
-@import url("modules/overlay.css");
-@import url("modules/tweetstream.css");
-@import url("modules/mobile-poll.css");
-@import url("modules/tweet-box.css");
+@import url("poll/poll.css");
+@import url("poll/overlay.css");
+@import url("poll/tweetstream.css");
+@import url("poll/mobile-poll.css");
+@import url("poll/tweet-box.css");
