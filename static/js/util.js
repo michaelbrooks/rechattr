@@ -1,6 +1,8 @@
 (function() {
     var FLASH_SELECTOR = '.flash';
     var FLASH_TYPE_MAP = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'};
+    var FLASH_TIMEOUT = 2000;
+    
     var util = {};
 
     /**
@@ -29,6 +31,7 @@
     }
     
     var flashBox = null;
+    var flashTimeout = null;
     util.initFlash = function() {
         flashBox = $(FLASH_SELECTOR);
         
@@ -41,6 +44,16 @@
         $(document).on('closed', FLASH_SELECTOR + ' .alert', function() {
             flashBox.hide();
         });
+        
+        //Initialize the flash if there is one
+        var alert = flashBox.find('.alert');
+        if (alert.size()) {
+            alert.alert();
+            if (flashTimeout) {
+                clearTimeout(flashTimeout);
+            }
+            flashTimeout = setTimeout(util.hideFlash, FLASH_TIMEOUT);
+        }
     }
     
     util.flash = function(options) {
@@ -52,7 +65,17 @@
         
         flashBox
         .html(alert)
-        .alert()
+        .alert();
+        
+        if (flashTimeout) {
+            clearTimeout(flashTimeout);
+        }
+        flashTimeout = setTimeout(util.hideFlash, FLASH_TIMEOUT);
+    }
+    
+    util.hideFlash = function() {
+        flashBox.find('.alert').addClass('very-slow-fade').alert('close');
+        flashTimeout = null;
     }
     
     var intervals = {
@@ -152,7 +175,10 @@
         
         hashtag = htmatch[tr.VALID_HASHTAG_GROUP_TAG];
         
-        var hashtagRegex = new RegExp("(^|[^0-9A-Z&/]+)(#|\uFF03)(" + hashtag + ")($|[^#\uFF03" + tr.HASHTAG_ALPHA_NUMERIC_CHARS + "])", "im");
+        var hashtagRegex = new RegExp("(^|[^0-9A-Z&/]+)(#|\uFF03)(" + 
+                                      hashtag + 
+                                      ")($|[^#\uFF03" + tr.HASHTAG_ALPHA_NUMERIC_CHARS + "])", 
+                                      "i");
         return function(inputStr) {
             return inputStr.match(hashtagRegex);
         }
