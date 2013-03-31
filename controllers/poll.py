@@ -11,7 +11,8 @@ tweet_form = form.Form(
     form.Hidden('form_submit', type="hidden"),
     form.Button('submit', type='submit', 
                 class_="btn btn-primary tweet-submit",
-                description='Send')
+                disabled="disabled",
+                html='Send Tweet')
 )
 
 class poll:

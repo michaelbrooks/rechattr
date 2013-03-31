@@ -12,7 +12,7 @@
         this.ui.tweetLengthMessage.toggleClass(TWEET_LENGTH_WARNING_CLASS, remaining < 10);
         this.ui.tweetLengthMessage.toggleClass(TWEET_LENGTH_INVALID_CLASS, remaining < 0);
         
-        if (remaining < 0) {
+        if (remaining < 0 || remaining == TWEET_LENGTH) {
             this.ui.tweetSubmitButton.attr('disabled', 'disabled');
         } else {
             this.ui.tweetSubmitButton.removeAttr('disabled');
@@ -45,6 +45,7 @@
     
     var TweetBox = function() {
         attachInteractions.call(this);
+        // catchSubmit.call(this);
     }
     
     rechattr.extension.TweetBox = TweetBox;
