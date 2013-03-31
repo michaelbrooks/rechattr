@@ -71,6 +71,7 @@ $var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.ti
         <div class="modal-body">
             <form method="POST" class="tweet-form">
                 $:tweetForm.tweet.render()
+                <div class="hashtag-box" data-hashtag="${poll.twitter_hashtag}"></div>
                 $:tweetForm.form_submit.render()
                 $:tweetForm.submit.render()
                 <div class="tweet-length-message"></div>

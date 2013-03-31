@@ -3,9 +3,22 @@
     TWEET_LENGTH_WARNING_CLASS = 'length-warning';
     TWEET_LENGTH_INVALID_CLASS = 'length-invalid';
     
+    var hashtag = null;
+    var hashtagContains = null;
+    var hashtagLength = 0;
+    
     var updateTweetLengthMessage = function() {
-        var message = this.ui.tweetInput.val();
-        var remaining = TWEET_LENGTH - message.length;
+        var message = this.ui.tweetInput.val().toLowerCase();
+        
+        var limit = TWEET_LENGTH - hashtagLength;
+        var containsHashtag = false;
+        //Does the message contain the hashtag?
+        if (hashtagContains(message)) {
+            limit = TWEET_LENGTH;
+            containsHashtag = true;
+        }
+        
+        var remaining = limit - message.length;
         
         this.ui.tweetLengthMessage.text(remaining);
         
@@ -48,6 +61,10 @@
     }
     
     var TweetBox = function() {
+        hashtag = this.ui.hashtagBox.data('hashtag');
+        hashtagLength = hashtag.length;
+        hashtagContains = rechattr.util.twitter.hashtag_contains(hashtag);
+        
         attachInteractions.call(this);
         // catchSubmit.call(this);
     }
