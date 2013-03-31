@@ -22,6 +22,11 @@ class Auth(object):
         
         return redirect_url
         
+    def tweepy(self, auth=None):
+        if auth is None:
+            auth = self._oauth
+        return tweepy.API(auth)
+        
     def finish_auth(self, input):
         verifier = input.get('oauth_verifier')
         
@@ -32,7 +37,7 @@ class Auth(object):
         auth.get_access_token(verifier)
         
         # make a tweepy api instance
-        api = tweepy.API(auth)
+        api = self.tweepy(auth)
         twitter_user = api.verify_credentials(skip_status=True, include_entities=False)
         
         # does this user already exist?
@@ -69,5 +74,8 @@ class Auth(object):
         if self._user is None and 'user_id' in web.ctx.session:
             user_id = web.ctx.session['user_id']
             self._user = web.ctx.orm.query(User).get(user_id)
+            
+            # configure the access token for auth
+            self._oauth.set_access_token(self._user.oauth_key, self._user.oauth_secret)
         
         return self._user

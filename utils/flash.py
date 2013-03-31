@@ -15,7 +15,6 @@ class Flash(object):
             web.ctx.session['flash'] = obj
         else:
             web.ctx.session['flash'] = kargs
-        print web.ctx.session['flash']
     
     def error(self, message):
         self.set(type="error", message=message)

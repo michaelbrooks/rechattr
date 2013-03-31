@@ -104,7 +104,7 @@ class PollTermChecker(TermChecker):
         # look in database first to see if it is there already
         tweet = self.orm.query(Tweet).get(status['id'])
         if tweet is None:
-            tweet = Tweet(status)
+            tweet = Tweet.fromJSON(status)
             new_tweet = True
         
         if rt_status is not None:

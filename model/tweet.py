@@ -3,10 +3,13 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer, String, DateTime, BigInteger
 from sqlalchemy.orm import relationship, backref    
 from datetime import datetime, timedelta
+import calendar
 from dateutil import parser
 import simplejson as json
 from string import Template
 from cgi import escape
+
+from tweepy import Status
 
 # Get the shared base class for declarative ORM
 from model import Base
@@ -17,6 +20,7 @@ urlTemplate = Template('<a target="_blank" href="${url}" title="${expanded_url}"
 mentionTemplate = Template('<a target="_blank" href="https://twitter.com/${screen_name}" title="${name}">@${screen_name}</a>')
 hashtagTemplate = Template('<a target="_blank" href="https://twitter.com/search?q=%23${text}">#${text}</a>')
 
+zeroTime = timedelta(0, 0, 0)
 oneMinute = timedelta(0, 60, 0)
 oneHour = timedelta(0, 60*60, 0)
 oneDay = timedelta(0, 60*60*24, 0)
@@ -57,23 +61,29 @@ class Tweet(Base):
     # for saving parsed entities
     _json_entities = None
     
-    def __init__(self, status_obj):
-        self.id = status_obj['id']
-        self.created = parser.parse(status_obj['created_at'])
+    def __init__(self, tweepyStatus):
+        self.id = tweepyStatus.id
+        self.created = tweepyStatus.created_at
         
-        self.user_id = status_obj['user']['id']
-        self.screen_name = status_obj['user']['screen_name']
-        self.user_name = status_obj['user']['name']
-        self.profile_image_url = status_obj['user']['profile_image_url_https']
-        self.utc_offset = status_obj['user']['utc_offset']
+        self.user_id = tweepyStatus.user.id
+        self.screen_name = tweepyStatus.user.screen_name
+        self.user_name = tweepyStatus.user.name
+        self.profile_image_url = tweepyStatus.user.profile_image_url_https
+        self.utc_offset = tweepyStatus.user.utc_offset
         
-        self.text = status_obj['text']
-        self.reply_to_tweet_id = status_obj['in_reply_to_status_id']
+        self.text = tweepyStatus.text
+        self.reply_to_tweet_id = tweepyStatus.in_reply_to_status_id
         
-        self.entities = json.dumps(status_obj['entities'])
+        self.entities = json.dumps(tweepyStatus.entities)
         
-        if 'retweet_of_status_obj_id' in status_obj:
-            self.retweet_of_status_obj_id = status_obj['retweet_of_status_id']
+        if hasattr(tweepyStatus, 'retweet_of_status_id'):
+            self.retweet_of_status_id = tweepyStatus.retweet_of_status_id
+        
+    
+    @classmethod
+    def fromJSON(cls, statusJson):
+        status = Status(statusJson)
+        return cls(status)
     
     def get_entities(self):
         if self._json_entities is None:
@@ -147,7 +157,9 @@ class Tweet(Base):
         now = utc_aware()
         delta = now - self.created
         
-        if delta < oneMinute:
+        if delta < zeroTime:
+            return "0s"
+        elif delta < oneMinute:
             return "%ds" %(delta.seconds)
         elif delta < oneHour:
             return "%dm" %(round(delta.seconds / 60))
@@ -156,3 +168,5 @@ class Tweet(Base):
         else:
             return self.created.strftime("%d %b")
             
+    def created_timestamp(self):
+        return calendar.timegm(self.created.utctimetuple())

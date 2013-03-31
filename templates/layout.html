@@ -16,7 +16,7 @@ $def with (content)
                 config: {
                     app_name: "$content.get('js_app', 'undefined')",
                     poll: "$content.get('poll', 'undefined')",
-                    time: $time.time()
+                    time: $content.get('current_time', time.time())
                 },
                 classes: {},
                 extension: {}

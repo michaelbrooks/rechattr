@@ -1,6 +1,7 @@
 $def with (user, poll, items, tweetForm, stats)
 $var js_app: PollApp
 $var poll: $poll.poll_url_code
+$var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.time()}
 <div class="row-fluid">
     <div class="feedback panel in">
         <div class="segment-title rotate panel-title">

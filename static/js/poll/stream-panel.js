@@ -2,24 +2,33 @@
     
     var STREAM_NOTIFY_SELECTOR = '.stream-notify';
     var STREAM_INTERVAL_SECONDS = 20;
+    var TIME_UPDATE_INTERVAL_SECONDS = 60;
+    var ITEM_CREATED_AT_SELECTOR = '.created-at';
     
     var pollId = rechattr.config.poll;
     var lastCheck = rechattr.config.time;
-    var interval = null;
+    var streamInterval = null;
+    var timeUpdateInterval = null;
     var pendingItems = null;
     var streamUrl = rechattr.config.poll + "/stream";
     
     var startPoll = function() {
-        var millis = STREAM_INTERVAL_SECONDS * 1000;
         var self = this;
-        interval = setInterval(function() {
+        streamInterval = setInterval(function() {
             checkStream.call(self);
-        }, millis);
+        }, STREAM_INTERVAL_SECONDS * 1000);
+        
+        timeUpdateInterval = setInterval(function() {
+            updateStreamTimes.call(self);
+        }, TIME_UPDATE_INTERVAL_SECONDS * 1000);
     }
     
     var stopPoll = function() {
-        if (interval) {
-            clearInterval(interval);
+        if (streamInterval) {
+            clearInterval(streamInterval);
+        }
+        if (timeUpdateInterval) {
+            clearInterval(timeUpdateInterval);
         }
     }
     
@@ -83,8 +92,20 @@
             
             lastCheck = response.time;
             if (response.items > 0) {
-                self._callback(response.items, response.html);
+                newItems.call(self, response.items, response.html)
             }
+        });
+    }
+    
+    var updateStreamTimes = function() {
+        this.ui.streamList.find(ITEM_CREATED_AT_SELECTOR).each(function() {
+            var $this = $(this);
+            var created = $this.data('created');
+            if (!created) {
+                return;
+            }
+            created = rechattr.util.time_ago(created);
+            $this.text(created);
         });
     }
     
@@ -100,6 +121,13 @@
     var processItems = function(selection) {
         selection.each(function(index, element) {
             var $this = $(this);
+            
+            //Process the created date if it exists
+            var timeElement = $this.find(ITEM_CREATED_AT_SELECTOR)
+            var created = timeElement.data('created');
+            if (created) {
+                timeElement.data('created', new Date(created * 1000));
+            }
             
             var itemType = $this.data('stream-item-type');
             switch (itemType) {
@@ -119,13 +147,13 @@
     
     var StreamPanel = function() {
         //FOR TESTING//
-        var tweets = this.ui.streamList.children().slice(0,5);
-        tweets.remove();
-        tweets.addClass('new-item');
-        var self = this;
-        setTimeout(function() {
-            newItems.call(self, tweets.size(), tweets);
-        }, 5000);
+        // var tweets = this.ui.streamList.children().slice(0,5);
+        // tweets.remove();
+        // tweets.addClass('new-item');
+        // var self = this;
+        // setTimeout(function() {
+            // newItems.call(self, tweets.size(), tweets);
+        // }, 5000);
         //FOR TESTING//
     
         attachInteractions.call(this);

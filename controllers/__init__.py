@@ -1,8 +1,9 @@
-import web, time
+import web, time, calendar
 
 helpers = {
     'web': web,
-    'time': time
+    'time': time,
+    'calendar': calendar
 }
 
 render = web.template.render('templates/', globals=helpers)

@@ -55,6 +55,43 @@
         .alert()
     }
     
+    var intervals = {
+        zeroTime: 0,
+        oneMinute: 60,
+        oneHour: 60*60,
+        oneDay: 60*60*24
+    };
+    var monthMap = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+    ];
+    util.time_ago = function(date) {
+        var now = new Date();
+        var delta = (now - date) / 1000;
+            
+        if (delta < intervals.zeroTime) {
+            return "0s";
+        } else if (delta < intervals.oneMinute) {
+            return Math.round(delta).toString() + "s";
+        } else if (delta < intervals.oneHour) {
+            return Math.round(delta / 60).toString() + "m";
+        } else if (delta < intervals.oneDay) {
+            return Math.round(delta / (60*60)).toString() + "h";
+        } else {
+            return date.getDate().toString() + " " + monthMap[date.getMonth()];
+        }
+    }
+    
     rechattr.util = util;
     
     return util;

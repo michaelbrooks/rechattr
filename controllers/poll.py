@@ -30,9 +30,27 @@ class poll:
         
     def _record_tweet(self, poll, tweetText):
         user = web.ctx.auth.current_user()
-        return False
         if user is None:
             return False
+        
+        api = web.ctx.auth.tweepy()
+        status = api.update_status(tweetText);
+        
+        # go ahead and add it
+        # we will link it to the current poll,
+        # but potentially miss any concurrent overlapping polls
+        # unsure whether the subsequent stream arrival will overwrite.
+        tweet = Tweet(status)
+        tweet.polls.append(poll)
+        
+        web.ctx.orm.add(tweet)
+        # try:
+            # web.ctx.orm.commit()
+        # except:
+            # web.ctx.orm.rollback()
+            # raise
+        
+        return tweet
             
     def _get_stats(self, poll, user):
         tweetCount = web.ctx.orm.query(Tweet).\
