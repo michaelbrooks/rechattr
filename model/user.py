@@ -20,6 +20,7 @@ class User(Base):
     oauth_provider = Column(String)
     username = Column(String)
     full_name = Column(String)
+    profile_image_url = Column(String)
     
     last_signed_in = Column(UTCDateTime, default=datetime.utcnow)
     tweet_count = Column(Integer, default=0)
@@ -41,3 +42,7 @@ class User(Base):
         if self.oauth_provider == "Twitter":
             self.username = user_info.screen_name
             self.full_name = user_info.name
+            self.profile_image_url = user_info.profile_image_url_https
+
+    def load_cache(self):
+        return pickle.loads(self.user_cache.encode('utf-8'))
