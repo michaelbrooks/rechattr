@@ -17,6 +17,7 @@
             limit = TWEET_LENGTH;
             containsHashtag = true;
         }
+        this.ui.hashtagBox.toggleClass('in', !containsHashtag);
         
         var remaining = limit - message.length;
         
@@ -45,6 +46,12 @@
         var self = this;
         this.ui.tweetInput.on('keydown keyup', function(e) {
             updateTweetLengthMessage.call(self, e);
+        })
+        .on('focus', function(e) {
+            self.ui.tweetInputWrapper.addClass('focus');
+        })
+        .on('blur', function(e) {
+            self.ui.tweetInputWrapper.removeClass('focus');
         });
         
         this.ui.newTweetButton.on('click', function(e) {

@@ -14,10 +14,12 @@
     var NEW_TWEET_BUTTON_SELECTOR = '.new-tweet-button';
     var TWEET_MODAL_SELECTOR = '.tweet-modal';
     var TWEET_INPUT_SELECTOR = '.tweet-input';
+    var TWEET_INPUT_WRAPPER_SELECTOR = '.tweet-input-wrapper';
     var TWEET_LENGTH_MESSAGE_SELECTOR = '.tweet-length-message';
     var TWEET_SUBMIT_BUTTON_SELECTOR = '.tweet-submit';
     var TWEET_FORM_SELECTOR = '.tweet-form';
     var HASHTAG_BOX_SELECTOR = '.hashtag-box';
+    
     // var QUESTION_CLASS = 'answer-list';
     // var BUTTON_CLASS = 'answer-btn';
     
@@ -63,11 +65,12 @@
         this.ui.newTweetButton = $(NEW_TWEET_BUTTON_SELECTOR);
         
         this.ui.tweetBox = $(TWEET_MODAL_SELECTOR);
+        this.ui.tweetInputWrapper = $(TWEET_INPUT_WRAPPER_SELECTOR);
         this.ui.tweetInput = $(TWEET_INPUT_SELECTOR);
+        this.ui.hashtagBox = $(HASHTAG_BOX_SELECTOR);
         this.ui.tweetLengthMessage = $(TWEET_LENGTH_MESSAGE_SELECTOR);
         this.ui.tweetSubmitButton = $(TWEET_SUBMIT_BUTTON_SELECTOR);
         this.ui.tweetForm = $(TWEET_FORM_SELECTOR);
-        this.ui.hashtagBox = $(HASHTAG_BOX_SELECTOR);
     }
     
     PollApp.prototype.on = function(event, fun, context) {
