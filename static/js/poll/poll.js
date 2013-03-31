@@ -88,7 +88,9 @@
     }
     
     PollApp.prototype.attachInteractions = function() {
-        
+        $('.tooltip-below').tooltip({
+            placement: 'bottom'
+        });
     }
     
     rechattr.classes.PollApp = PollApp;

@@ -24,12 +24,16 @@ $var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.ti
                                 <span class="screen-name">${user.full_name}</span>
                             </div>
                             <div class="user-stats">
-                                <span class="feedbacks-label"><i class="icon icon-white icon-check"></i></span>
-                                <span class="feedbacks-count">${stats['feedbacks']}</span>
-                                <span class="tweets-label"><span class="twitter-icon light"></span></span>
-                                <span class="tweets-count">${stats['tweets']}</span>
+                                <span class="tooltip-below" title="Feedback about this event">
+                                    <span class="feedbacks-label"><i class="icon icon-white icon-check"></i></span>
+                                    <span class="feedbacks-count">${stats['feedbacks']}</span>
+                                </span>
+                                <span class="tooltip-below" title="Number of tweets about this event">
+                                    <span class="tweets-label"><span class="twitter-icon light"></span></span>
+                                    <span class="tweets-count">${stats['tweets']}</span>
+                                </span>
                             </div>
-                            <button class="btn btn-small btn-info new-tweet-button"
+                            <button class="btn btn-small btn-info new-tweet-button tooltip-below"
                                     title="Compose new tweet">
                                 <span class="twitter-icon light"></span>
                             </button>

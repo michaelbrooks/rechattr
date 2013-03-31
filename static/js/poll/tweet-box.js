@@ -61,10 +61,6 @@
         this.ui.tweetBox.on('shown', function(e) {
             activateTweetBox.call(self, e);
         });
-        
-        this.ui.newTweetButton.tooltip({
-            placement: 'bottom'
-        });
     }
     
     var TweetBox = function() {
