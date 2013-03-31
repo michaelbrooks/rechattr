@@ -3,14 +3,6 @@
     var FLASH_TYPE_MAP = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'};
     var util = {};
 
-    util.showOverlay = function(message) {
-        var loadingOverlay = $('.overlay').show();
-        setTimeout(function() {
-            loadingOverlay.find('.message').text(message);
-            loadingOverlay.addClass('in');
-        }, 1);
-    }
-    
     /**
 	 * Generates a list of hourly times.
 	 */

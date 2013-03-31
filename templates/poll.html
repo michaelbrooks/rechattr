@@ -1,4 +1,4 @@
-$def with (poll, items, tweetForm)
+$def with (user, poll, items, tweetForm, stats)
 $var js_app: PollApp
 $var poll: $poll.poll_url_code
 <div class="row-fluid">
@@ -9,7 +9,31 @@ $var poll: $poll.poll_url_code
             <span class="twitter-info">$poll.twitter_hashtag $poll.twitter_user</span>
         </div>
         <div class="feedback-content panel-content">
-            <p><button class="btn btn-primary new-tweet-button">Tweet!</button></p>
+            <div class="user-panel">
+                $if user is None:
+                    <a class="sign-in-button" href="${poll.sign_in_url()}">
+                        <span class="twitter-icon light"></span> Sign in with Twitter
+                    </a>
+                $else:
+                    <div class="user-info">
+                        <div class="user-wrapper">
+                            <div class="twitter-author">
+                                <img class="avatar" src="${user.profile_image_url}" alt="${user.username}" />
+                                <strong class="full-name">@${user.username}</strong>
+                                <span class="screen-name">${user.full_name}</span>
+                            </div>
+                            <div class="user-stats">
+                                <span class="feedbacks-label"><i class="icon icon-white icon-check"></i></span>
+                                <span class="feedbacks-count">${stats['feedbacks']}</span>
+                                <span class="tweets-label"><span class="twitter-icon light"></span></span>
+                                <span class="tweets-count">${stats['tweets']}</span>
+                            </div>
+                            <button class="btn btn-small btn-info new-tweet-button">
+                                <span class="twitter-icon light"></span>
+                            </button>
+                        </div>
+                    </div>
+            </div>
             <p>Blah blah blah blah</p>
             <p>blah blah asdf asdf asdf </p>
             <p>this is some placeholder text</p>

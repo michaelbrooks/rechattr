@@ -2,6 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime
 from datetime import datetime
 import simplejson as json
+from urllib import urlencode
 
 # Get the shared base class for declarative ORM
 from model import Base
@@ -45,6 +46,9 @@ class Poll(Base):
     
     def poll_url(self):
         return '/%s' % (self.poll_url_human)
+    
+    def sign_in_url(self):
+        return '/sign_in?%s' %(urlencode({'return_to': self.poll_url()}));
         
     def edit_url(self):
         return '/%s/edit/%s' % (self.poll_url_human, self.edit_url_code)

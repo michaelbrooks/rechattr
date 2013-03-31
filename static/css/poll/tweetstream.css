@@ -16,8 +16,6 @@
      -moz-transition: height 300ms ease-in-out;
        -o-transition: height 300ms ease-in-out;
           transition: height 300ms ease-in-out;
-    
-    border-bottom: 1px solid #ddd;
 }
 
 .stream-header div {
@@ -29,12 +27,24 @@
     font-weight: bold;
     margin: 0;
     
-    background-color: #BBDEFF;
+    background-color: #96CAE2;
     cursor: pointer;
+    
+    -webkit-transition: background 300ms ease-in-out;
+    -moz-transition: background 300ms ease-in-out;
+    -ms-transition: background 300ms ease-in-out;
+    -o-transition: background 300ms ease-in-out;
+    transition: background 300ms ease-in-out;
+    
+    -webkit-text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
 }
 
 .stream-header div:hover {
-    background-color: #A0D1FF;
+    background-color: #70BFE4;
+}
+.stream-header div:active {
+    color: red;
 }
 
 .stream-list {
@@ -55,7 +65,7 @@
 }
 
 .stream-list .stream-item.new-item {
-    background-color: #BBDEFF;
+    background-color: #96CAE2;
     opacity: 0;
 }
 
@@ -67,15 +77,15 @@
     margin-left: 58px;
 }
 
-.tweet-author {
+.twitter-author {
     color: #999;
     text-decoration: none;
 }
-.tweet-author:hover {
+.twitter-author:hover {
     text-decoration: none;
 }
 
-.tweet-author .avatar {
+.twitter-author .avatar {
     border: 0;
     width: 48px;
     height: 48px;
@@ -88,16 +98,16 @@
     left: 12px;
 }
 
-.tweet-author .full-name {
+.twitter-author .full-name {
     font-weight: bold;
     color: #333;
 }
-.tweet-author:hover .full-name {
+.twitter-author:hover .full-name {
     color: #0084B4;
     text-decoration: underline;
 }
 
-.tweet-author .screen-name {
+.twitter-author .screen-name {
     font-size: 12px;
 }
 

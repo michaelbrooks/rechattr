@@ -24,8 +24,7 @@ class sign_in:
                 if user is None:
                     web.ctx.flash.error("Sorry, there was a problem signing in.")
                     web.ctx.log.error('No user after finish auth', e)
-                else:    
-                    web.ctx.flash.info("Welcome, %s." %(user.full_name))
+                else:
                     web.ctx.log.info('Sign in success', user.id)
                     
                 return web.seeother(return_to)

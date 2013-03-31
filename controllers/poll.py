@@ -32,22 +32,36 @@ class poll:
         return False
         if user is None:
             return False
+            
+    def _get_stats(self, poll, user):
+        tweetCount = web.ctx.orm.query(Tweet).\
+                             filter(Tweet.polls.contains(poll), Tweet.user_id == user.oauth_user_id).\
+                             count()
+                             
+        return {
+            'tweets': tweetCount,
+            'feedbacks': 0
+        }
         
     
     def GET(self, poll_url):
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
+        user = web.ctx.auth.current_user()
         items = self._poll_stream(poll)
         tweetForm = tweet_form()
-        
+        if user is not None:
+            stats = self._get_stats(poll, user)
+        else:
+            stats = None
         # display the poll
-        return render.poll(poll, items, tweetForm)
+        return render.poll(user=user, poll=poll, items=items, tweetForm=tweetForm, stats=stats)
     
     def POST(self, poll_url):
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
         tweetForm = tweet_form()
-        
+            
         i = web.input()
         if 'tweet' in i:
             if tweetForm.validates():
@@ -80,7 +94,14 @@ class poll:
                     # we have to re-render the whole page
                     web.ctx.flash.set(response)
                     items = self._poll_stream(poll)
-                    return render.poll(pool, items, tweetForm)
+                    user = web.ctx.auth.current_user()
+                    
+                    if user is not None:
+                        stats = self._get_stats(poll, user)
+                    else:
+                        stats = None
+                        
+                    return render.poll(user=user, poll=poll, items=items, tweetForm=tweetForm, stats=stats)
                 else:
                     # we only need to render a message
                     return json.dumps(response)
