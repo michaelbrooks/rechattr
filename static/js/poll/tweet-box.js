@@ -10,7 +10,7 @@
     var updateTweetLengthMessage = function() {
         var message = this.ui.tweetInput.val().toLowerCase();
         
-        var limit = TWEET_LENGTH - hashtagLength;
+        var limit = TWEET_LENGTH - hashtagLength - 1; //1 for the space before the hashtag
         var containsHashtag = false;
         //Does the message contain the hashtag?
         if (hashtagContains(message)) {
@@ -26,7 +26,7 @@
         this.ui.tweetLengthMessage.toggleClass(TWEET_LENGTH_WARNING_CLASS, remaining < 10);
         this.ui.tweetLengthMessage.toggleClass(TWEET_LENGTH_INVALID_CLASS, remaining < 0);
         
-        if (remaining < 0 || remaining == TWEET_LENGTH) {
+        if (remaining < 0 || remaining == limit) {
             this.ui.tweetSubmitButton.attr('disabled', 'disabled');
         } else {
             this.ui.tweetSubmitButton.removeAttr('disabled');
@@ -34,9 +34,6 @@
     }
     
     var activateTweetBox = function(e) {
-        // var width = this.ui.tweetForm.width();
-        // this.ui.tweetInput.outerWidth(width);
-        
         this.ui.tweetInput.focus();
         
         updateTweetLengthMessage.call(this);
@@ -54,6 +51,10 @@
             self.ui.tweetInputWrapper.removeClass('focus');
         });
         
+        this.ui.hashtagBox.on('click', function(e) {
+            self.ui.tweetInput.focus();
+        });
+        
         this.ui.newTweetButton.on('click', function(e) {
             self.ui.tweetBox.modal('show');
         });
@@ -61,6 +62,12 @@
         this.ui.tweetBox.on('shown', function(e) {
             activateTweetBox.call(self, e);
         });
+        
+        //If there is already input, it must be a failed POST so bring it back up
+        if (this.ui.tweetInput.val()) {
+            this.ui.tweetBox.modal('show');
+            activateTweetBox.call(this);
+        }
     }
     
     var TweetBox = function() {

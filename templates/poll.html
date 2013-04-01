@@ -23,16 +23,7 @@ $var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.ti
                                 <strong class="full-name">@${user.username}</strong>
                                 <span class="screen-name">${user.full_name}</span>
                             </div>
-                            <div class="user-stats">
-                                <span class="tooltip-below" title="Feedback about this event">
-                                    <span class="feedbacks-label"><i class="icon icon-white icon-check"></i></span>
-                                    <span class="feedbacks-count">${stats['feedbacks']}</span>
-                                </span>
-                                <span class="tooltip-below" title="Number of tweets about this event">
-                                    <span class="tweets-label"><span class="twitter-icon light"></span></span>
-                                    <span class="tweets-count">${stats['tweets']}</span>
-                                </span>
-                            </div>
+                            $:elements.user_stats(stats)
                             <button class="btn btn-small btn-info new-tweet-button tooltip-below"
                                     title="Compose new tweet">
                                 <span class="twitter-icon light"></span>
@@ -68,7 +59,8 @@ $var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.ti
     
     <div class="chatter-notify glow-notify"></div>
     
-    <div class="modal tweet-modal fade hide">
+    $ tweetModalVisibility = 'in' if tweetForm.tweet.value else "hide"
+    <div class="modal tweet-modal fade $tweetModalVisibility">
         <div class="modal-body">
             <form method="POST" class="tweet-form">
                 <div class="tweet-input-wrapper">
@@ -79,7 +71,7 @@ $var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.ti
                 </div>
                 $:tweetForm.form_submit.render()
                 $:tweetForm.submit.render()
-                <div class="tweet-length-message"></div>
+                <div class="tweet-message-box"><span class="tweet-length-message"></span></div>
             </form>
         </div>
     </div>
