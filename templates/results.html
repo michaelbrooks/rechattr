@@ -3,7 +3,7 @@ $def with (poll)
     <div class="span12">
         <h2>Poll Results</h2>
 
-        <p>Email: $poll.user_email</p>
+        <p>Email: $poll.email</p>
         <p>Start: $poll.event_start</p>
         <p>Stop: $poll.event_stop</p>
     </div>
@@ -23,11 +23,10 @@ $def with (poll)
         </table>
     </div>
     <div class="span6">
-        <div class="tweet-list">
-            <h2 class="tweet-list-header">Tweets</h2>
-            <div class="tweet-list-content">
-            $for tweet in poll.tweets:
-                $:elements.tweet(tweet)
+        <div class="stream">
+            <div class="stream-list">
+                $for item in poll.tweets:
+                    $:render_stream_item(item)
             </div>
         </div>
     </div>
