@@ -10,4 +10,5 @@ from response import Response
 from visit import Visit
 from user import User
 from session import Session
+from question import Question
 from poll import Poll

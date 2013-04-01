@@ -18,10 +18,18 @@ class Response(Base):
     poll = relationship('Poll', 
                         backref=backref('responses', order_by=created))
     
+    question_id = Column(Integer, ForeignKey('questions.id'))
+    question = relationship('Question',
+                            backref=backref('responses', order_by=created))
+                            
     visit_id = Column(Integer, ForeignKey('visits.id'))
     visit = relationship('Visit', 
                          uselist=False,
                          backref=backref('response', uselist=False))
     
-    answers = Column(String)
-    comment = Column(String)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
+    user = relationship('User',
+                        backref=backref('responses', order_by=created))
+                        
+    answer = Column(String)
+    

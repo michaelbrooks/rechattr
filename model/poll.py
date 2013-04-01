@@ -1,5 +1,7 @@
 from sqlalchemy import Column
+from sqlalchemy import ForeignKey
 from sqlalchemy import Integer, String, DateTime
+from sqlalchemy.orm import relationship, backref
 from datetime import datetime
 import simplejson as json
 from urllib import urlencode
@@ -21,13 +23,15 @@ class Poll(Base):
     updated = Column(UTCDateTime, default=datetime.utcnow)
     
     #User info
-    user_email = Column(String)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user = relationship('User', 
+                        backref=backref('polls', order_by=created))
+    email = Column(String)
     
     # Event info
     title = Column(String)
     event_start = Column(UTCDateTime)
     event_stop = Column(UTCDateTime)
-    twitter_user = Column(String)
     twitter_hashtag = Column(String)
     twitter_other_terms = Column(String)
     

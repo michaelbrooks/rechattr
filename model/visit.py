@@ -18,7 +18,10 @@ class Visit(Base):
     poll_id = Column(Integer, ForeignKey('polls.id'))
     poll = relationship('Poll', 
                         backref=backref('visits', order_by=created))
-                        
+
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User')
+    
     url = Column(String)
     page = Column(String)
     ip_address = Column(postgresql.INET)
