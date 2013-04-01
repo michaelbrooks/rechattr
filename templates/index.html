@@ -1,32 +1,12 @@
 $def with (user, polls)
 $ create_url = urls.new_poll()
-$ sign_in_url = urls.sign_in(create_url)
+$ sign_out_url = urls.sign_out()
 <div class="masthead">
-    <ul class="nav nav-pills pull-right">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-    </ul>
-    <h3 class="muted">re:chattr</h3>
+    $:elements.nav('polls')
+    <h3 class="muted"><a href="$urls.home()">re:chattr</a></h3>
 </div>
 <hr>
-<div class="jumbotron">
-    <h1>Welcome to re:chattr!</h1>
-    <p class="lead"><strong>re:chattr</strong> helps you collect feedback
-        and discussion about your presentations, talks, and other events.</p>
-        
-    $if user is None:
-        <a class="btn btn-large btn-info sign-in-button" href="$sign_in_url">
-            <span class="twitter-icon light"></span>
-            Sign in with Twitter</a>
-    $else:
-        <p class="user-welcome lead">Hello, <strong>@$user.username<span class="twitter-icon"></span></strong><p>
-        <a class="btn btn-large btn-success setup-new-button" href="$create_url">
-            Set up a new event</a>
-    
-</div>
-<hr>
-<div class="row-fluid marketing">
+<div class="row-fluid">
     <div class="span6">
         <h4>Manage your backchannel</h4>
         
@@ -41,7 +21,6 @@ $ sign_in_url = urls.sign_in(create_url)
         <h4>Here's how it works:</h4>
         <p>
         <ol>
-            <li><a href="$sign_in_url">Sign in using Twitter</a> to set up a new event.</li>
             <li>Create a special #hashtag just for your event and write a few questions for your audience.</li>
             <li>Give your presentation! (remember to tell your audience your #hashtag)</li>
             <li>Visit <strong>re:chattr</strong> after the event and review the results.</li>

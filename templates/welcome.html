@@ -1,15 +1,12 @@
 $def with (user)
+$var css: welcome.css
 $ create_url = urls.new_poll()
 $ sign_in_url = urls.sign_in(urls.home())
 $ sign_out_url = urls.sign_out()
 $ polls_url = urls.polls_list()
 <div class="masthead">
-    <ul class="nav nav-pills pull-right">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
-    </ul>
-    <h3 class="muted">re:chattr</h3>
+    $:elements.nav('welcome')
+    <h3 class="muted"><a href="$urls.home()">re:chattr</a></h3>
 </div>
 <hr>
 <div class="jumbotron">
