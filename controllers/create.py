@@ -101,8 +101,8 @@ class create:
         user = poll.twitter_user[1:]
         hashtag = poll.twitter_hashtag[1:]
         
-        # combine the user and hashtag
-        prefix = "%s-%s" %(user, hashtag)
+        # the url starts with the hashtag only
+        prefix = "%s" %(hashtag)
         
         # remove all non alphanumeric and lowercase it
         prefix = re.sub(r'[^\w]','-', prefix)
