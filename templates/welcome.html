@@ -1,6 +1,8 @@
 $def with (user)
 $ create_url = urls.new_poll()
-$ sign_in_url = urls.sign_in(create_url)
+$ sign_in_url = urls.sign_in(urls.home())
+$ sign_out_url = urls.sign_out()
+$ polls_url = urls.polls_list()
 <div class="masthead">
     <ul class="nav nav-pills pull-right">
         <li class="active"><a href="#">Home</a></li>
@@ -21,8 +23,14 @@ $ sign_in_url = urls.sign_in(create_url)
             Sign in with Twitter</a>
     $else:
         <p class="user-welcome lead">Hello, <strong>@$user.username<span class="twitter-icon"></span></strong><p>
-        <a class="btn btn-large btn-success setup-new-button" href="$create_url">
-            Set up a new event</a>
+        <p>
+            <a class="btn btn-success setup-new-button" href="$create_url">
+                Set up a new event</a>
+            <a class="btn my-polls" href="$polls_url">
+                My Polls</a>
+            <a class="btn sign-out" href="$sign_out_url">
+                Sign out</a>
+        </p>
     
 </div>
 <hr>

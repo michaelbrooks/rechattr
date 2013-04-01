@@ -46,6 +46,7 @@ class AppUrls(object):
         '/new',                 'create',
         '/clear_db',            'clear_db',
         '/sign_in',             'sign_in',
+        '/sign_out',            'sign_in',
         '/([\w-]+)',            'poll',
         '/([\w-]+)/edit/(\w+)', 'edit',
         '/([\w-]+)/stream',     'stream',
@@ -64,7 +65,13 @@ class AppUrls(object):
         'results': results
     }
     
-    def sign_in(self, return_to="/"):
+    def home(self):
+        return '/'
+    
+    def sign_in(self, return_to=None):
+        if return_to is None:
+            return_to = self.home()
+            
         return '/sign_in?%s' %(urlencode({'return_to': return_to}))
 
     def poll_results(self, poll):
@@ -81,6 +88,9 @@ class AppUrls(object):
     
     def new_poll(self):
         return '/new'
+        
+    def sign_out(self):
+        return '/sign_out'
         
 urls = AppUrls()
 

@@ -79,3 +79,7 @@ class Auth(object):
             self._oauth.set_access_token(self._user.oauth_key, self._user.oauth_secret)
         
         return self._user
+        
+    def sign_out(self):
+        del web.ctx.session['user_id']
+        self._user = None

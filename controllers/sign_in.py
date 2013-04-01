@@ -3,10 +3,18 @@ import web
 from . import pagerender as render
 
 class sign_in:
-        
+    
+    def _sign_out(self):
+        web.ctx.auth.sign_out()
+        return web.seeother(web.ctx.urls.home())
+    
     def GET(self):
         i = web.input()
         
+        path = web.ctx.path
+        if path == '/sign_out':
+            return self._sign_out()
+            
         # the ultimate destination, or home
         return_to = i.get('return_to', web.ctx.home)
         
