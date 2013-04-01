@@ -82,12 +82,6 @@ class poll:
         if poll is None:
             raise web.ctx.notfound()
         return poll
-    
-    def _poll_stream(self, poll):
-        query = web.ctx.orm.query(Tweet).\
-                            filter(Tweet.polls.contains(poll)).\
-                            order_by(Tweet.created.desc())
-        return query.all()
         
     def _record_tweet(self, poll, tweetText):
         user = web.ctx.auth.current_user()
@@ -112,26 +106,16 @@ class poll:
             # raise
         
         return tweet
-            
-    def _get_stats(self, poll, user):
-        tweetCount = web.ctx.orm.query(Tweet).\
-                             filter(Tweet.polls.contains(poll), Tweet.user_id == user.oauth_user_id).\
-                             count()
-                             
-        return {
-            'tweets': tweetCount,
-            'feedbacks': 0
-        }
         
     
     def GET(self, poll_url):
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
         user = web.ctx.auth.current_user()
-        items = self._poll_stream(poll)
+        items = poll.tweet_stream(web.ctx.orm)
         tweetForm = tweet_form()
         if user is not None:
-            stats = self._get_stats(poll, user)
+            stats = user.poll_stats(web.ctx.orm, poll)
         else:
             stats = None
         # display the poll
@@ -203,11 +187,11 @@ class poll:
             if invalidInput:
                 # we have to re-render the whole page
                 web.ctx.flash.set(response)
-                items = self._poll_stream(poll)
+                items = poll.tweet_stream(web.ctx.orm)
                 user = web.ctx.auth.current_user()
                 
                 if user is not None:
-                    stats = self._get_stats(poll, user)
+                    stats = user.poll_stats(web.ctx.orm, poll)
                 else:
                     stats = None
                     

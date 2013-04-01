@@ -5,7 +5,7 @@ import simplejson as json
 from urllib import urlencode
 
 # Get the shared base class for declarative ORM
-from model import Base
+from model import Base, Tweet
 from decorators import UTCDateTime
 
 class Poll(Base):
@@ -66,6 +66,12 @@ class Poll(Base):
         
         # track_list = self.twitter_other_terms_list()
         return [self.twitter_user.lower(), self.twitter_hashtag.lower()]
+    
+    def tweet_stream(self, session):
+        query = session.query(Tweet).\
+                        filter(Tweet.polls.contains(self)).\
+                        order_by(Tweet.created.desc())
+        return query.all()
     
     @staticmethod
     def get_active(session):

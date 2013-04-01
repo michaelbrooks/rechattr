@@ -5,9 +5,9 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 # Load all of the models into the package
-from poll import Poll
 from tweet import Tweet
 from response import Response
 from visit import Visit
 from user import User
 from session import Session
+from poll import Poll

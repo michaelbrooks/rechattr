@@ -4,7 +4,7 @@ from datetime import datetime
 import cPickle as pickle
 
 # Get the shared base class for declarative ORM
-from model import Base
+from model import Base, Tweet
 from decorators import UTCDateTime
 
 class User(Base):
@@ -46,3 +46,13 @@ class User(Base):
 
     def load_cache(self):
         return pickle.loads(self.user_cache.encode('utf-8'))
+
+    def poll_stats(self, session, poll):
+        tweetCount = session.query(Tweet).\
+                             filter(Tweet.polls.contains(poll), Tweet.user_id == self.oauth_user_id).\
+                             count()
+                             
+        return {
+            'tweets': tweetCount,
+            'feedbacks': 0
+        }
