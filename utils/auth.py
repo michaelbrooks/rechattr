@@ -60,6 +60,7 @@ class Auth(object):
             web.ctx.orm.rollback()
             raise
         
+        self.reset_session()
         
         # sign them in
         web.ctx.session['user_id'] = self._user.id
@@ -81,5 +82,12 @@ class Auth(object):
         return self._user
         
     def sign_out(self):
-        del web.ctx.session['user_id']
         self._user = None
+        del web.ctx.session['user_id']
+        self.reset_session()
+        
+    def reset_session(self):
+        # delete the old session from the db
+        del web.ctx.session.store[web.ctx.session.session_id]
+        # generate a new id - this will be saved automatically
+        web.ctx.session.session_id = web.ctx.session._generate_session_id()

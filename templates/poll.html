@@ -3,6 +3,7 @@ $var css: poll.css
 $var js_app: PollApp
 $var poll: $poll.poll_url_code
 $var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.time()}
+$ sign_in_url = urls.sign_in(urls.poll(poll))
 <div class="row-fluid">
     <div class="feedback panel in">
         <div class="segment-title rotate panel-title">
@@ -13,7 +14,7 @@ $var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.ti
         <div class="feedback-content panel-content">
             <div class="user-panel">
                 $if user is None:
-                    <a class="sign-in-button" href="${poll.sign_in_url()}">
+                    <a class="sign-in-button" href="${sign_in_url}">
                         <span class="twitter-icon light"></span> Sign in with Twitter
                     </a>
                 $else:
