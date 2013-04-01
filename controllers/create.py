@@ -68,8 +68,6 @@ create_form = form.Form(
     Timebox('start_time', '', 'start-time'),
     Datebox('stop_date', 'Event Stop', 'stop-date'),
     Timebox('stop_time', '', 'stop-time'),
-    form.Textbox('twitter_user', form.notnull, valid_username,
-                 description='Twitter username'),
     form.Textbox('twitter_hashtag', form.notnull, valid_hashtag,
                  description='Hashtag'),
     # form.Textbox('twitter_other_terms', 
@@ -97,8 +95,7 @@ class create:
         return code[:length].lower()
 
     def _create_poll_url(self, poll):
-        #remove the @ and #
-        user = poll.twitter_user[1:]
+        #remove the #
         hashtag = poll.twitter_hashtag[1:]
         
         # the url starts with the hashtag only
@@ -159,7 +156,6 @@ class create:
         poll.event_start = event_start
         poll.event_stop = event_stop
         
-        poll.twitter_user = clean_term(i.twitter_user, '@')
         poll.twitter_hashtag = clean_term(i.twitter_hashtag, '#')
         # poll.twitter_other_terms = i.twitter_other_terms
         

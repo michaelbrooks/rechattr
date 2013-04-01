@@ -10,7 +10,7 @@ $for poll in polls:
         <td>$poll.user_email</td>
         <td>$poll.event_start</td>
         <td>$poll.event_stop</td>
-        <td>$poll.twitter_hashtag / $poll.twitter_user</td>
+        <td>$poll.twitter_hashtag / $poll.user.username</td>
         <td>$len(poll.responses)</td>
         <td>$len(poll.tweets)</td>
         <td><a class="btn" href="$poll.poll_url()">Respond</a></td>
