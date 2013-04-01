@@ -1,4 +1,5 @@
 $def with (user, poll, items, tweetForm, stats)
+$var css: poll.css
 $var js_app: PollApp
 $var poll: $poll.poll_url_code
 $var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.time()}
