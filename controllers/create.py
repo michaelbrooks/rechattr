@@ -201,4 +201,4 @@ class create:
         web.ctx.orm.add(poll)
         
         # go to the results page
-        web.seeother(poll.results_url())
+        web.seeother(web.ctx.urls.poll_results(poll))

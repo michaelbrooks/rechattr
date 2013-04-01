@@ -199,7 +199,7 @@ class poll:
             else:
                 # redirect to avoid double submit
                 web.ctx.flash.set(response)
-                return web.seeother(poll.poll_url())
+                return web.seeother(web.ctx.urls.poll(poll))
         else:
             # we only need to render a confirmation message
             return json.dumps(response)
@@ -223,4 +223,4 @@ class poll:
             web.ctx.orm.add(response)
         
             # go to the results page
-            web.seeother(poll.results_url())
+            web.seeother(web.ctx.urls.poll_results(poll))

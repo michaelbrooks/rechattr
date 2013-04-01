@@ -12,23 +12,13 @@ from utils.logger import Logger
 # migrate the database before starting
 migrate.migrate(conf.ALEMBIC_VERSION)
 
-urls = (
-    '/',                    'index',
-    '/new',                 'create',
-    '/clear_db',            'clear_db',
-    '/sign_in',             'sign_in',
-    '/([\w-]+)',            'poll',
-    '/([\w-]+)/edit/(\w+)', 'edit',
-    '/([\w-]+)/stream',     'stream',
-    '/([\w-]+)/results',    'results'
-)
-
 web.config.debug = conf.DEBUG
 
 web.config.session_parameters.cookie_name = 'rechattr_session_id'
 web.config.session_parameters.secret_key = conf.SESSION_ENCRYPTION_KEY
 
-app = web.application(urls, controllers.__dict__)
+from controllers import urls
+app = web.application(urls.urls, urls.controller_map)
 
 def load_sqla(handler):
     web.ctx.orm = db.db_session()
@@ -46,6 +36,9 @@ def load_sqla(handler):
         # web.ctx.orm.expunge_all() 
 
 def load_session(handler):
+    # make the url manager available
+    web.ctx.urls = urls
+    
     # set up the session
     sessionStore.set_db(web.ctx.orm)
     web.ctx.session = session

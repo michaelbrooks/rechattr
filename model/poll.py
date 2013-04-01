@@ -4,7 +4,6 @@ from sqlalchemy import Integer, String, DateTime
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime
 import simplejson as json
-from urllib import urlencode
 
 # Get the shared base class for declarative ORM
 from model import Base, Tweet
@@ -45,18 +44,6 @@ class Poll(Base):
     #The poll definition, json
     definition = Column(String)
 
-    def results_url(self):
-        return '/%s/results' % (self.poll_url_human)
-    
-    def poll_url(self):
-        return '/%s' % (self.poll_url_human)
-    
-    def sign_in_url(self):
-        return '/sign_in?%s' %(urlencode({'return_to': self.poll_url()}));
-        
-    def edit_url(self):
-        return '/%s/edit/%s' % (self.poll_url_human, self.edit_url_code)
-        
     def definition_object(self):
         return json.loads(self.definition)
     
@@ -68,8 +55,7 @@ class Poll(Base):
             
     def twitter_track_list(self):
         
-        # track_list = self.twitter_other_terms_list()
-        return [self.twitter_user.lower(), self.twitter_hashtag.lower()]
+        return ['@%s'%(self.user.username.lower()), self.twitter_hashtag.lower()]
     
     def tweet_stream(self, session):
         query = session.query(Tweet).\
