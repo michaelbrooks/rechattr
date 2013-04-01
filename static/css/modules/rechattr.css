@@ -1,0 +1,13 @@
+
+.twitter-icon {
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    
+    background-image: url("/static/img/twitter-bird-light-bgs.png");
+}
+
+.twitter-icon.light {
+    background-image: url("/static/img/twitter-bird-dark-bgs.png");
+}
