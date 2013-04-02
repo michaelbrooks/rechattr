@@ -20,6 +20,10 @@ web.config.session_parameters.secret_key = conf.SESSION_ENCRYPTION_KEY
 from controllers import urls
 app = web.application(urls.urls, urls.controller_map)
 
+# entry point for wsgi servers
+# http://stackoverflow.com/questions/13667103/web-py-and-gunicorn
+wsgi_app = app.wsgifunc()
+
 def load_sqla(handler):
     web.ctx.orm = db.db_session()
     
