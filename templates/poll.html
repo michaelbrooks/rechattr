@@ -77,19 +77,5 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
             </form>
         </div>
     </div>
-    <div class="modal-box">
-        <form method="POST">
-            $ hideClass = ""
-            $for question in poll.definition_object()['questions']:
-            
-                <div class="answer-list $hideClass" data-question-name="$question['name']">
-                $ hideClass="fade hide"
-            
-                $for choice in question['choices']:
-                    <button type="button" class="answer-btn" data-option="$choice['value']">$choice['label']</button>
-                </div>
-
-        </form>
-    </div>
 </div>
 

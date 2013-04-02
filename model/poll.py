@@ -48,12 +48,6 @@ class Poll(Base):
     edit_url_code = Column(String)
     poll_short_url = Column(String)
     
-    #The poll definition, json
-    definition = Column(String)
-
-    def definition_object(self):
-        return json.loads(self.definition)
-    
     def twitter_other_terms_list(self):
         if self.twitter_other_terms is not None:
             return self.twitter_other_terms.split(',')

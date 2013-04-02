@@ -17,7 +17,7 @@ from . import pagerender as render
 
 def nullable(validator):
     return form.Validator(validator.msg,
-                          lambda v: validator.test(v) if v else True)
+                          lambda v: validator.valid(v) if bool(v) else True)
 
 valid_email = form.regexp(r'.+@.+\..+', 
                           'Must be a valid email address')
@@ -155,6 +155,16 @@ class create:
             web.ctx.flash.info("You must be signed in to create a poll")
             return web.seeother(url) # go sign in and then come back
     
+        combo = nullable(valid_email)
+        inp = web.input()
+        test = lambda v: valid_email.valid(v) if bool(v) else True
+        print test('asdf')
+        print 'foo' if bool('test') else True
+        print 'bar' if bool('') else True
+        print inp.email
+        print valid_email.valid(inp.email)
+        
+        print combo.valid(inp.email)
         # validate the form
         form = create_form()
         if not form.validates():
@@ -165,58 +175,37 @@ class create:
         poll = Poll()
         i = web.input()
         
+        # save the title
+        poll.title = i.title
+        
+        # parse the provided date and time given the detected tz info
         gmt_offset_seconds = 60 * int(i.gmt_offset)
+        poll.event_start = self._parse_date_time(i.start_date, i.start_time, gmt_offset_seconds)
+        poll.event_stop = self._parse_date_time(i.stop_date, i.stop_time, gmt_offset_seconds)
+         
+        # if they provided an email then save it
+        if i.email is not None and len(i.email) > 0:
+            poll.email = i.email
         
-        event_start = self._parse_date_time(i.start_date, i.start_time, gmt_offset_seconds)
-        event_stop = self._parse_date_time(i.stop_date, i.stop_time, gmt_offset_seconds)
-        
-        poll.user_email = i.email
-        poll.event_start = event_start
-        poll.event_stop = event_stop
-        
+        # save the hashtag
         poll.twitter_hashtag = clean_term(i.twitter_hashtag, '#')
         # poll.twitter_other_terms = i.twitter_other_terms
         
+        # initialize the urls
         poll.poll_url_human = self._create_poll_url(poll)
         poll.poll_url_code = poll.poll_url_human.lower()
-        
         poll.results_url_code = self._random_code(Poll.RESULTS_URL_CODE_LENGTH)
         poll.edit_url_code = self._random_code(Poll.EDIT_URL_CODE_LENGTH)
         #poll.short_url = ???
         
-        definition = {
-            'questions': [
-                {
-                    'name': 'category',
-                    'choices': [
-                        { 'label': 'motivation', 'value': 0 },
-                        { 'label': 'analysis', 'value': 1 },
-                        { 'label': 'findings', 'value': 2 },
-                        { 'label': 'visuals', 'value': 3 },
-                        { 'label': 'enthusiasm', 'value': 4 },
-                        { 'label': 'Q&A', 'value': 5 },
-                        { 'label': 'quotes', 'value': 6 }
-                    ]
-                }, {
-                    'name': 'opinion',
-                    'choices': [
-                        { 'label': ':)', 'value': 0 },
-                        { 'label': ':|', 'value': 1 },
-                        { 'label': ':(', 'value': 2 },
-                        { 'label': '!!!', 'value': 3 },
-                        { 'label': '???', 'value': 4 },
-                        { 'label': '...', 'value': 5 }
-                    ]
-                }
-            ]
-        }
+        # TODO: send a confirmation email
         
-        poll.definition = json.dumps(definition)
-        
-        # send a confirmation email
+        # tie it to the current user
+        poll.user = user
         
         # save the poll in the database
         web.ctx.orm.add(poll)
         
-        # go to the results page
-        web.seeother(web.ctx.urls.poll_results(poll))
+        # go to the edit page
+        web.seeother(web.ctx.urls.poll_edit(poll))
+        
