@@ -7,28 +7,64 @@ $ sign_out_url = urls.sign_out()
 </div>
 <hr>
 <div class="row-fluid">
-    <div class="span6">
-        <h4>Manage your backchannel</h4>
-        
-        <p>People may already be talking about your event on Twitter.
-           <strong>re:chattr</strong> collects that discussion and saves it in one place.</p>
-           
-        <h4>Targetted feedback</h4>
-        <p>Ever wonder what your audience thought about a specific slide or idea in your presentation?
-           Use <strong>re:chattr</strong>'s feedback polls to ask your audience simple multiple-choice questions.</p>
-    </div>
-    <div class="span6">
-        <h4>Here's how it works:</h4>
-        <p>
-        <ol>
-            <li>Create a special #hashtag just for your event and write a few questions for your audience.</li>
-            <li>Give your presentation! (remember to tell your audience your #hashtag)</li>
-            <li>Visit <strong>re:chattr</strong> after the event and review the results.</li>
-        </ol>
-        
-        </p>
-    </div>
-    <div class="span6">
-        
+    <div class="span12">
+        <h3>My Events</h3>
+        <table class="poll-list table">
+            <thead>
+                <tr>
+                    <th class="title-header">Title / Hashtag</th>
+                    <th class="status-header">Status</th>
+                    <th class="tweets-header">Tweets</th>
+                    <th class="responses-header">Responses</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            $for poll in polls:
+                $ poll_edit_url = urls.poll_edit(poll)
+                $ poll_results_url = urls.poll_results(poll)
+                $ poll_start = user.from_localtime(poll.event_start)
+                $ poll_stop = user.from_localtime(poll.event_stop)
+                <tr class="poll-list-item">
+                    <td class="poll-title">
+                        $poll.title <span class="poll-hashtag muted">$poll.twitter_hashtag</span>
+                    $if poll.is_active():
+                        <span class="poll-timing-info">
+                            Ends in $time_to(poll_stop, long=True, showDays=True)
+                        </span>
+                    $elif poll.has_started():
+                        <span class="poll-timing-info">
+                            Ended $time_ago(poll_stop, long=True, showDays=True) ago
+                        </span>
+                    $else:
+                        <span class="poll-timing-info">
+                            Starts in $time_to(poll_start, long=True, showDays=True)
+                        </span>
+                    </td>
+                    <td class="poll-status">
+                    $if poll.is_active():
+                        <span class="poll-status-active label label-success">Live!</span>
+                    $elif poll.has_started():
+                        <span class="poll-status-ended label label-info">Ended</span>
+                    $else:
+                        <span class="poll-status-pending label">Not started</span>
+                    </td>
+                    <td class="tweet-count">
+                        $poll.count_tweets()
+                    </td>
+                    <td class="response-count">
+                        $poll.count_responses()
+                    </td>
+                    <td class="poll-controls">
+                    $if poll.is_active():
+                        <a class="btn btn-primary" href="$poll_results_url">Monitor Event</a>
+                    $elif poll.has_started():
+                        <a class="btn btn-primary" href="$poll_results_url">View Results</a>
+                    $else:
+                        <a class="btn" href="$poll_edit_url">Edit Event</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

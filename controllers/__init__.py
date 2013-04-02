@@ -1,10 +1,13 @@
 import web, time, calendar
 from urllib import urlencode
+import utils
 
 helpers = {
     'web': web,
     'time': time,
-    'calendar': calendar
+    'calendar': calendar,
+    'time_ago': utils.time_ago,
+    'time_to': utils.time_to
 }
 
 render = web.template.render('templates/', globals=helpers)
@@ -65,6 +68,9 @@ class AppUrls(object):
         'results': results
     }
     
+    def absolute(self, url):
+        return web.ctx.home + url
+    
     def home(self):
         return '/'
     
@@ -82,7 +88,10 @@ class AppUrls(object):
         
     def poll_edit(self, poll):
         return '/%s/edit/%s' % (poll.poll_url_human, poll.edit_url_code)
-
+    
+    def poll_delete(self, poll):
+        return '/%s/delete' % (poll.poll_url_human)
+        
     def polls_list(self):
         return '/polls'
     
@@ -91,7 +100,10 @@ class AppUrls(object):
         
     def sign_out(self):
         return '/sign_out'
-        
+    
+    def twitter_hashtag(self, hashtag):
+        return 'http://twitter.com/search?%s' %(urlencode({'q': hashtag}))
+    
 urls = AppUrls()
 
 helpers['urls'] = urls

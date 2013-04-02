@@ -3,3 +3,44 @@
 @import url("modules/rechattr.css");
 @import url("modules/tweetstream.css");
 @import url("modules/tweets.css");
+
+.poll-list {
+    width: 100%;
+}
+
+.poll-list th {
+    font-weight: normal;
+    text-align: center;
+}
+
+.poll-list .title-header {
+    text-align: left;
+}
+
+.poll-list td {
+    text-align: center;
+}
+
+.poll-list tr td {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.poll-list tr td.poll-title {
+    font-weight: bold;
+    text-align: left;
+}
+.poll-list tr td.poll-title .poll-hashtag {
+    font-weight: normal;
+}
+
+.poll-list tr td.poll-title .poll-timing-info {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: normal;
+    display: block;
+}
+
+.poll-list tr td.poll-status .label {
+    padding: 3px 6px;
+}
