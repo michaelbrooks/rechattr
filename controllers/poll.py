@@ -3,6 +3,7 @@ from web import form
 import simplejson as json
 import re
 from tweepy import TweepError
+import utils
 from . import pagerender as render
 from model import Poll, Response, Tweet
 
@@ -171,10 +172,8 @@ class poll:
                             'type': "error"
                         }
                 except TweepError, e:
+                    code, message = utils.parse_tweep_error(e)
                     web.ctx.log.error('Tweepy error saving tweet', tweet, e)
-                    error = e.args[0][0] # the first error from the first argument
-                    message = error['message']
-                    code = error['code']
                     response = {
                         'message': message,
                         'type': "success"

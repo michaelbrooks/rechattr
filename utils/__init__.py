@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta
 from dateutil.tz import tzoffset, tzutc
 
+from csrf import csrf_protected, csrf_token_input
+
 _utc = tzutc()
 
 zeroTime = timedelta(seconds=0)
@@ -66,5 +68,12 @@ def time_ago(dt, long=False, showDays=False):
         return format_time('days', delta.days, long)
     else:
         return format_time('date', dt, long)
-        
-from csrf import csrf_protected, csrf_token_input
+
+def parse_tweep_error(e):
+    try:
+        error = e.args[0][0] # the first error from the first argument
+        message = error['message']
+        code = error['code']
+        return code, message
+    except:
+        return -1, str(e)

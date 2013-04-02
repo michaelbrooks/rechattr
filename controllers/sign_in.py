@@ -1,5 +1,7 @@
 import web
 
+import utils
+from tweepy import TweepError
 from . import pagerender as render
 
 class sign_in:
@@ -52,6 +54,15 @@ class sign_in:
                     
                 # redirect
                 return web.seeother(twitter_url)
+        except TweepError, e:
+            code, message = utils.parse_tweep_error(e)
+            web.ctx.log.error('Tweepy error signing in', e)
+            if code == 130:
+                message = "Sorry, Twitter not responding. Please try again in a moment."
+            else:
+                message = "Sorry, Twitter sign in failed. Please try again in a moment."
+            web.ctx.flash.error(message)
+            return web.seeother(return_to)
         except Exception, e:
             web.ctx.log.error('Sign in error', e)
             web.ctx.flash.error("Sorry, something went wrong signing in.")
