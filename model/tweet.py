@@ -2,7 +2,7 @@ from sqlalchemy import Column, Table
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer, String, DateTime, BigInteger
 from sqlalchemy.orm import relationship, backref    
-from datetime import datetime, timedelta
+from datetime import datetime
 import calendar
 from dateutil import parser
 import simplejson as json
@@ -19,11 +19,6 @@ from decorators import UTCDateTime
 urlTemplate = Template('<a target="_blank" href="${url}" title="${expanded_url}">${display_url}</a>')
 mentionTemplate = Template('<a target="_blank" href="https://twitter.com/${screen_name}" title="${name}">@${screen_name}</a>')
 hashtagTemplate = Template('<a target="_blank" href="https://twitter.com/search?q=%23${text}">#${text}</a>')
-
-zeroTime = timedelta(0, 0, 0)
-oneMinute = timedelta(0, 60, 0)
-oneHour = timedelta(0, 60*60, 0)
-oneDay = timedelta(0, 60*60*24, 0)
 
 def escape_dict(base, *args):
     result = dict()
@@ -151,22 +146,6 @@ class Tweet(Base):
             offset += len(replacement) - (end - start)
             
         return text
-        
-    def time_ago(self):
-        
-        now = utc_aware()
-        delta = now - self.created
-        
-        if delta < zeroTime:
-            return "0s"
-        elif delta < oneMinute:
-            return "%ds" %(delta.seconds)
-        elif delta < oneHour:
-            return "%dm" %(round(delta.seconds / 60))
-        elif delta < oneDay:
-            return "%dh" %(round(delta.seconds / (60*60)))
-        else:
-            return self.created.strftime("%d %b")
             
     def created_timestamp(self):
         return calendar.timegm(self.created.utctimetuple())

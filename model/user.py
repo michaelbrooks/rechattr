@@ -1,6 +1,7 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime, BigInteger
 from datetime import datetime
+from dateutil.tz import tzoffset
 import cPickle as pickle
 
 # Get the shared base class for declarative ORM
@@ -21,6 +22,8 @@ class User(Base):
     username = Column(String)
     full_name = Column(String)
     profile_image_url = Column(String)
+    utc_offset = Column(Integer)
+    time_zone = Column(String)
     
     last_signed_in = Column(UTCDateTime, default=datetime.utcnow)
     tweet_count = Column(Integer, default=0)
@@ -43,7 +46,16 @@ class User(Base):
             self.username = user_info.screen_name
             self.full_name = user_info.name
             self.profile_image_url = user_info.profile_image_url_https
+            self.utc_offset = user_info.utc_offset
+            self.time_zone = user_info.time_zone
 
+    def from_localtime(self, dt):
+        if self.utc_offset is None:
+            return dt
+            
+        tzinfo = tzoffset(self.time_zone, self.utc_offset);
+        return dt.astimezone(tzinfo)
+        
     def load_cache(self):
         return pickle.loads(self.user_cache.encode('utf-8'))
 

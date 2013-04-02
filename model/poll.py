@@ -1,13 +1,20 @@
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer, String, DateTime
-from sqlalchemy.orm import relationship, backref
-from datetime import datetime
+from sqlalchemy.orm import relationship, backref, Session
+
+from datetime import datetime, timedelta
 import simplejson as json
 
 # Get the shared base class for declarative ORM
-from model import Base, Tweet
+from model import Base, Tweet, Response
+from utils import utc_aware
 from decorators import UTCDateTime
+
+zeroTime = timedelta(0, 0, 0)
+oneMinute = timedelta(0, 60, 0)
+oneHour = timedelta(0, 60*60, 0)
+oneDay = timedelta(0, 60*60*24, 0)
 
 class Poll(Base):
     __tablename__ = 'polls'
@@ -57,11 +64,62 @@ class Poll(Base):
         
         return ['@%s'%(self.user.username.lower()), self.twitter_hashtag.lower()]
     
-    def tweet_stream(self, session):
+    def count_tweets(self, session=None):
+        if session is None:
+            session = Session.object_session(self)
+        
+        return session.query(Tweet).\
+                       filter(Tweet.polls.contains(self)).\
+                       count()
+    
+    def count_responses(self, session=None):
+        if session is None:
+            session = Session.object_session(self)
+        
+        return session.query(Response).\
+                       filter(Response.poll ==self).\
+                       count()
+    
+    def tweet_stream(self, session=None):
+        if session is None:
+            session = Session.object_session(self)
+            
         query = session.query(Tweet).\
                         filter(Tweet.polls.contains(self)).\
                         order_by(Tweet.created.desc())
         return query.all()
+    
+    def has_started(self):
+        now = utc_aware()
+        return now > self.event_start
+        
+    def is_active(self):
+        now = utc_aware()
+        return now > self.event_start and now < self.event_stop
+    
+    def has_ended(self):
+        now = utc_aware()
+        return now > self.event_stop
+    
+    def duration(self):
+        duration = self.event_stop - self.event_start
+        
+    
+    @classmethod
+    def date_format(cls, dt, withDate=True, tz=None):
+        if tz is not None:
+            dt = dt.astimezone(tz)
+            
+        str = dt.strftime('%I:%M%p').lstrip('0').lower()
+        if withDate:
+            day = dt.strftime('%d').lstrip('0')
+            str += dt.strftime(', %B ' + day + ' %Y')
+           
+        offset = dt.utcoffset()
+        if offset is not None and offset.total_seconds() == 0:
+            str += ' UTC'
+            
+        return str
     
     @staticmethod
     def get_active(session):
