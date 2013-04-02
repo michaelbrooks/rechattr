@@ -1,16 +1,17 @@
-$def with (active)
+$def with (active, user=None)
 
 $def menu_item(name, text, url, active_name):
     $if active_name == name:
-        <li class="active"><a href="$url">$text</a></li>
+        <li class="active"><a href="$url">$:text</a></li>
     $else:
-        <li><a href="$url">$text</a></li>
+        <li><a href="$url">$:text</a></li>
     
 <ul class="nav nav-pills pull-right">
     $:menu_item('welcome', 'Home', urls.home(), active)
-    $:menu_item('new', 'New Event', urls.new_poll(), active)
-    $:menu_item('polls', 'My Events', urls.polls_list(), active)
-    $:menu_item('sign_out', 'Sign out', urls.sign_out(), active)
-    $:menu_item('about', 'About', urls.home(), active)
-    $:menu_item('contact', 'Contact', urls.home(), active)
+    $if user is None:
+        $:menu_item('sign_in', '<b>Sign in</b>', urls.sign_in(), active)
+    $else:
+        $:menu_item('new', 'New Event', urls.new_poll(), active)
+        $:menu_item('polls', 'My Events', urls.polls_list(), active)
+        $:menu_item('sign_out', 'Sign out', urls.sign_out(), active)
 </ul>

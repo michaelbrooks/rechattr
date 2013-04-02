@@ -1,6 +1,7 @@
 @import url("bootstrap.css");
 @import url("bootstrap-responsive.css");
 @import url("modules/rechattr.css");
+@import url("modules/sticky-footer.css");
 @import url("modules/tweetstream.css");
 @import url("modules/tweets.css");
 
@@ -31,7 +32,7 @@
 }
 
 .marketing {
-    margin: 60px 0;
+    margin: 60px 0 20px 0;
 }
 .marketing p + h4 {
     margin-top: 28px;

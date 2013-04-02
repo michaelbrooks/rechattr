@@ -2,7 +2,7 @@ $def with (user, polls)
 $var css: mypolls.css
 $ create_url = urls.new_poll()
 <div class="masthead">
-    $:elements.nav('polls')
+    $:elements.nav('polls', user)
     <h3 class="muted"><a href="$urls.home()">re:chattr</a></h3>
 </div>
 <hr>

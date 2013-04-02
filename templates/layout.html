@@ -44,21 +44,32 @@ $def with (content)
         <script src="/static/js/main.js"></script>
     </head>
     <body>
-
-        <div class="container">
-            $ flash = web.ctx.flash.get(clear=True)
-            $if flash is None:
-                <div class="flash hide">
-            $else:
-                <div class="flash">
-                    $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'}
-                    $ cls = type_map[flash['type']]
-                    <div class="alert $cls fade in">
-                        <div class="close" >&times;</div>  
-                        $flash['message']
-                    </div>
+        <div id="wrap">
+            <div class="container">
+                $ flash = web.ctx.flash.get(clear=True)
+                $if flash is None:
+                    <div class="flash hide">
+                $else:
+                    <div class="flash">
+                        $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'}
+                        $ cls = type_map[flash['type']]
+                        <div class="alert $cls fade in">
+                            <div class="close" >&times;</div>  
+                            $flash['message']
+                        </div>
+                </div>
+                $:content
             </div>
-            $:content
+            <div id="push"></div>
+        </div>
+        <div id="footer">
+          <div class="container">
+            <p class="muted credit"><strong>re:chattr</strong> brought to you by 
+                <a href="http://twitter.com/anachrobot">@anachrobot</a>/<a href="http://anachrobot.us">katie</a>
+                + 
+                <a href="http://twitter.com/mjbrks">@mjbrks</a>/<a href="http://students.washignton.edu/mjbrooks">michael</a>
+            </p>
+          </div>
         </div>
         
     </body>

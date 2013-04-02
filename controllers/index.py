@@ -10,7 +10,7 @@ class index:
         user = web.ctx.auth.current_user()
         if user is None:
             url = web.ctx.urls.sign_in(web.ctx.urls.polls_list())
-            web.seeother(url) # go sign in and then come back
+            return web.seeother(url) # go sign in and then come back
             
         polls = web.ctx.orm.query(Poll).order_by(Poll.created).all()
         

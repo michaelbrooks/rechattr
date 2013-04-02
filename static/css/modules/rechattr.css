@@ -1,6 +1,12 @@
-body {
-    padding-top: 20px;
-    padding-bottom: 0px;
+
+#push,
+#footer {
+    /* Hide the sticky-footer stuff by default */
+    display: none;
+}
+
+.credit {
+    margin: 20px 0;
 }
 
 /* Custom container */
