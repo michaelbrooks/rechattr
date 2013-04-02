@@ -2,3 +2,73 @@
 @import url("bootstrap-responsive.css");
 @import url("modules/rechattr.css");
 @import url("modules/sticky-footer.css");
+@import url("modules/bootstrap-datepicker.css");
+@import url("modules/time-picker.css");
+
+.create-field {
+    margin-bottom: 20px;
+}
+
+.create-field input,
+.create-field .input-prepend .add-on,
+.create-field .input-append .btn {
+    font-size: 16px;
+    line-height: 22px;
+    height: 22px;
+}
+
+.create-field .field-note {
+    font-weight: bold;
+}
+
+.event-title input {
+    font-size: 20px;
+    line-height: 30px;
+    height: 30px;
+    width: 90%;
+    margin-top: 20px;
+}
+
+.date-time-label {
+    display: inline-block;
+    float: left;
+    width: 40px;
+    font-weight: bold;
+    text-align: right;
+    font-size: 16px;
+    line-height: 32px;
+    margin-bottom: 10px;
+}
+
+.date-picker,
+.time-picker {
+    float: left;
+    margin-left: 10px;
+}
+
+.date-picker,
+.time-picker,
+.date-time-label {
+    margin-top: 10px;
+}
+
+.date-picker {
+    display: inline-block;
+    *display: inline;
+    margin-bottom: 0;
+    vertical-align: middle;
+    *zoom: 1;
+}
+
+input.date-box,
+input.time-box {
+    width: 75px;
+}
+
+.event-hashtag {
+    margin-top: 20px;
+}
+
+.event-email {
+    margin-top: 20px;
+}

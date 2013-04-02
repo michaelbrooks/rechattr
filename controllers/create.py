@@ -14,6 +14,10 @@ import os
 
 from . import pagerender as render
 
+def nullable(validator):
+    return form.Validator(validator.msg,
+                          lambda v: validator.test(v) if v else True)
+
 valid_email = form.regexp(r'.+@.+\..+', 
                           'Must be a valid email address')
 valid_date = form.regexp(r'\d{1,2}/\d{1,2}/\d{2,4}',
@@ -48,7 +52,7 @@ class Timebox(form.Textbox):
     def __init__(self, name, description="", class_=""):
         class_ = 'input-mini time-box %s' % class_
         super(form.Textbox, self).__init__(
-             name, form.notnull, valid_time, 
+             name, form.notnull, valid_time, type="time",
              placeholder="hh:mm",
              description=description,
              class_=class_)
@@ -58,7 +62,7 @@ class Timebox(form.Textbox):
         return '<div class="time-picker">%s</div>' % input
 
 create_form = form.Form(
-    form.Textbox('email', form.notnull, valid_email, 
+    form.Textbox('email', nullable(valid_email),
                  description='Your email',
                  class_="input-large", placeholder="Email"),
     form.Textbox('title', form.notnull,
@@ -74,8 +78,9 @@ create_form = form.Form(
                  # description='Other usernames / hashtags (Optional)'),
     form.Hidden('gmt_offset', type='hidden'),
     form.Button('submit', type='submit', 
-                class_="btn btn-primary",
-                description='Create')
+                class_="btn btn-primary btn-large",
+                description='Create',
+                html="Create my event")
 )
 
 def clean_term(term, prefix):
@@ -131,17 +136,27 @@ class create:
         
         
     def GET(self):
+        user = web.ctx.auth.current_user()
+        if user is None:
+            url = web.ctx.urls.sign_in(web.ctx.urls.new_poll())
+            return web.seeother(url) # go sign in and then come back
         
         form = create_form()
         
         # use it to populate the form
-        return render.create(form)
+        return render.create(user, form)
         
     def POST(self):
+        user = web.ctx.auth.current_user()
+        if user is None:
+            url = web.ctx.urls.sign_in(web.ctx.urls.new_poll())
+            web.ctx.flash.info("You must be signed in to create a poll")
+            return web.seeother(url) # go sign in and then come back
+    
         # validate the form
         form = create_form()
         if not form.validates():
-            return render.create(form)
+            return render.create(user, form)
         
         # create a new poll with the input
         poll = Poll()
