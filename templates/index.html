@@ -1,6 +1,6 @@
 $def with (user, polls)
+$var css: mypolls.css
 $ create_url = urls.new_poll()
-$ sign_out_url = urls.sign_out()
 <div class="masthead">
     $:elements.nav('polls')
     <h3 class="muted"><a href="$urls.home()">re:chattr</a></h3>
@@ -8,7 +8,7 @@ $ sign_out_url = urls.sign_out()
 <hr>
 <div class="row-fluid">
     <div class="span12">
-        <h3>My Events</h3>
+        <h3>My Events <a href="$create_url" class="btn btn-success create-event-button pull-right">Create a new event</a></h3>
         <table class="poll-list table">
             <thead>
                 <tr>
@@ -57,11 +57,11 @@ $ sign_out_url = urls.sign_out()
                     </td>
                     <td class="poll-controls">
                     $if poll.is_active():
-                        <a class="btn btn-primary" href="$poll_results_url">Monitor Event</a>
+                        <a class="btn btn-primary pull-right" href="$poll_results_url">Monitor Event</a>
                     $elif poll.has_started():
-                        <a class="btn btn-primary" href="$poll_results_url">View Results</a>
+                        <a class="btn btn-primary pull-right" href="$poll_results_url">View Results</a>
                     $else:
-                        <a class="btn" href="$poll_edit_url">Edit Event</a>
+                        <a class="btn pull-right" href="$poll_edit_url">Edit Event</a>
                     </td>
                 </tr>
             </tbody>
