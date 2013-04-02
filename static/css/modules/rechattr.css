@@ -4,6 +4,10 @@
     display: none;
 }
 
+h2.page-title {
+    margin: 30px 0;
+}
+
 .credit {
     margin: 20px 0;
 }

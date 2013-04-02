@@ -5,10 +5,19 @@
 
 .create-event-button {
     font-weight: normal;
+    line-height: 30px;
 }
 
 .poll-list {
     width: 100%;
+}
+
+.poll-list tr th:first-child, tr td:first-child {
+    padding-left: 0;
+}
+
+.poll-list tr th:last-child, tr td:last-child {
+    padding-right: 0;
 }
 
 .poll-list th {
@@ -22,6 +31,7 @@
 
 .poll-list td {
     text-align: center;
+    padding: 16px 8px;
 }
 
 .poll-list tr td {

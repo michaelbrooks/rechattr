@@ -12,7 +12,7 @@
 }
 .jumbotron h1 {
     font-size: 72px;
-    line-height: 1;
+    line-height: 1em;
 }
 .jumbotron .btn-large {
     font-size: 21px;
@@ -26,8 +26,8 @@
 }
 
 .jumbotron .user-welcome .twitter-icon {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     vertical-align: bottom;
 }
 
