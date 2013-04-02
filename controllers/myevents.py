@@ -4,7 +4,7 @@ from model import Poll
 
 from . import pagerender as render
 
-class index:
+class myevents:
         
     def GET(self):
         user = web.ctx.auth.current_user()
@@ -14,4 +14,4 @@ class index:
             
         polls = web.ctx.orm.query(Poll).order_by(Poll.created).all()
         
-        return render.index(user, polls)
+        return render.myevents(user, polls)

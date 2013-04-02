@@ -28,7 +28,7 @@ from create import create
 from edit import edit
 from poll import poll
 from results import results
-from index import index
+from myevents import myevents
 from welcome import welcome
 from clear_db import clear_db
 from sign_in import sign_in
@@ -45,7 +45,7 @@ class AppUrls(object):
     
     urls = (
         '/',                    'welcome',
-        '/polls',               'index',
+        '/events',              'myevents',
         '/new',                 'create',
         '/clear_db',            'clear_db',
         '/sign_in',             'sign_in',
@@ -58,7 +58,7 @@ class AppUrls(object):
     
     controller_map = {
         'welcome': welcome,
-        'index': index,
+        'myevents': myevents,
         'create': create,
         'clear_db': clear_db,
         'sign_in': sign_in,
@@ -93,7 +93,7 @@ class AppUrls(object):
         return '/%s/delete' % (poll.poll_url_human)
         
     def polls_list(self):
-        return '/polls'
+        return '/events'
     
     def new_poll(self):
         return '/new'

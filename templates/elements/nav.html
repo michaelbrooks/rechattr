@@ -27,8 +27,8 @@ $def menu_item(name, text, url, active_name):
             $if user is None:
                 $:menu_item('sign_in', '<b>Sign in</b>', urls.sign_in(), active)
             $else:
-                $:menu_item('new', 'New Event', urls.new_poll(), active)
-                $:menu_item('polls', 'My Events', urls.polls_list(), active)
+                $:menu_item('create', 'New Event', urls.new_poll(), active)
+                $:menu_item('myevents', 'My Events', urls.polls_list(), active)
                 $:menu_item('sign_out', 'Sign out', urls.sign_out(), active)
         </ul>
       </div>
