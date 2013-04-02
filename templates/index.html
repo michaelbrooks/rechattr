@@ -1,11 +1,7 @@
 $def with (user, polls)
 $var css: mypolls.css
+$var nav: $:elements.nav('polls', user)
 $ create_url = urls.new_poll()
-<div class="masthead">
-    $:elements.nav('polls', user)
-    <h3 class="muted"><a href="$urls.home()">re:chattr</a></h3>
-</div>
-<hr>
 <div class="row-fluid">
     <div class="span12">
         <h3>My Events <a href="$create_url" class="btn btn-success create-event-button pull-right">Create a new event</a></h3>

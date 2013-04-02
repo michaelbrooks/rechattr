@@ -1,14 +1,10 @@
 $def with (user=None)
 $var css: welcome.css
+$var nav: $:elements.nav('welcome', user)
 $ create_url = urls.new_poll()
 $ sign_in_url = urls.sign_in(urls.home())
 $ sign_out_url = urls.sign_out()
 $ polls_url = urls.polls_list()
-<div class="masthead">
-    $:elements.nav('welcome', user)
-    <h3 class="muted"><a href="$urls.home()">re:chattr</a></h3>
-</div>
-<hr>
 <div class="jumbotron">
     <h1>Welcome to re:chattr!</h1>
     <p class="lead"><strong>re:chattr</strong> helps you collect feedback

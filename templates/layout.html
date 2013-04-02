@@ -45,6 +45,7 @@ $def with (content)
     </head>
     <body>
         <div id="wrap">
+            $:content.get('nav', '')
             <div class="container">
                 $ flash = web.ctx.flash.get(clear=True)
                 $if flash is None:
