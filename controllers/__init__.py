@@ -7,7 +7,8 @@ helpers = {
     'time': time,
     'calendar': calendar,
     'time_ago': utils.time_ago,
-    'time_to': utils.time_to
+    'time_to': utils.time_to,
+    'csrf_token_input': utils.csrf_token_input
 }
 
 render = web.template.render('templates/', globals=helpers)
@@ -70,7 +71,10 @@ class AppUrls(object):
     
     def absolute(self, url):
         return web.ctx.home + url
-    
+
+    def requested(self):
+        return web.ctx.path
+        
     def home(self):
         return '/'
     

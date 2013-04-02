@@ -25,6 +25,16 @@
     margin: 30px 0;
 }
 
+.flash .alert {
+    margin-top: 10px;
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+.flash .alert .close {
+    top: 0;
+}
+
 .twitter-icon {
     background-size: cover;
     background-repeat: no-repeat;

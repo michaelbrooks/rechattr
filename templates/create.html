@@ -84,6 +84,7 @@ $var nav: $:elements.nav('create', user=user)
 <div class="row-fluid create-field">
     <div class="span12">
         $:form.gmt_offset.render()
+        $:csrf_token_input()
         <div class="pull-right">
             <a class="btn btn-large" href="$urls.home()">Cancel</a>
             $:form.submit.render()

@@ -12,6 +12,7 @@ from model import Poll
 import hashlib
 import os
 
+from utils import csrf_protected
 from . import pagerender as render
 
 def nullable(validator):
@@ -146,6 +147,7 @@ class create:
         # use it to populate the form
         return render.create(user, form)
         
+    @csrf_protected
     def POST(self):
         user = web.ctx.auth.current_user()
         if user is None:
@@ -156,6 +158,7 @@ class create:
         # validate the form
         form = create_form()
         if not form.validates():
+            web.ctx.flash.error("Please check the form for problems.")
             return render.create(user, form)
         
         # create a new poll with the input

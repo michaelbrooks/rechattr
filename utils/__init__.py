@@ -66,3 +66,5 @@ def time_ago(dt, long=False, showDays=False):
         return format_time('days', delta.days, long)
     else:
         return format_time('date', dt, long)
+        
+from csrf import csrf_protected, csrf_token_input

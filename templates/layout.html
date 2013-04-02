@@ -55,7 +55,7 @@ $def with (content)
                         $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'}
                         $ cls = type_map[flash['type']]
                         <div class="alert $cls fade in">
-                            <div class="close" >&times;</div>  
+                            <div class="close" data-dismiss="alert" >&times;</div>  
                             $flash['message']
                         </div>
                 </div>
