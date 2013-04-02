@@ -12,7 +12,7 @@ $else:
         <small class="tweet-time">
             <a target="_blank" class="created-at"
                href="https://twitter.com/${tweet.screen_name}/status/${tweet.id}"
-               data-created="${tweet.created_timestamp()}">$tweet.time_ago()</a>
+               data-created="${tweet.created_timestamp()}">$time_ago(tweet.created)</a>
         </small>
         <div class="tweet-text">$:tweet.enriched_tweet_text()</div>
     </div>

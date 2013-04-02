@@ -51,7 +51,7 @@ class AppUrls(object):
         '/sign_in',             'sign_in',
         '/sign_out',            'sign_in',
         '/([\w-]+)',            'poll',
-        '/([\w-]+)/edit/(\w+)', 'edit',
+        '/([\w-]+)/edit',       'edit',
         '/([\w-]+)/stream',     'stream',
         '/([\w-]+)/results',    'results'
     )
