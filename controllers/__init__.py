@@ -48,7 +48,6 @@ class AppUrls(object):
         '/',                    'welcome',
         '/events',              'myevents',
         '/new',                 'create',
-        '/clear_db',            'clear_db',
         '/sign_in',             'sign_in',
         '/sign_out',            'sign_in',
         '/([\w-]+)',            'poll',

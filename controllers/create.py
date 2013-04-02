@@ -19,6 +19,13 @@ def nullable(validator):
     return form.Validator(validator.msg,
                           lambda v: validator.valid(v) if bool(v) else True)
 
+# Make sure the hashtag is not in the restricted set of url segments
+def legal_url_segment(ht):
+    if ht[0] == '#':
+        ht = ht[1:]
+    return ht.lower() not in ['events', 'new', 'sign_in', 'sign_out']
+legal_url_validator = form.Validator('This word is reserved for re:chattr', legal_url_segment)
+
 valid_email = form.regexp(r'.+@.+\..+', 
                           'Must be a valid email address')
 valid_date = form.regexp(r'\d{1,2}/\d{1,2}/\d{2,4}',
@@ -73,7 +80,7 @@ create_form = form.Form(
     Timebox('start_time', '', 'start-time'),
     Datebox('stop_date', 'Event Stop', 'stop-date'),
     Timebox('stop_time', '', 'stop-time'),
-    form.Textbox('twitter_hashtag', form.notnull, valid_hashtag,
+    form.Textbox('twitter_hashtag', form.notnull, valid_hashtag, legal_url_validator,
                  description='Hashtag'),
     # form.Textbox('twitter_other_terms', 
                  # description='Other usernames / hashtags (Optional)'),
