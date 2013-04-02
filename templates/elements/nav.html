@@ -1,10 +1,12 @@
 $def with (active, user=None)
 
-$def menu_item(name, text, url, active_name):
-    $if active_name == name:
-        <li class="active"><a href="$url">$:text</a></li>
+$def menu_item(name, text=None, url=None, body=None):
+    $if body is None:
+        $ body = '<a href="%s">%s</a>' %(url, text)
+    $if active == name:
+        <li class="active">$:body</li>
     $else:
-        <li><a href="$url">$:text</a></li>
+        <li>$:body</li>
 
 <div class="navbar navbar-static-top">
   <div class="navbar-inner">
@@ -23,13 +25,14 @@ $def menu_item(name, text, url, active_name):
       <!-- Everything you want hidden at 940px or less, place within here -->
       <div class="nav-collapse collapse">
         <ul class="nav pull-right">
-            $:menu_item('welcome', 'Home', urls.home(), active)
+            $:menu_item('welcome', 'Home', urls.home())
             $if user is None:
-                $:menu_item('sign_in', '<b>Sign in</b>', urls.sign_in(), active)
+                $:menu_item('sign_in', '<b>Sign in</b>', urls.sign_in())
             $else:
-                $:menu_item('create', 'New Event', urls.new_poll(), active)
-                $:menu_item('myevents', 'My Events', urls.polls_list(), active)
-                $:menu_item('sign_out', 'Sign out', urls.sign_out(), active)
+                $ create_button = elements.create_button(class_="", html="New Event", white=False)
+                $:menu_item('create', body=create_button)
+                $:menu_item('myevents', 'My Events', urls.polls_list())
+                $:menu_item('sign_out', 'Sign out', urls.sign_out())
         </ul>
       </div>
  

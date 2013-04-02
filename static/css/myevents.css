@@ -3,11 +3,6 @@
 @import url("modules/rechattr.css");
 @import url("modules/sticky-footer.css");
 
-.create-event-button {
-    font-weight: normal;
-    line-height: 30px;
-}
-
 .poll-list {
     width: 100%;
 }

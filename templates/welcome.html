@@ -1,7 +1,6 @@
 $def with (user=None)
 $var css: welcome.css
 $var nav: $:elements.nav('welcome', user)
-$ create_url = urls.new_poll()
 $ sign_in_url = urls.sign_in(urls.home())
 $ sign_out_url = urls.sign_out()
 $ polls_url = urls.polls_list()
@@ -17,8 +16,7 @@ $ polls_url = urls.polls_list()
     $else:
         <p class="user-welcome lead">Hello, <strong>@$user.username<span class="twitter-icon"></span></strong><p>
         <p>
-            <a class="btn btn-success setup-new-button" href="$create_url">
-                Set up a new event</a>
+            $:elements.create_button(class_="btn btn-success setup-new-button")
             <a class="btn my-polls" href="$polls_url">
                 My Events</a>
             <a class="btn sign-out" href="$sign_out_url">
