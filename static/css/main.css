@@ -43,4 +43,6 @@
 
 .poll-list tr td.poll-status .label {
     padding: 3px 6px;
+    font-size: 16px;
+    line-height: 16px;
 }
