@@ -29,6 +29,19 @@
     margin-top: 20px;
 }
 
+.interval-field {
+    text-align: center;
+}
+.interval-field * {
+    text-align: left;
+}
+
+.interval-field .interval-start,
+.interval-field .interval-stop {
+    display: inline-block;
+    margin-bottom: 0;
+}
+
 .date-time-label {
     display: inline-block;
     float: left;
