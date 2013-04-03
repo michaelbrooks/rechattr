@@ -61,12 +61,9 @@ $var nav: $:elements.nav('myevents', user)
                         $poll.count_responses()
                     </td>
                     <td class="poll-controls">
-                    $if poll.is_active():
-                        <a class="btn btn-primary pull-right" href="$poll_results_url">Monitor Event</a>
-                    $elif poll.has_started():
-                        <a class="btn btn-primary pull-right" href="$poll_results_url">View Results</a>
-                    $else:
-                        <a class="btn pull-right" href="$poll_edit_url">Edit Event</a>
+                        <a class="btn pull-right" href="$poll_edit_url">Settings</a>
+                        $if poll.has_started():
+                            <a class="btn pull-right" href="$poll_results_url">Results</a>
                     </td>
                 </tr>
             </tbody>

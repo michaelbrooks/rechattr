@@ -1,7 +1,7 @@
 import web
 import tweepy
 from datetime import datetime
-from utils import utc_aware
+from utils.dtutils import utc_aware
 from model import User
 
 class Auth(object):

@@ -8,7 +8,7 @@ import time
 
 # Get the shared base class for declarative ORM
 from model import Base
-from utils import utc_aware
+from utils.dtutils import utc_aware
 from decorators import UTCDateTime
 
 class Question(Base):
@@ -27,6 +27,7 @@ class Question(Base):
     trigger_type = Column(String)
     trigger_info = Column(String)
     image_src = Column(String)
+    subject = Column(String)
     question_text = Column(String)
     answer_choices = Column(String)
 

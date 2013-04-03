@@ -1,7 +1,7 @@
 import web
 from datetime import datetime, timedelta
 from model import Session
-from utils import utc_aware
+from utils.dtutils import utc_aware
 from sqlalchemy.orm.session import Session as sess
 
 class AlchemyStore(web.session.Store):

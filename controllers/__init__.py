@@ -6,8 +6,8 @@ helpers = {
     'web': web,
     'time': time,
     'calendar': calendar,
-    'time_ago': utils.time_ago,
-    'time_to': utils.time_to,
+    'time_ago': utils.dtutils.time_ago,
+    'time_to': utils.dtutils.time_to,
     'csrf_token_input': utils.csrf_token_input
 }
 
@@ -22,6 +22,8 @@ def render_stream_item(item, newItem=False):
     itemType = type(item)
     if itemType is Tweet:
         return elements.tweet(item, newItem)
+    elif itemType is Question:
+        return elements.question(item, newItem)
 
 helpers['render_stream_item'] = render_stream_item
 
@@ -90,7 +92,7 @@ class AppUrls(object):
         return '/%s' % (poll.poll_url_human)
         
     def poll_edit(self, poll):
-        return '/%s/edit/%s' % (poll.poll_url_human, poll.edit_url_code)
+        return '/%s/edit' % (poll.poll_url_human)
     
     def poll_delete(self, poll):
         return '/%s/delete' % (poll.poll_url_human)

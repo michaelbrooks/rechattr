@@ -8,13 +8,8 @@ import simplejson as json
 
 # Get the shared base class for declarative ORM
 from model import Base, Tweet, Response
-from utils import utc_aware
+from utils.dtutils import utc_aware
 from decorators import UTCDateTime
-
-zeroTime = timedelta(0, 0, 0)
-oneMinute = timedelta(0, 60, 0)
-oneHour = timedelta(0, 60*60, 0)
-oneDay = timedelta(0, 60*60*24, 0)
 
 class Poll(Base):
     __tablename__ = 'polls'
