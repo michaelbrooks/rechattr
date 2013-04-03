@@ -27,8 +27,8 @@ $var nav: $:elements.nav('create', user=user)
         <p class="help-small">We'll send out requests 
             for feedback and monitor Twitter discussion during this time.</p>
     </div>
-    <div class="span6">
-        <div class="event-start clearfix">
+    <div class="span6 interval-field">
+        <div class="interval-start control-group clearfix">
             <label class="date-time-label" for="$:form.start_date.id">Start</label>
             $:form.start_date.render()
             $:form.start_time.render()
@@ -39,7 +39,7 @@ $var nav: $:elements.nav('create', user=user)
             </div>
         </div>
         
-        <div class="event-stop clearfix">
+        <div class="interval-stop control-group clearfix">
             <label class="date-time-label" for="$:form.stop_date.id">End</label>
             $:form.stop_date.render()
             $:form.stop_time.render()

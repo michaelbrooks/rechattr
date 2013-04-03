@@ -46,6 +46,8 @@
 		if(this.component && this.component.length === 0)
 			this.component = false;
 
+		this._attachEvents();
+
 		this.forceParse = true;
 		if ('forceParse' in options) {
 			this.forceParse = options.forceParse;
@@ -53,9 +55,12 @@
 			this.forceParse = this.element.data('date-force-parse');
 		}
 
-		this.picker = $(DPGlobal.template);
-		this._buildEvents();
-		this._attachEvents();
+
+		this.picker = $(DPGlobal.template)
+							.on({
+								click: $.proxy(this.click, this),
+								mousedown: $.proxy(this.mousedown, this)
+							});
 
 		if(this.isInline) {
 			this.picker.addClass('datepicker-inline').appendTo(this.element);
@@ -67,6 +72,12 @@
 			this.picker.find('.prev i, .next i')
 						.toggleClass('icon-arrow-left icon-arrow-right');
 		}
+		$(document).on('mousedown', function (e) {
+			// Clicked outside the datepicker, hide it
+            if (!(that.element.find(e.target).size() || that.picker.find(e.target).size())) {
+				that.hide();
+			}
+		});
 
 		this.autoclose = false;
 		if ('autoclose' in options) {
@@ -153,22 +164,8 @@
 		constructor: Datepicker,
 
 		_events: [],
-		_secondaryEvents: [],
-		_applyEvents: function(evs){
-			for (var i=0, el, ev; i<evs.length; i++){
-				el = evs[i][0];
-				ev = evs[i][1];
-				el.on(ev);
-			}
-		},
-		_unapplyEvents: function(evs){
-			for (var i=0, el, ev; i<evs.length; i++){
-				el = evs[i][0];
-				ev = evs[i][1];
-				el.off(ev);
-			}
-		},
-		_buildEvents: function(){
+		_attachEvents: function(){
+			this._detachEvents();
 			if (this.isInput) { // single input
 				this._events = [
 					[this.element, {
@@ -191,9 +188,9 @@
 					}]
 				];
 			}
-			else if (this.element.is('div')) {  // inline datepicker
-				this.isInline = true;
-			}
+						else if (this.element.is('div')) {  // inline datepicker
+							this.isInline = true;
+						}
 			else {
 				this._events = [
 					[this.element, {
@@ -201,37 +198,19 @@
 					}]
 				];
 			}
-
-			this._secondaryEvents = [
-				[this.picker, {
-					click: $.proxy(this.click, this)
-				}],
-				[$(window), {
-					resize: $.proxy(this.place, this)
-				}],
-				[$(document), {
-					mousedown: $.proxy(function (e) {
-						// Clicked outside the datepicker, hide it
-						if (!(this.element.find(e.target).size() || this.picker.find(e.target).size())) {
-							this.hide();
-						}
-					}, this)
-				}]
-			];
-		},
-		_attachEvents: function(){
-			this._detachEvents();
-			this._applyEvents(this._events);
+			for (var i=0, el, ev; i<this._events.length; i++){
+				el = this._events[i][0];
+				ev = this._events[i][1];
+				el.on(ev);
+			}
 		},
 		_detachEvents: function(){
-			this._unapplyEvents(this._events);
-		},
-		_attachSecondaryEvents: function(){
-			this._detachSecondaryEvents();
-			this._applyEvents(this._secondaryEvents);
-		},
-		_detachSecondaryEvents: function(){
-			this._unapplyEvents(this._secondaryEvents);
+			for (var i=0, el, ev; i<this._events.length; i++){
+				el = this._events[i][0];
+				ev = this._events[i][1];
+				el.off(ev);
+			}
+			this._events = [];
 		},
 
 		show: function(e) {
@@ -240,7 +219,7 @@
 			this.picker.show();
 			this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
 			this.place();
-			this._attachSecondaryEvents();
+			$(window).on('resize', $.proxy(this.place, this));
 			if (e) {
 				e.preventDefault();
 			}
@@ -254,9 +233,12 @@
 			if(this.isInline) return;
 			if (!this.picker.is(':visible')) return;
 			this.picker.hide().detach();
-			this._detachSecondaryEvents();
+			$(window).off('resize', this.place);
 			this.viewMode = this.startViewMode;
 			this.showMode();
+			if (!this.isInput) {
+				$(document).off('mousedown', this.hide);
+			}
 
 			if (
 				this.forceParse &&
@@ -264,10 +246,8 @@
 					this.isInput && this.element.val() ||
 					this.hasInput && this.element.find('input').val()
 				)
-			) {
-				this.setValue();
-            }
-            
+			)
+				// this.setValue();
 			this.element.trigger({
 				type: 'hide',
 				date: this.date
@@ -275,9 +255,7 @@
 		},
 
 		remove: function() {
-			this.hide();
 			this._detachEvents();
-			this._detachSecondaryEvents();
 			this.picker.remove();
 			delete this.element.data().datepicker;
 			if (!this.isInput) {

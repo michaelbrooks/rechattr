@@ -14,7 +14,12 @@
 		var time = moment('0', 'h'); //0th hour
 		
 		for (var h = 0; h < 24; h++) {
-			times.push(time.format(timeFormat));
+            if (timeFormat) {
+                times.push(time.format(timeFormat));
+            } else {
+                times.push(time.clone());
+            }
+            
 			time.add('hours', 1);
 		}
 		
