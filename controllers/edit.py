@@ -22,7 +22,7 @@ edit_form = form.Form(
                  # description='Other usernames / hashtags (Optional)'),
     form.Hidden('gmt_offset', type='hidden'),
     form.Button('submit', type='submit', 
-                class_="btn btn-primary btn-large",
+                class_="btn btn-primary",
                 description='Save',
                 html="Save Changes")
 )

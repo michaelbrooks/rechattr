@@ -2,7 +2,25 @@
 @import url("bootstrap-responsive.css");
 @import url("modules/rechattr.css");
 @import url("modules/sticky-footer.css");
+@import url("modules/bootstrap-datepicker.css");
+@import url("modules/time-picker.css");
 
-.page-title .poll-title {
-    color: #474D8A;
+.event-title input {
+    font-size: 20px;
+    line-height: 30px;
+    height: 30px;
+}
+
+.event-hashtag,
+.event-email {
+    display: inline-block;
+    margin-left: 10px;
+}
+.event-hashtag {
+    margin-left: 60px;
+}
+
+.event-update {
+    margin-left: 60px;
+    margin-top: 6px;
 }
