@@ -41,8 +41,8 @@ $var nav: $:elements.nav('create', user=user)
             
             <div class="interval-stop control-group clearfix">
                 <label class="date-time-label" for="$:form.stop_date.id">to</label>
-                $:form.stop_date.render()
                 $:form.stop_time.render()
+                $:form.stop_date.render()
                 
                 <div class="field-note text-error">
                     $:form.stop_date.note
