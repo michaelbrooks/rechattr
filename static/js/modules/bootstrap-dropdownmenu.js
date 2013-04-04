@@ -110,7 +110,6 @@
     },
     
     scrollToSelected: function() {
-        debugger;
         if (this.selectedChoice && this.selectedChoice.length) {
             var halfHeight = this.$menu.height() * 0.5;
             var targetCenter = this.selectedChoice.position().top + this.selectedChoice.height() * 0.5;
