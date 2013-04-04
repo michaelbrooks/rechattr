@@ -45,11 +45,11 @@
 .date-time-label {
     display: inline-block;
     float: left;
-    width: 40px;
     font-weight: bold;
     text-align: right;
     font-size: 16px;
     line-height: 32px;
+    margin-left: 8px;
     margin-bottom: 10px;
 }
 
@@ -98,27 +98,24 @@ input.time-box.error:focus {
 
 .datepicker td,
 .datepicker th {
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
 }
 
+/* Just color today elements light gray + bold */
 .datepicker table tr td.today,
 .datepicker table tr td.today:hover,
 .datepicker table tr td.today.disabled,
 .datepicker table tr td.today.disabled:hover {
   border: none;
-  background-color: #ddd;
-  background-image: -moz-linear-gradient(top, #ddd, #c4c4c4);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ddd), to(#c4c4c4));
-  background-image: -webkit-linear-gradient(top, #ddd, #c4c4c4);
-  background-image: -o-linear-gradient(top, #ddd, #c4c4c4);
-  background-image: linear-gradient(to bottom, #ddd, #c4c4c4);
-  background-repeat: repeat-x;
-  outline: 0;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+  background-color: #eee;
+  background-image: none;
+  filter: none;
+  font-weight: bold;
 }
-}
+
+/* A bit darker on hover */
 .datepicker table tr td.today:hover,
 .datepicker table tr td.today:hover:hover,
 .datepicker table tr td.today.disabled:hover,
@@ -139,8 +136,10 @@ input.time-box.error:focus {
 .datepicker table tr td.today:hover[disabled],
 .datepicker table tr td.today.disabled[disabled],
 .datepicker table tr td.today.disabled:hover[disabled] {
-  background-color: #EEE;
+  background-color: #dadada;
 }
+
+/* Reset styles on selected today element so it looks normal */
 .datepicker table tr td.today:active,
 .datepicker table tr td.today:hover:active,
 .datepicker table tr td.today.disabled:active,
@@ -163,6 +162,20 @@ input.time-box.error:focus {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
   color: #fff !important;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.datepicker table tr td.today.highlight,
+.datepicker table tr td.today.interval,
+.datepicker table tr td.highlight,
+.datepicker table tr td.interval {
+    background-color: #D6EAF5;
+}
+
+.datepicker table tr td.today.highlight:hover,
+.datepicker table tr td.today.interval:hover,
+.datepicker table tr td.highlight:hover,
+.datepicker table tr td.interval:hover {
+    background-color: #9FD2EC;
 }
 
 .event-hashtag {

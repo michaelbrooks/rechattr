@@ -13,15 +13,6 @@
     
     var DEFAULT_DURATION = 60*60; //1 hour in seconds
     
-    var HOURS = [];
-    //prepare the HOURS array
-    HOURS = $.map(rechattr.util.getHourlyTimes(), function(time) {
-        return {
-            text: time.format(TIME_FORMAT),
-            time: time
-        };
-    });
-    
     var IntervalSelection = function(element) {
         
         this.element = element;
@@ -29,7 +20,6 @@
         this.initUI();
         this.attachEvents();
         this.initPickers();
-        
         this.initDataModel();
         this.attachWidgetEvents();
     }
@@ -97,7 +87,6 @@
     }
     
     IntervalSelection.prototype.setStopDateTime = function(time, dontUpdateStop) {
-        console.log("set stop time " + time.toString());
         //Calculate the difference against the start time
         this.model.duration = time.unix() - this.model.startTime.unix();
         this.model.stopTime = time;
@@ -114,7 +103,6 @@
     }
 
     IntervalSelection.prototype.setStartDateTime = function(time, dontUpdateStop) {
-        console.log("set start time " + time.toString());
         
         this.model.startTime = time;
         
@@ -130,6 +118,7 @@
         var dateStr = this.model.startTime.format(DATE_FORMAT);
         this.ui.startDate.val(dateStr);
         this.ui.startDate.datepicker('update', dateStr);
+        this.ui.stopDate.datepicker('setHighlightDate', this.model.startTime.toDate());
         
         var timeStr = this.model.startTime.format(TIME_FORMAT);
         this.ui.startTime.val(timeStr);
@@ -137,8 +126,11 @@
         this.ui.startDate.toggleClass(INVALID_CLASS, false);
         this.ui.startTime.toggleClass(INVALID_CLASS, false);
         
-        var startTimeKey = nextNearestHour(this.model.startTime).format(TIME_FORMAT);
-        this.ui.startTimePicker.dropdownmenu('update', startTimeKey);
+        var dateOfStart = getDateOnly(this.model.startTime);
+        var timeSeries = rechattr.util.getHourlyTimes(dateOfStart);
+        var selectedTime = nextNearestTime(this.model.startTime, timeSeries);
+        this.ui.startTimePicker.dropdownmenu('menu', timeSeries);
+        this.ui.startTimePicker.dropdownmenu('update', selectedTime);
         
         if (!this.validSelection) {
             //Leave the stop time display alone if the duration is not valid
@@ -149,23 +141,41 @@
     }
     
     IntervalSelection.prototype.updateStop = function() {
-        console.log("update stop time");
         
         //If it is the same day as the start, save a flag
         this.sameDay = this.model.stopTime.isSame(this.model.startTime, 'day')
         
+        
         var dateStr = this.model.stopTime.format(DATE_FORMAT);
         this.ui.stopDate.val(dateStr);
         this.ui.stopDate.datepicker('update', dateStr);   
+        this.ui.startDate.datepicker('setHighlightDate', this.model.stopTime.toDate());
         
         var timeStr = this.model.stopTime.format(TIME_FORMAT);
         this.ui.stopTime.val(timeStr);
         
-        var stopTimeKey = nextNearestHour(this.model.stopTime).format(TIME_FORMAT);
-        this.ui.stopTimePicker.dropdownmenu('update', stopTimeKey);
+        
+        var timeSeries;
+        if (this.sameDay) {
+            //Generate a set of times only after the current START time
+            timeSeries = rechattr.util.getHourlyTimes(this.model.startTime);
+        } else {
+            //Generate a set of times on the day of the current stop time
+            var dateOfStop = getDateOnly(this.model.stopTime);
+            timeSeries = rechattr.util.getHourlyTimes(dateOfStop);
+        }
+        
+        //Get the time right after the stop time for the menu
+        var selectedTime = nextNearestTime(this.model.stopTime, timeSeries);
+        this.ui.stopTimePicker.dropdownmenu('menu', timeSeries);
+        this.ui.stopTimePicker.dropdownmenu('update', selectedTime);
         
         this.ui.stopDate.toggleClass(INVALID_CLASS, false);
         this.ui.stopTime.toggleClass(INVALID_CLASS, false);
+    }
+    
+    function getDateOnly(mo) {
+        return mo.clone().startOf('day');
     }
     
     function setDateOnly(on, from) {
@@ -198,17 +208,15 @@
             self.setStartDateTime(dateTime);
         });
         
-        this.ui.stopTimePicker.on('dropdown.select', function(e, obj) {
-            var timeOnly = obj.time;
-            var dateTime = setTimeOnly(self.model.stopTime, timeOnly);
+        this.ui.stopTimePicker.on('dropdown.select', function(e, time) {
+            var dateTime = setTimeOnly(self.model.stopTime, time);
             self.setStopDateTime(dateTime);
             
             self.ui.stopTimePicker.dropdownmenu('hide');
         });
         
-        this.ui.startTimePicker.on('dropdown.select', function(e, obj) {
-            var timeOnly = obj.time;
-            var dateTime = setTimeOnly(self.model.startTime, timeOnly);
+        this.ui.startTimePicker.on('dropdown.select', function(e, time) {
+            var dateTime = setTimeOnly(self.model.startTime, time);
             self.setStartDateTime(dateTime);
             
             self.ui.startTimePicker.dropdownmenu('hide');
@@ -303,15 +311,18 @@
         
     }
     
-    function nextNearestHour(time) {
-        var rounded = time.clone();
-        //Round down first
-        rounded.startOf('hour');
-        if (!rounded.isSame(time)) {
-            //if rounding down changed it, round up instead
-            rounded.add('hour', 1);
-        }
-        return rounded;
+    function nextNearestTime(time, fromTimes, dateInsensitive) {
+        var before = null;
+        $.each(fromTimes, function(index, value) {
+            if (time - value >= 0) {
+                //update before until it passes time
+                before = value;
+            } else {
+                return false;
+            }
+        });
+        
+        return before;
     }
     
     IntervalSelection.prototype.initPickers = function() {
@@ -321,34 +332,26 @@
         .addClass('dropdown');
         // .addClass('input-append dropdown')
         // .append('<div class="btn dropdown-toggle"><span class="icon-time"></span></div>');
-        
+    
         this.ui.startTimePicker.dropdownmenu({
-            choices: HOURS,
-            key: function(obj) {
-                return obj.text;
-            },
-            display: function(obj) {
-                return obj.text;
+            display: function(time) {
+                return time.format(TIME_FORMAT);
             }
         });
         
         var self = this;
         this.ui.stopTimePicker.dropdownmenu({
-            choices: HOURS,
-            key: function(obj) {
-                return obj.text;
-            },
-            display: function(obj) {
+            display: function(time) {
                 if (self.sameDay) {
                     //When the same day is showing on both start and end,
                     //only show the options in the future on the time selector
-                    var objTime = setDateOnly(obj.time, self.model.stopTime);
+                    var objTime = setDateOnly(time, self.model.stopTime);
                     var offset = objTime.diff(self.model.startTime);
                     if (offset < 0) {
                         return false;
                     }
                 }
-                return obj.text;
+                return time.format(TIME_FORMAT);
             }
         });
         
@@ -358,6 +361,7 @@
             forceParse: false,
             keyboardNavigation: false,
             todayHighlight: true,
+            highlightInterval: true,
             autoclose: true
         });
         

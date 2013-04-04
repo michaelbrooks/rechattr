@@ -113,7 +113,9 @@
 
 		this.todayBtn = (options.todayBtn||this.element.data('date-today-btn')||false);
 		this.todayHighlight = (options.todayHighlight||this.element.data('date-today-highlight')||false);
-
+        this.highlightDate = (options.highlightDate||this.element.data('date-highlight-date')||false);
+        this.highlightInterval = (options.highlightInterval||this.element.data('date-highlight-interval')||false);
+        
 		this.calendarWeeks = false;
 		if ('calendarWeeks' in options) {
 			this.calendarWeeks = options.calendarWeeks;
@@ -339,6 +341,12 @@
 			this.updateNavArrows();
 		},
 
+        setHighlightDate: function(date) {
+            var offset = date.getTimezoneOffset() * 60 * 1000;
+            this.highlightDate = new Date(date.valueOf() - offset);
+            this.update();
+        },
+        
 		setDaysOfWeekDisabled: function(daysOfWeekDisabled){
 			this.daysOfWeekDisabled = daysOfWeekDisabled||[];
 			if (!$.isArray(this.daysOfWeekDisabled)) {
@@ -473,6 +481,26 @@
 					prevMonth.getUTCDate() == today.getDate()) {
 					clsName += ' today';
 				}
+                if (this.highlightDate &&
+                    prevMonth.getUTCFullYear() == this.highlightDate.getUTCFullYear() &&
+					prevMonth.getUTCMonth() == this.highlightDate.getUTCMonth() &&
+					prevMonth.getUTCDate() == this.highlightDate.getUTCDate()) {
+                    clsName += ' highlight';
+                }
+                if (this.highlightDate && this.highlightInterval) {
+                    //The highlight date is to the future of the current date
+                    if (this.highlightDate.valueOf() > currentDate &&
+                        prevMonth.valueOf() > currentDate &&
+                        prevMonth.valueOf() < this.highlightDate.valueOf()) {
+                        clsName += ' interval interval-future';
+                    }
+                    //The highlight date is to the past of the current date
+                    else if (this.highlightDate.valueOf() < currentDate &&
+                        prevMonth.valueOf() < currentDate &&
+                        prevMonth.valueOf() > this.highlightDate.valueOf()) {
+                        clsName += ' interval interval-past';
+                    }
+                }
 				if (currentDate && prevMonth.valueOf() == currentDate) {
 					clsName += ' active';
 				}

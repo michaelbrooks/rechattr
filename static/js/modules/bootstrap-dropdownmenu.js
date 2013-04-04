@@ -5,9 +5,8 @@
   // DropdownMenu PUBLIC CLASS DEFINITION
   var DropdownMenu = function(element, options) {
     this.choices = options.choices;
-    this.selectedKey = options.selectedKey;
+    this.selectedItem = options.selected;
     this.display = options.display;
-    this.key = options.key;
     
     this.$element = $(element);
     this._init();
@@ -34,28 +33,35 @@
       this.buildMenu();
     },
     
-    updateMenu: function() {
-        var self = this;
-        
-        if (!this.$menu) {
-            return;
-        }
-        
-        var menuChoices = this.$menu.children();
-        $.each(this.choices, function(index, item) {
-            var choice = $(menuChoices[index]);
-            var display = self.display(item);
-            
-            if (!display) {
-                //Hide items with no display
-                choice.hide();
-            } else {
-                choice.show();
-            }
-            
-            choice.html('<a tabindex="-1" href="#">' + (display) + '</a>');
-        });
+    menu: function(choices) {
+        this.choices = choices;
+        this.selectedChoice = null;
+        this.selectedItem = null;
+        this.buildMenu();
     },
+    
+    // updateMenu: function() {
+        // var self = this;
+        
+        // if (!this.$menu) {
+            // return;
+        // }
+        
+        // var menuChoices = this.$menu.children();
+        // $.each(this.choices, function(index, item) {
+            // var choice = $(menuChoices[index]);
+            // var display = self.display(item);
+            
+            // if (!display) {
+                // Hide items with no display
+                // choice.hide();
+            // } else {
+                // choice.show();
+            // }
+            
+            // choice.html('<a tabindex="-1" href="#">' + (display) + '</a>');
+        // });
+    // },
     
     buildMenu: function() {
         var self = this;
@@ -67,27 +73,35 @@
             this.$menu.empty();
         }
         
-        $.each(this.choices, function(index, item) {
-            var display = self.display(item);
-            var choice = $('<li><a tabindex="-1" href="#">' + (display) + '</a></li>');
-            self.$menu.append(choice);
-            
-            choice.on('click', function(event) {
-                self.$element.trigger('dropdown.select', item);
+        if (this.choices) {
+            $.each(this.choices, function(index, item) {
+                var display = self.display(item);
+                if (display) {
+                    var choice = $('<li><a tabindex="-1" href="#">' + (display) + '</a></li>');
+                    if (item == self.selectedItem) {
+                        choice.addClass('active');
+                    }
+                    
+                    self.$menu.append(choice);
+                    
+                    choice.on('click', function(event) {
+                        self.$element.trigger('dropdown.select', item);
+                    });
+                }
             });
-        });
+        }
     },
     
-    update: function(itemKey) {
+    update: function(item) {
         var self = this;
         $.each(this.choices, function(index, value) {
-            if (self.key(value) == itemKey) {
+            if (value == item) {
                 var choices = self.$menu.children();
                 choices.removeClass('active');
                 
                 self.selectedChoice = $(choices[index]);
                 self.selectedChoice.addClass('active');
-                self.selectedKey = itemKey;
+                self.selectedItem = item;
                 return false;
             }
         });
@@ -110,7 +124,7 @@
     show: function() {
         this.$element.addClass('open');
         
-        this.updateMenu()
+        this.buildMenu()
         this.scrollToSelected();
     }
   };
