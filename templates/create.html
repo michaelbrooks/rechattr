@@ -28,27 +28,7 @@ $var nav: $:elements.nav('create', user=user)
             for feedback and monitor Twitter discussion during this time.</p>
             
         <div class="interval-field clearfix">
-            <div class="interval-start control-group clearfix">
-                <label class="date-time-label" for="$:form.start_date.id">From</label>
-                $:form.start_date.render()
-                $:form.start_time.render()
-                
-                <div class="field-note text-error">
-                    $:form.start_date.note
-                    $:form.start_time.note
-                </div>
-            </div>
-            
-            <div class="interval-stop control-group clearfix">
-                <label class="date-time-label" for="$:form.stop_date.id">to</label>
-                $:form.stop_time.render()
-                $:form.stop_date.render()
-                
-                <div class="field-note text-error">
-                    $:form.stop_date.note
-                    $:form.stop_time.note
-                </div>
-            </div>
+            $:elements.interval_selector(form.start_date, form.start_time, form.stop_date, form.stop_time)
         </div>
     </div>
 </div>

@@ -1,0 +1,21 @@
+$def with (start_date, start_time, stop_date, stop_time)
+<div class="interval-start control-group clearfix">
+    <label class="date-time-label" for="$:start_date.id">From</label>
+    $:start_date.render()
+    $:start_time.render()
+    
+    <div class="field-note text-error">
+        $:start_date.note
+        $:start_time.note
+    </div>
+</div>
+<div class="interval-stop control-group clearfix">
+    <label class="date-time-label" for="$:stop_date.id">to</label>
+    $:stop_time.render()
+    $:stop_date.render()
+    
+    <div class="field-note text-error">
+        $:stop_date.note
+        $:stop_time.note
+    </div>
+</div>
