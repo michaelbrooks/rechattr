@@ -8,17 +8,21 @@
     /**
 	 * Generates a list of hourly times.
 	 */
-	util.getHourlyTimes = function(timeFrom, timeFormat) {
+	util.getHourlyTimes = function(timeFrom, numHalfsToInclude) {
+        numHalfsToInclude = numHalfsToInclude | 0;
+        
 		var times = [];
 		var time = timeFrom.clone()
 		for (var h = time.hour(); h < 24; h++) {
+            times.push(time.clone());
             
-            if (timeFormat) {
-                times.push(time.format(timeFormat));
-            } else {
-                times.push(time.clone());
+            if (numHalfsToInclude > 0) {
+                //While still halfs to include interject a half-hour in there
+                times.push(time.clone().add('minutes', 30));
+                numHalfsToInclude--;
             }
-			time.add('hours', 1);
+            
+            time.add('hours', 1);
 		}
 		
 		return times;

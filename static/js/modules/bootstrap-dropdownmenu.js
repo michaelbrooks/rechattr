@@ -80,6 +80,7 @@
                     var choice = $('<li><a tabindex="-1" href="#">' + (display) + '</a></li>');
                     if (item == self.selectedItem) {
                         choice.addClass('active');
+                        self.selectedChoice = choice;
                     }
                     
                     self.$menu.append(choice);
@@ -109,6 +110,7 @@
     },
     
     scrollToSelected: function() {
+        debugger;
         if (this.selectedChoice && this.selectedChoice.length) {
             var halfHeight = this.$menu.height() * 0.5;
             var targetCenter = this.selectedChoice.position().top + this.selectedChoice.height() * 0.5;
@@ -122,9 +124,8 @@
     },
     
     show: function() {
-        this.$element.addClass('open');
-        
         this.buildMenu()
+        this.$element.addClass('open');
         this.scrollToSelected();
     }
   };

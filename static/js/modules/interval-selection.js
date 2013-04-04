@@ -12,6 +12,7 @@
     var INVALID_CLASS = 'error';
     
     var DEFAULT_DURATION = 60*60; //1 hour in seconds
+    var NUM_HALFS_TO_INCLUDE = 2;
     
     var IntervalSelection = function(element) {
         
@@ -158,7 +159,7 @@
         var timeSeries;
         if (this.sameDay) {
             //Generate a set of times only after the current START time
-            timeSeries = rechattr.util.getHourlyTimes(this.model.startTime);
+            timeSeries = rechattr.util.getHourlyTimes(this.model.startTime, NUM_HALFS_TO_INCLUDE);
         } else {
             //Generate a set of times on the day of the current stop time
             var dateOfStop = getDateOnly(this.model.stopTime);
@@ -231,7 +232,7 @@
     }
     
     function parseTime(userTime) {
-        var time = moment(timeOnly, TIME_FORMAT);
+        var time = moment(userTime, TIME_FORMAT);
         if (time && time.isValid()) {
             return time;
         }
@@ -239,6 +240,15 @@
     
     IntervalSelection.prototype.attachEvents = function() {
         var self = this;
+        
+        $(document).on('click', function(e) {
+            if (!self.ui.startTimePicker.find(e.target).size()) {
+                self.ui.startTimePicker.dropdownmenu('hide');
+            }
+            if (!self.ui.stopTimePicker.find(e.target).size()) {
+                self.ui.stopTimePicker.dropdownmenu('hide');
+            }
+        });
         
         this.ui.startTime
         .on('blur', function(e) {
@@ -350,6 +360,24 @@
                     if (offset < 0) {
                         return false;
                     }
+                    var minutes = time.diff(self.model.startTime, 'minutes');
+                    
+                    var diff = ' (';
+                    if (minutes < 60) {
+                        diff += minutes + ' mins';
+                    } else {
+                        hours = minutes / 60;
+                        diff += hours;
+                        if (hours != 1) {
+                            diff += " hrs";
+                        } else {
+                            diff += " hr";
+                        }
+                    }
+                    
+                    diff += ')';
+                    
+                    return time.format(TIME_FORMAT) + diff;
                 }
                 return time.format(TIME_FORMAT);
             }
