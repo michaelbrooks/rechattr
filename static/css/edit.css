@@ -5,7 +5,7 @@
 
 .poll-banner {
     background: #18182E;
-    padding: 15px 20px 10px 20px;
+    padding: 25px 20px 25px 20px;
     
     color: #D6D7F7;
 }
@@ -89,12 +89,6 @@
     width: 70px;
 }
 
-.poll-banner .other-fields input {
-    font-size: 18px;
-    line-height: 25px;
-    height: 25px;
-}
-
 .poll-banner .event-title {
     position: relative;
     padding-right: 14px;
@@ -103,6 +97,9 @@
 .poll-banner .event-title input {
     width: 100%;
     margin-right: -14px;
+    font-size: 18px;
+    line-height: 25px;
+    height: 25px;
 }
 
 .poll-banner .event-email {
@@ -110,4 +107,7 @@
 }
 .poll-banner .event-email input {
     width: 142px;
+    font-size: 18px;
+    line-height: 25px;
+    height: 25px;
 }

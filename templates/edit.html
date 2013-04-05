@@ -5,10 +5,11 @@ $var nav: $:elements.nav('edit', user)
 <form method="POST" class="poll-banner">
 <div class="row-fluid">
     <div class="span8">
-        <div class="event-hashtag span">
+        <div class="event-hashtag">
             <span class="hashtag-hash">#</span>
             $:form.twitter_hashtag.render()
         </div>
+        <div class="event-title">$:form.title.render()</div>
     </div>
     <div class="span4">
         <div class="event-timing">
@@ -26,15 +27,8 @@ $var nav: $:elements.nav('edit', user)
                     $:form.stop_date.render()
                 </div>
             </div>
+            <div class="event-email">$:form.email.render()</div>
         </div>
-    </div>
-</div>
-<div class="row-fluid other-fields">
-    <div class="span8">
-        <div class="event-title">$:form.title.render()</div>
-    </div>
-    <div class="span4">
-        <div class="event-email">$:form.email.render()</div>
     </div>
 </div>
 $:csrf_token_input()
