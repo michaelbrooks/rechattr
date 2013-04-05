@@ -29,11 +29,11 @@
 	}
     
     var closeButton = '<div class="close">&times;</div>'
-    var flashMessage = function(type, message) {
-        var cls = FLASH_TYPE_MAP[type];
-        var alert = $("<div>").addClass('alert ' + cls);
+    var flashMessage = function(options) {
+        var cls = FLASH_TYPE_MAP[options.type];
+        var alert = $("<div>").addClass('alert fade ' + cls);
         alert.append(closeButton);
-        alert.append(message);
+        alert.append(options.message);
         return alert;
     }
     
@@ -72,12 +72,27 @@
         
         flashBox
         .html(alert)
+        .show();
+        
+        alert
         .alert();
+        
+        // Display a bit later to allow the element to exist first
+        setTimeout(function() {
+            alert.addClass('in')
+        }, 1);
         
         if (flashTimeout) {
             clearTimeout(flashTimeout);
         }
         flashTimeout = setTimeout(util.hideFlash, FLASH_TIMEOUT);
+    }
+    
+    util.flash.error = function(message) {
+        return util.flash({
+            'type': 'error',
+            'message': message
+        });
     }
     
     util.hideFlash = function() {
