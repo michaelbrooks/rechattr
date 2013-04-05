@@ -10,6 +10,10 @@
     color: #D6D7F7;
 }
 
+.poll-banner .muted {
+    color: #858599
+}
+
 .poll-banner input[type="text"].editable,
 .poll-banner .editable input[type="text"]
  {
@@ -56,22 +60,31 @@
 }
 
 .poll-banner .event-hashtag {
-    
+    position: relative;
 }
 
 .poll-banner .event-hashtag,
 .poll-banner .event-hashtag input {
     font-size: 45px;
-    line-height: 60px;
+    line-height: 50px;
 }
 .poll-banner .event-hashtag input {
     height: 60px;
-    padding-left: 2px;
-    margin-left: -6px;
+    padding-left: 35px;
+    margin-left: 0;
     min-width: 200px;
 }
 .poll-banner .event-hashtag .hashtag-hash {
-
+    position: absolute;
+    left: 8px;
+    line-height: 70px;
+    
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .poll-banner .event-timing {
@@ -80,7 +93,7 @@
 
 .poll-banner .event-timing .start-time,
 .poll-banner .event-timing .stop-time {
-    width: 50px;
+    width: 60px;
 }
 
 .poll-banner .event-timing .start-date,
@@ -92,7 +105,6 @@
 .poll-banner .event-title {
     position: relative;
     padding-right: 14px;
-    padding-left: 32px;
 }
 .poll-banner .event-title input {
     width: 100%;
@@ -106,7 +118,7 @@
     text-align: right;
 }
 .poll-banner .event-email input {
-    width: 142px;
+    width: 152px;
     font-size: 18px;
     line-height: 25px;
     height: 25px;
