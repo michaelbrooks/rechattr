@@ -35,6 +35,26 @@
     top: 0;
 }
 
+.flash {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 2000;
+}
+.flash .alert {
+    display: inline-block;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+.flash .very-slow-fade {
+  -webkit-transition: opacity 2s linear;
+     -moz-transition: opacity 2s linear;
+       -o-transition: opacity 2s linear;
+          transition: opacity 2s linear;
+}
+
 .twitter-icon {
     background-size: cover;
     background-repeat: no-repeat;
