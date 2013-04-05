@@ -48,11 +48,11 @@ def nice_delta(delta, long=False, showDays=False):
     elif delta < oneMinute:
         return format_time('seconds', delta.seconds, long)
     elif delta < oneHour:
-        return format_time('minutes', round(delta.seconds / 60), long)
+        return format_time('minutes', round(delta.seconds / 60.0), long)
     elif delta < oneDay:
-        return format_time('hours', round(delta.seconds / (60*60)), long)
+        return format_time('hours', round(delta.seconds / (60.0*60)), long)
     elif showDays:
-        return format_time('days', delta.days, long)
+        return format_time('days', delta.total_seconds() / (60.0*60*24), long)
     else:
         return format_time('date', dt, long)
         
