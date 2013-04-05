@@ -2,25 +2,112 @@
 @import url("bootstrap-responsive.css");
 @import url("modules/rechattr.css");
 @import url("modules/sticky-footer.css");
-@import url("modules/bootstrap-datepicker.css");
-@import url("modules/time-picker.css");
 
-.event-title input {
-    font-size: 20px;
-    line-height: 30px;
-    height: 30px;
+.poll-banner {
+    background: #18182E;
+    padding: 15px 20px 10px 20px;
+    
+    color: #D6D7F7;
 }
 
-.event-hashtag,
-.event-email {
-    display: inline-block;
-    margin-left: 10px;
-}
-.event-hashtag {
-    margin-left: 60px;
+.poll-banner input[type="text"].editable,
+.poll-banner .editable input[type="text"]
+ {
+    background-color: transparent;
+    
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+  
+    -webkit-box-shadow: none;
+       -moz-box-shadow: none;
+            box-shadow: none;
+            
+    -webkit-transition: border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s;
+     -moz-transition: border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s;
+       -o-transition: border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s;
+          transition: border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s;
+
+            
+    border: 1px dashed #453E96;
+    
+    color: #D6D7F7;
 }
 
-.event-update {
-    margin-left: 60px;
-    margin-top: 6px;
+.poll-banner input[type="text"].editable:focus,
+.poll-banner .editable input[type="text"]:focus {
+    background-color: #272155;
+    border-color: #39337A;
+    
+    -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+       -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            
+    
+}
+
+.poll-banner .input-prepend.editable .add-on {
+    border-color: transparent;
+    background: transparent;
+    
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.poll-banner .event-hashtag {
+    
+}
+
+.poll-banner .event-hashtag,
+.poll-banner .event-hashtag input {
+    font-size: 45px;
+    line-height: 60px;
+}
+.poll-banner .event-hashtag input {
+    height: 60px;
+    padding-left: 2px;
+    margin-left: -6px;
+    min-width: 200px;
+}
+.poll-banner .event-hashtag .hashtag-hash {
+
+}
+
+.poll-banner .event-timing {
+    text-align: right;
+}
+
+.poll-banner .event-timing .start-time,
+.poll-banner .event-timing .stop-time {
+    width: 50px;
+}
+
+.poll-banner .event-timing .start-date,
+.poll-banner .event-timing .stop-date {
+    margin-left: 8px;
+    width: 70px;
+}
+
+.poll-banner .other-fields input {
+    font-size: 18px;
+    line-height: 25px;
+    height: 25px;
+}
+
+.poll-banner .event-title {
+    position: relative;
+    padding-right: 14px;
+    padding-left: 32px;
+}
+.poll-banner .event-title input {
+    width: 100%;
+    margin-right: -14px;
+}
+
+.poll-banner .event-email {
+    text-align: right;
+}
+.poll-banner .event-email input {
+    width: 142px;
 }

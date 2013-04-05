@@ -48,7 +48,7 @@ class Timebox(form.Textbox):
     def __init__(self, name, description="", class_=""):
         class_ = 'input-mini time-box %s' % class_
         super(Timebox, self).__init__(
-             name, form.notnull, valid_time, type="time",
+             name, form.notnull, valid_time,
              placeholder="hh:mm",
              autocomplete="off",
              description=description,
