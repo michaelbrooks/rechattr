@@ -8,6 +8,12 @@
     var INTERVAL_STOP_SELECTOR = '.interval-stop';
     var DATE_PICKER_SELECTOR = '.date-picker';
     var TIME_PICKER_SELECTOR = '.time-picker';
+
+    var TIMEZONE_SET_BUTTON_SELECTOR = '.show-timezone-button';
+    var TIMEZONE_BOX_SELECTOR = '.timezone-selector';
+    var TIMEZONE_SHORT_CODE_SELECTOR = '.timezone-short';
+    var TIMEZONE_SELECT_SELECTOR = '#tz_timezone';
+    var TIMEZONE_SHORT_CODE_DATA = 'code';
     
     var INVALID_CLASS = 'error';
     
@@ -23,50 +29,35 @@
         this.initPickers();
         this.initDataModel();
         this.attachWidgetEvents();
+        
+        this.attachTimezoneEvents();
     }
     
     IntervalSelection.prototype.initDataModel = function() {
         this.model = {};
         
-        var startTime = this.element.data('start-timestamp');
-        var stopTime = this.element.data('stop-timestamp');
-        var utcOffset = this.element.data('utc-offset');
-        var timezone = this.element.data('timezone');
+        var startTime = this.ui.startTime.val();
+        var startDate = this.ui.startDate.val();
+        var stopTime = this.ui.stopTime.val();
+        var stopDate = this.ui.stopDate.val();
         
-        if (startTime && stopTime) {
-            this.model.startTime = moment.unix(startTime);
-            this.model.duration = stopTime - startTime;
-            this.model.stopTime = moment.unix(stopTime);
-        } else if (startTime) {
-            this.model.startTime = moment.unix(startTime);
-            this.model.duration = DEFAULT_DURATION;
-            this.model.stopTime = moment.unix(startTime + DEFAULT_DURATION);
+        if (startTime && stopTime && startDate && stopDate) {
+            this.model.startTime = parseDateTime(startDate, startTime);
+            this.model.stopTime = parseDateTime(stopDate, stopTime);
+            this.model.duration = this.model.stopTime - this.model.startTime;
             
-            this.updateStop();
-            
+            this.setStartDateTime(this.model.startTime);
         } else {
             //Initialize to the next whole hour after the current time
             var theHour = moment()
             theHour.startOf('hour')
-            theHour.add('hours', 1)
+            theHour.add('hours', 1);
         
             this.model.startTime = theHour;
             this.model.duration = DEFAULT_DURATION;
             this.model.stopTime = moment.unix(theHour.unix() + DEFAULT_DURATION)
             
             this.setStartDateTime(this.model.startTime);
-        }
-        
-        if (utcOffset) {
-            this.model.utcOffset = utcOffset;
-        } else {
-            this.model.utcOffset = null;
-        }
-        
-        if (timezone) {
-            this.model.timezone = timezone;
-        } else {
-            this.model.timezone = null;
         }
     }
     
@@ -85,6 +76,11 @@
         this.ui.startTime = this.ui.startTimePicker.find('input');
         this.ui.stopDate = this.ui.stopDatePicker.find('input');
         this.ui.stopTime = this.ui.stopTimePicker.find('input');
+        
+        this.ui.timezoneBox = this.element.find(TIMEZONE_BOX_SELECTOR);
+        this.ui.timezoneSetButton = this.element.find(TIMEZONE_SET_BUTTON_SELECTOR);
+        this.ui.timezoneShortCode = this.element.find(TIMEZONE_SHORT_CODE_SELECTOR);
+        this.ui.timezoneSelect = this.element.find(TIMEZONE_SELECT_SELECTOR);
     }
     
     IntervalSelection.prototype.setStopDateTime = function(time, dontUpdateStop) {
@@ -224,6 +220,13 @@
         });
     }
     
+    function parseDateTime(userDate, userTime) {
+        var date = moment(userDate + ' ' + userTime, DATE_FORMAT + ' ' + TIME_FORMAT);
+        if (date && date.isValid()) {
+            return date;
+        }
+    }
+    
     function parseDate(userDate) {
         var date = moment(userDate, DATE_FORMAT);
         if (date && date.isValid()) {
@@ -267,7 +270,7 @@
                 var dateTime = setTimeOnly(self.model.startTime, timeOnly);
                 self.setStartDateTime(dateTime);
             } else {
-                self.startTime.toggleClass(INVALID_CLASS, true);
+                self.ui.startTime.toggleClass(INVALID_CLASS, true);
             }
         });
         
@@ -279,7 +282,7 @@
                 var dateTime = setDateOnly(self.model.startTime, dateOnly);
                 self.setStartDateTime(dateTime);
             } else {
-                self.startDate.toggleClass(INVALID_CLASS, true);
+                self.ui.startDate.toggleClass(INVALID_CLASS, true);
             }
             self.ui.startDate.datepicker('hide');
         });
@@ -319,6 +322,18 @@
             self.ui.stopDate.datepicker('hide');
         });
         
+        this.ui.stopDate
+        .add(this.ui.stopTime)
+        .add(this.ui.startDate)
+        .add(this.ui.startTime)
+        .on('keydown', function(e) {
+            if (e.which == 13) {
+                $(this).blur();            
+                e.preventDefault();
+                return false;
+            }
+        });
+        
     }
     
     function nextNearestTime(time, fromTimes, dateInsensitive) {
@@ -340,8 +355,6 @@
         var timePickers = this.ui.startTimePicker.add(this.ui.stopTimePicker)
         timePickers
         .addClass('dropdown');
-        // .addClass('input-append dropdown')
-        // .append('<div class="btn dropdown-toggle"><span class="icon-time"></span></div>');
     
         this.ui.startTimePicker.dropdownmenu({
             display: function(time) {
@@ -394,48 +407,21 @@
         });
         
     }
-
-    // CreateApp.prototype.updateMenuFromInput = function(inputElement, menuElement) {
-        // var input = $(inputElement);
-        // var menu = $(menuElement);
+    
+    IntervalSelection.prototype.attachTimezoneEvents = function() {
+        var self = this;
         
-        // var time = moment(input.val(), TIME_FORMAT)
-        // if (time.isValid()) {
-            // var formatted = time.format(TIME_FORMAT);
-            // var index = this.hours.indexOf(formatted);
-            // if (index >= 0) {
-                // menu.dropdownmenu('setActiveIndex', index);
-            // } else {
-                // time.startOf('hour');
-                // formatted = time.format(TIME_FORMAT);
-                // index = this.hours.indexOf(formatted);
-                // menu.dropdownmenu('scrollToIndex', index);
-                // menu.dropdownmenu('setActiveIndex', false);
-            // }
-        // } else {
-            // input.val('');
-        // };
-    // }
-
-    // CreateApp.prototype.initializeDefaultTimes = function() {
+        this.ui.timezoneSelect.on('change', function(e) {
+            var code = $(this).find(':selected').data(TIMEZONE_SHORT_CODE_DATA)
+            self.ui.timezoneShortCode.text(code);
+        });
         
-        // var now = moment();
-        
-        // var theHour = now.clone()
-        // theHour.startOf('hour')
-        // theHour.add('hours', 1)
-        
-        // if (!this.$startTime.val() && !this.$startDate.val()) {
-            // this.$startTime.val(theHour.format(TIME_FORMAT));
-            // this.$startDate.val(theHour.format(DATE_FORMAT));
-        // }
-        
-        // if (!this.$stopTime.val() && !this.$stopDate.val()) {
-            // theHour.add('seconds', this.duration)
-            // this.$stopTime.val(theHour.format(TIME_FORMAT));
-            // this.$stopDate.val(theHour.format(DATE_FORMAT));
-        // }
-    // }
+        this.ui.timezoneSetButton.on('click', function(e) {
+            self.ui.timezoneBox.collapse('toggle');
+            e.preventDefault();
+            return false;
+        });
+    }
     
     rechattr.util.IntervalSelection = IntervalSelection;
     return IntervalSelection;

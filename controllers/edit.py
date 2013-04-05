@@ -18,8 +18,8 @@ edit_form = form.Form(
     inputs.Timebox('stop_time', '', 'stop-time'),
     form.Textbox('twitter_hashtag', form.notnull, inputs.valid_hashtag, inputs.legal_url_validator,
                  description='Hashtag'),
-    # form.Textbox('twitter_other_terms', 
-                 # description='Other usernames / hashtags (Optional)'),
+    inputs.TZTimezone('tz_timezone'),
+    form.Checkbox('tz_timezone_save', value="default"),
     form.Hidden('gmt_offset', type='hidden'),
     form.Button('submit', type='submit', 
                 class_="btn btn-primary",
@@ -41,15 +41,22 @@ class edit:
         form.twitter_hashtag.value = poll.twitter_hashtag[1:]
         
         user = web.ctx.auth.current_user()
-        gmt_offset_seconds = user.utc_offset
         
+        tzone = dtutils.tz(poll.olson_timezone)
+        local_event_start = dtutils.local_time(poll.event_start, tzone)
+        local_event_stop = dtutils.local_time(poll.event_stop, tzone)
+        start_date, start_time = dtutils.datetime_to_user(local_event_start)
+        stop_date, stop_time = dtutils.datetime_to_user(local_event_stop)
         
-        start_date, start_time = dtutils.datetime_to_user(poll.event_start, gmt_offset_seconds)
-        stop_date, stop_time = dtutils.datetime_to_user(poll.event_stop, gmt_offset_seconds)
         form.start_date.value = start_date
         form.start_time.value = start_time
         form.stop_date.value = stop_date
         form.stop_time.value = stop_time
+        
+        # save/retrieve the timezone in the poll itself
+        if poll.user.olson_timezone:
+            form.tz_timezone.set_timezone_code(poll.user.olson_timezone)
+        
         
     def GET(self, poll_url):
         # look up the poll based on the url

@@ -33,6 +33,8 @@ class Poll(Base):
     title = Column(String)
     event_start = Column(UTCDateTime)
     event_stop = Column(UTCDateTime)
+    olson_timezone = Column(String)
+    
     twitter_hashtag = Column(String)
     twitter_other_terms = Column(String)
     

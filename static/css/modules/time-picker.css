@@ -46,9 +46,18 @@
 }
 
 .interval-field .interval-start,
-.interval-field .interval-stop {
+.interval-field .interval-stop,
+.interval-field .interval-timezone,
+.interval-field .timezone-control {
     display: inline-block;
     margin-bottom: 0;
+}
+
+.interval-field .interval-timezone a {
+    float: left;
+    margin: 10px 0 10px 10px;
+    line-height: 32px;
+    font-size: 16px;
 }
 
 .date-time-label {
@@ -185,4 +194,40 @@ input.time-box.error:focus {
 .datepicker table tr td.highlight:hover,
 .datepicker table tr td.interval:hover {
     background-color: #9FD2EC;
+}
+
+#tz_timezone {
+    width: auto;
+    min-width: 300px;
+    padding: 0 0 0 4px;
+}
+
+.interval-field .timezone-control .timezone-short {
+    float: left;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 32px;
+    margin-top: 10px;
+    margin-left: 8px;
+    margin-bottom: 10px;
+}
+
+.interval-field .timezone-selector {
+    text-align: center;
+}
+
+.interval-field .timezone-save-default {
+    margin-left: 20px;
+}
+.interval-field .interval-timezone {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #fbfbfb;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.interval-field .timezone-selector .field-note {
+    margin-top: 5px;
 }

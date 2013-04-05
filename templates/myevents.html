@@ -28,22 +28,20 @@ $var nav: $:elements.nav('myevents', user)
             $for poll in polls:
                 $ poll_edit_url = urls.poll_edit(poll)
                 $ poll_results_url = urls.poll_results(poll)
-                $ poll_start = user.from_localtime(poll.event_start)
-                $ poll_stop = user.from_localtime(poll.event_stop)
                 <tr class="poll-list-item">
                     <td class="poll-title">
                         $poll.title <span class="poll-hashtag muted">$poll.twitter_hashtag</span>
                     $if poll.is_active():
                         <span class="poll-timing-info">
-                            Ends in $time_to(poll_stop, long=True, showDays=True)
+                            Ends in $time_to(poll.event_stop, long=True, showDays=True)
                         </span>
                     $elif poll.has_started():
                         <span class="poll-timing-info">
-                            Ended $time_ago(poll_stop, long=True, showDays=True) ago
+                            Ended $time_ago(poll.event_stop, long=True, showDays=True) ago
                         </span>
                     $else:
                         <span class="poll-timing-info">
-                            Starts in $time_to(poll_start, long=True, showDays=True)
+                            Starts in $time_to(poll.event_start, long=True, showDays=True)
                         </span>
                     </td>
                     <td class="poll-status">

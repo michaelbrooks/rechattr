@@ -1,4 +1,10 @@
-$def with (start_date, start_time, stop_date, stop_time)
+$def with (form)
+$ start_date = form.start_date
+$ start_time = form.start_time
+$ stop_date = form.stop_date
+$ stop_time = form.stop_time
+$ tz_timezone = form.tz_timezone
+$ tz_timezone_save = form.tz_timezone_save
 <div class="interval-start control-group clearfix">
     <label class="date-time-label" for="$:start_date.id">From</label>
     $:start_date.render()
@@ -18,4 +24,25 @@ $def with (start_date, start_time, stop_date, stop_time)
         $:stop_date.note
         $:stop_time.note
     </div>
+</div>
+<div class="timezone-control">
+    <a href="#" class="timezone-short show-timezone-button">
+        $if tz_timezone.show:
+            $tz_timezone.show
+    </a>
+</div>
+$if tz_timezone.value:
+    <div class="timezone-selector collapse">
+$else:
+    <div class="timezone-selector collapse in">
+<div class="interval-timezone form-inline">
+    <label for="tz_timezone">Event timezone:</label>
+    $:tz_timezone.render()
+    <label class="checkbox timezone-save-default" for="tz_timezone_save_yes">
+        $:tz_timezone_save.render()
+        <span title="Use this timezone for future events">Save as my default</span>
+    </label>
+    <div class="field-note text-error">$:tz_timezone.note</div>
+    <div class="field-note text-error">$:tz_timezone_save.note</div>
+</div>
 </div>

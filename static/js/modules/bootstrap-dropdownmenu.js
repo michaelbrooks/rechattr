@@ -87,6 +87,8 @@
                     
                     choice.on('click', function(event) {
                         self.$element.trigger('dropdown.select', item);
+                        event.preventDefault();
+                        return false;
                     });
                 }
             });

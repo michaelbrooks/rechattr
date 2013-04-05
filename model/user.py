@@ -6,6 +6,7 @@ import cPickle as pickle
 
 # Get the shared base class for declarative ORM
 from model import Base, Tweet
+from utils import dtutils
 from decorators import UTCDateTime
 
 class User(Base):
@@ -23,7 +24,8 @@ class User(Base):
     full_name = Column(String)
     profile_image_url = Column(String)
     utc_offset = Column(Integer)
-    time_zone = Column(String)
+    human_timezone = Column(String)
+    olson_timezone = Column(String)
     
     last_signed_in = Column(UTCDateTime, default=datetime.utcnow)
     tweet_count = Column(Integer, default=0)
@@ -47,9 +49,20 @@ class User(Base):
             self.full_name = user_info.name
             self.profile_image_url = user_info.profile_image_url_https
             self.utc_offset = user_info.utc_offset
-            self.time_zone = user_info.time_zone
+            self.human_timezone = user_info.time_zone
+            
+            # if the timezone hasn't been set, try to guess it
+            if self.olson_timezone is None:
+                self.olson_timezone = self.guess_olson_timezone()
+                
+            
+    def guess_olson_timezone(self):
+        if self.human_timezone is not None and self.human_timezone in dtutils.ruby_to_olson:
+            return dtutils.ruby_to_olson[self.human_timezone]
+        
+        return None
 
-    def from_localtime(self, dt):
+    def to_localtime(self, dt):
         if self.utc_offset is None:
             return dt
             

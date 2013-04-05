@@ -11,10 +11,6 @@
     var CreateApp = function() {
         var self = this;
         
-        this.$form = $('form');
-        this.gmtOffset = -new Date().getTimezoneOffset();
-        $('input[name=gmt_offset]').val(this.gmtOffset);
-        
         this.intervalSelector = new rechattr.util.IntervalSelection($(INTERVAL_FIELD_SELECTOR));
     }
     
