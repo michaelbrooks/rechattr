@@ -7,11 +7,11 @@ from datetime import datetime, timedelta
 import simplejson as json
 
 # Get the shared base class for declarative ORM
-from model import Base, Tweet, Response
+import model
 from utils.dtutils import utc_aware
 from decorators import UTCDateTime
 
-class Poll(Base):
+class Poll(model.Base):
     __tablename__ = 'polls'
     
     POLL_URL_CODE_LENGTH = 6
@@ -59,25 +59,25 @@ class Poll(Base):
         if session is None:
             session = Session.object_session(self)
         
-        return session.query(Tweet).\
-                       filter(Tweet.polls.contains(self)).\
+        return session.query(model.Tweet).\
+                       filter(model.Tweet.polls.contains(self)).\
                        count()
     
     def count_responses(self, session=None):
         if session is None:
             session = Session.object_session(self)
         
-        return session.query(Response).\
-                       filter(Response.poll ==self).\
+        return session.query(model.Response).\
+                       filter(model.Response.poll ==self).\
                        count()
     
     def tweet_stream(self, session=None):
         if session is None:
             session = Session.object_session(self)
             
-        query = session.query(Tweet).\
-                        filter(Tweet.polls.contains(self)).\
-                        order_by(Tweet.created.desc())
+        query = session.query(model.Tweet).\
+                        filter(model.Tweet.polls.contains(self)).\
+                        order_by(model.Tweet.created.desc())
         return query.all()
     
     def has_started(self):

@@ -11,7 +11,7 @@ class myevents:
         if user is None:
             url = web.ctx.urls.sign_in(web.ctx.urls.polls_list())
             return web.seeother(url) # go sign in and then come back
-            
-        # polls = user.pollsweb.ctx.orm.query(Poll).order_by(Poll.created).all()
+
+        polls = user.polls_by_start()
         
-        return render.myevents(user, user.polls)
+        return render.myevents(user, polls)

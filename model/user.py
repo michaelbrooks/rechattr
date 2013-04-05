@@ -1,15 +1,16 @@
 from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime, BigInteger
+from sqlalchemy.orm import Session
 from datetime import datetime
 from dateutil.tz import tzoffset
 import cPickle as pickle
 
 # Get the shared base class for declarative ORM
-from model import Base, Tweet
+import model
 from utils import dtutils
 from decorators import UTCDateTime
 
-class User(Base):
+class User(model.Base):
     __tablename__ = 'users'
     
     id = Column(Integer, primary_key=True)
@@ -73,11 +74,22 @@ class User(Base):
         return pickle.loads(self.user_cache.encode('utf-8'))
 
     def poll_stats(self, session, poll):
-        tweetCount = session.query(Tweet).\
-                             filter(Tweet.polls.contains(poll), Tweet.user_id == self.oauth_user_id).\
+        tweetCount = session.query(model.Tweet).\
+                             filter(model.Tweet.polls.contains(poll), 
+                                    model.Tweet.user_id == self.oauth_user_id).\
                              count()
                              
         return {
             'tweets': tweetCount,
             'feedbacks': 0
         }
+        
+    def polls_by_start(self, session=None):
+        if session is None:
+            session = Session.object_session(self)
+            
+        return session.query(model.Poll).\
+                       filter(model.Poll.user == self).\
+                       order_by(model.Poll.event_start.desc()).\
+                       all()
+    
