@@ -1,0 +1,93 @@
+.timeline-wrapper {
+    margin: 40px 0;
+    height: 40px;
+}
+
+.timeline {
+    position: relative;
+    height: 100%;
+}
+
+.timeline .timeline-line,
+.timeline .timeline-bead,
+.timeline .timeline-tick,
+.timeline .timeline-focus {
+    position: absolute;
+    top: 50%;
+}
+
+.timeline .timeline-line {
+    height: 4px;
+    width: 100%;
+    
+    margin-top: -2px;
+    background: #13750A;
+}
+
+.timeline .timeline-tick {
+    height: 20px;
+    width: 4px;
+    background: green;
+    
+    margin-top: -10px;
+}
+
+.timeline .timeline-start {
+    left: 0;
+    margin-left: -2px;
+}
+
+.timeline .timeline-stop {
+    right: 0;
+    margin-right: -2px;
+}
+
+.timeline .timeline-focus {
+    height: 20px;
+    width: 2px;
+    background: green;
+    
+    margin-left: -1px;
+    margin-top: -10px;
+    
+    -webkit-transition: opacity 0.1s linear;
+    -moz-transition: opacity 0.1s linear;
+    -ms-transition: opacity 0.1s linear;
+    -o-transition: opacity 0.1s linear;
+    transition: opacity 0.1s linear;
+    
+}
+
+.timeline .timeline-bead {
+    height: 14px;
+    width: 14px;
+    background: green;
+    border: 1px solid green;
+    
+    margin-top: -8px;
+    margin-left: -8px;
+    
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    
+    -webkit-transition: background 0.1s linear, height 0.1s linear, width 0.1s linear, margin 0.1s linear;
+    -moz-transition: background 0.1s linear, height 0.1s linear, width 0.1s linear, margin 0.1s linear;
+    -ms-transition: background 0.1s linear, height 0.1s linear, width 0.1s linear, margin 0.1s linear;
+    -o-transition: background 0.1s linear, height 0.1s linear, width 0.1s linear, margin 0.1s linear;
+    transition: background 0.1s linear, height 0.1s linear, width 0.1s linear, margin 0.1s linear;
+}
+
+.timeline .timeline-bead.dragging {
+}
+
+.timeline .timeline-bead.selected {
+    background: #DBFF1D;
+    
+    height: 20px;
+    width: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    
+    z-index: 50;
+}

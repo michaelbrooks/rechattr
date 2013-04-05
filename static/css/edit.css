@@ -2,7 +2,7 @@
 @import url("bootstrap-responsive.css");
 @import url("modules/rechattr.css");
 @import url("modules/sticky-footer.css");
-
+@import url("edit/timeline.css");
 .poll-banner {
     background: #18182E;
     padding: 25px 20px 25px 20px;

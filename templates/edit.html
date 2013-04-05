@@ -50,7 +50,18 @@ $:csrf_token_input()
             and lasts for
             <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration())</span>.
         </p>
-        <div class="btn">New Question</div>
+        <div class="timeline-wrapper">
+            <div class="timeline">
+                <div class="timeline-line"></div>
+                <div class="timeline-tick timeline-start"></div>
+                <div class="timeline-tick timeline-stop"></div>
+                <div class="timeline-focus fade"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12">
         <div class="question-list">
             $for question in poll.questions:
                 $:render_stream_item(question)
