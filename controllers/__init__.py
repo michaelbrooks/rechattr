@@ -1,11 +1,10 @@
-import web, time, calendar
+import web, time
 from urllib import urlencode
 import utils
 
 helpers = {
     'web': web,
     'time': time,
-    'calendar': calendar,
     'dtutils': utils.dtutils,
     'csrf_token_input': utils.csrf_token_input
 }
@@ -53,6 +52,7 @@ class AppUrls(object):
         '/sign_out',            'sign_in',
         '/([\w-]+)',            'poll',
         '/([\w-]+)/edit',       'edit',
+        '/([\w-]+)/edit/(\w+)/(\d+)',   'edit',
         '/([\w-]+)/stream',     'stream',
         '/([\w-]+)/results',    'results'
     )

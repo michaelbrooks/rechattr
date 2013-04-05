@@ -1,5 +1,4 @@
 import web
-import simplejson as json
 from datetime import datetime
 import time
 
@@ -47,5 +46,4 @@ class stream:
         }
         
         # display the poll
-        web.header('Content-Type', 'application/json')
-        return json.dumps(response)
+        return web.ctx.json(response)

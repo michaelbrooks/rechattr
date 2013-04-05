@@ -3,7 +3,7 @@ import db, model
 import appconfig as conf
 import controllers
 import migrate
-from model import User
+import utils
 from utils.auth import Auth
 from utils.alchemystore import AlchemyStore
 from utils.flash import Flash
@@ -42,6 +42,9 @@ def load_sqla(handler):
 def load_session(handler):
     # make the url manager available
     web.ctx.urls = urls
+    
+    # provide a convenient way to return json data
+    web.ctx.json = utils.json
     
     # set up the session
     sessionStore.set_db(web.ctx.orm)

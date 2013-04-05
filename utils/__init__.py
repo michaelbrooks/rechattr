@@ -1,5 +1,6 @@
+import web
 from csrf import csrf_protected, csrf_token_input
-
+import simplejson
 
 def parse_tweep_error(e):
     try:
@@ -10,3 +11,9 @@ def parse_tweep_error(e):
     except:
         return -1, str(e)
         
+def json(data=None, **kargs):
+    web.header('Content-Type', 'application/json')
+    if data:
+        return simplejson.dumps(data)
+    else:
+        return simplejson.dumps(kargs)

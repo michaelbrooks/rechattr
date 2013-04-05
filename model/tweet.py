@@ -3,7 +3,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer, String, DateTime, BigInteger
 from sqlalchemy.orm import relationship, backref    
 from datetime import datetime
-import calendar
+
 from dateutil import parser
 import simplejson as json
 from string import Template
@@ -149,4 +149,4 @@ class Tweet(Base):
         return text
             
     def created_timestamp(self):
-        return calendar.timegm(self.created.utctimetuple())
+        return dtutils.dt_timestamp(self.created)

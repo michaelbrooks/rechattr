@@ -4,6 +4,7 @@ from dateutil.tz import tzoffset, tzutc
 import math
 import pytz
 import re
+import calendar
 
 utc = tzutc()
 
@@ -37,12 +38,15 @@ def utc_aware(dt=None):
         dt = datetime.utcnow()
     return dt.replace(tzinfo=utc)
 
+def dt_timestamp(dt):
+    return calendar.timegm(dt.utctimetuple())
+    
 def time_to(dt, long=False, showDays=False):
     now = utc_aware()
     delta = dt - now
     return nice_delta(delta, long=long, showDays=showDays)
     
-def nice_delta(delta, long=False, showDays=False):
+def nice_delta(delta, long=False, showDays=False, sub=False):
     if delta < zeroTime:
         return format_time('seconds', 0, long)
     elif delta < oneMinute:

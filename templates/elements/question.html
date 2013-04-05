@@ -10,17 +10,15 @@ $else:
             $if question.image_src is not None:
                 <img class="question-image" src="$question.image_src" />
             <strong class="question-subject">${question.subject}</strong>
+            <div class="question-offset">${question.nice_offset()}</div>
         </div>
         <div class="question-text">${question.question_text}</div>
-        <a class="twitter-author" target="_blank" href="https://twitter.com/${tweet.screen_name}">
-            <img class="avatar" src="${tweet.profile_image_url}" alt="${tweet.user_name}" />
-            <strong class="full-name">${tweet.user_name}</strong>
-            <span class="screen-name">@${tweet.screen_name}</span></a>
-        <small class="tweet-time">
-            <a target="_blank" class="created-at"
-               href="https://twitter.com/${tweet.screen_name}/status/${tweet.id}"
-               data-created="${tweet.created_timestamp()}">$time_ago(tweet.created)</a>
-        </small>
-        <div class="tweet-text">$:tweet.enriched_tweet_text()</div>
+        <ul class="answer-list">
+        $for choice in question.get_answer_choices():
+            <li>
+                <div class="choice">$choice</div>
+            </li>
+        </ul>
+        <div class="btn btn-danger question-delete">Delete</div>
     </div>
 </div>

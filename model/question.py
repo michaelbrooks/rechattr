@@ -8,6 +8,7 @@ import time
 
 # Get the shared base class for declarative ORM
 from model import Base
+from utils import dtutils
 from utils.dtutils import utc_aware
 from decorators import UTCDateTime
 
@@ -24,16 +25,35 @@ class Question(Base):
                         backref=backref('questions', order_by=created))
     
     # Question info
-    trigger_type = Column(String)
+    trigger_type = Column(String, default='time_offset')
     trigger_info = Column(String)
     image_src = Column(String)
     subject = Column(String)
     question_text = Column(String)
     answer_choices = Column(String)
-
-    def get_answer_choices(self):
-        return json.loads(self.answers)
     
+    def get_answer_choices(self):
+        if not hasattr(self, '_cached_answers'):
+            self._cached_answers = json.loads(self.answer_choices)
+        return self._cached_answers
+        
+    def set_answer_choices(self, answers):
+        self.answer_choices = json.dumps(answers)
+        self._cached_answers = answers
+        
+    def percent_through_poll(self):
+        if self.trigger_type != 'time_offset':
+            return None
+        seconds = float(self.trigger_info)
+        duration = self.poll.duration().total_seconds()
+        return seconds / duration;
+        
+    def nice_offset(self):
+        if self.trigger_type != 'time_offset':
+            return None
+        delta = timedelta(seconds=float(self.trigger_info))
+        return dtutils.nice_delta(delta, sub=True)
+        
     def triggered(self):
         if self.trigger_type == 'time_offset':
             seconds = self.trigger_info
