@@ -40,7 +40,9 @@ def utc_aware(dt=None):
 def time_to(dt, long=False, showDays=False):
     now = utc_aware()
     delta = dt - now
+    return nice_delta(delta, long=long, showDays=showDays)
     
+def nice_delta(delta, long=False, showDays=False):
     if delta < zeroTime:
         return format_time('seconds', 0, long)
     elif delta < oneMinute:
@@ -53,23 +55,11 @@ def time_to(dt, long=False, showDays=False):
         return format_time('days', delta.days, long)
     else:
         return format_time('date', dt, long)
-    
+        
 def time_ago(dt, long=False, showDays=False):
     now = utc_aware()
     delta = now - dt
-    
-    if delta < zeroTime:
-        return format_time('seconds', 0, long)
-    elif delta < oneMinute:
-        return format_time('seconds', delta.seconds, long)
-    elif delta < oneHour:
-        return format_time('minutes', round(delta.seconds / 60), long)
-    elif delta < oneDay:
-        return format_time('hours', round(delta.seconds / (60*60)), long)
-    elif showDays:
-        return format_time('days', delta.days, long)
-    else:
-        return format_time('date', dt, long)
+    return nice_delta(delta, long=long, showDays=showDays)
         
 def user_to_datetime(date_str, time_str, olsonCode):
     zone = tz(olsonCode)

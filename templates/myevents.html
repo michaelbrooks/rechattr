@@ -33,15 +33,15 @@ $var nav: $:elements.nav('myevents', user)
                         $poll.title <span class="poll-hashtag muted">$poll.twitter_hashtag</span>
                     $if poll.is_active():
                         <span class="poll-timing-info">
-                            Ends in $time_to(poll.event_stop, long=True, showDays=True)
+                            Ends in $dtutils.time_to(poll.event_stop, long=True, showDays=True)
                         </span>
                     $elif poll.has_started():
                         <span class="poll-timing-info">
-                            Ended $time_ago(poll.event_stop, long=True, showDays=True) ago
+                            Ended $dtutils.time_ago(poll.event_stop, long=True, showDays=True) ago
                         </span>
                     $else:
                         <span class="poll-timing-info">
-                            Starts in $time_to(poll.event_start, long=True, showDays=True)
+                            Starts in $dtutils.time_to(poll.event_start, long=True, showDays=True)
                         </span>
                     </td>
                     <td class="poll-status">

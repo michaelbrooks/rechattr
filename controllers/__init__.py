@@ -6,8 +6,7 @@ helpers = {
     'web': web,
     'time': time,
     'calendar': calendar,
-    'time_ago': utils.dtutils.time_ago,
-    'time_to': utils.dtutils.time_to,
+    'dtutils': utils.dtutils,
     'csrf_token_input': utils.csrf_token_input
 }
 

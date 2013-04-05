@@ -93,7 +93,7 @@ class Poll(model.Base):
         return now > self.event_stop
     
     def duration(self):
-        duration = self.event_stop - self.event_start
+        return self.event_stop - self.event_start
         
     
     @classmethod
