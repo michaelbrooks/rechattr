@@ -76,8 +76,9 @@ class Tweet(Base):
         
     
     @classmethod
-    def fromJSON(cls, statusJson):
-        status = Status(statusJson)
+    def fromJSON(cls, statusJson, tweepy):
+        raise Exception("Does not work right now!")
+        status = Status.parse(tweepy, statusJson)
         return cls(status)
     
     def get_entities(self):

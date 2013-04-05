@@ -8,23 +8,33 @@ from threading import Lock
 import time
 
 from twittermon import TermChecker, DynamicTwitterStream, JsonStreamListener
-from tweepy import OAuthHandler
+from tweepy import OAuthHandler, Status
 
 class DbListener(JsonStreamListener):
 
     def __init__(self, checker):
         super(DbListener, self).__init__()
         self.checker = checker
+        self.backlog = []
         
     def on_status(self, status):
         """Called when a new status arrives"""
+        
+        # build a Status object out of the json
+        status = Status.parse(self.api, status)
         
         # add the status to the queue on the checker
         if not self.checker.lock.acquire(False):
             self.backlog.append(status)
             print "putting status %s in backlog" % (status['id'])
         else:
+            # we have a lock so clear the backlog now
+            self.checker.tweets.extend(self.backlog)
+            self.backlog = []
+            
+            # and also add the status we care about
             self.checker.tweets.append(status)
+            
             self.checker.lock.release()
         
         return True
@@ -87,14 +97,14 @@ class PollTermChecker(TermChecker):
         
         
     def _normalize_entities(self, status):
-        for ht_entity in status['entities']['hashtags']:
+        for ht_entity in status.entities['hashtags']:
             ht_entity['text_n'] = '#' + ht_entity['text'].lower()
         
-        for mention in status['entities']['user_mentions']:
+        for mention in status.entities['user_mentions']:
             mention['screen_name_n'] = '@' + mention['screen_name'].lower()
         
-        status['user']['screen_name_n'] = '@' + status['user']['screen_name'].lower()
-        status['text_n'] = status['text'].lower()
+        status.user.screen_name_n = '@' + status.user.screen_name.lower()
+        status.text_n = status.text.lower()
         
     def _process_tweet(self, status, rt_status=None):
         new_tweet = False
@@ -102,15 +112,15 @@ class PollTermChecker(TermChecker):
         self._normalize_entities(status)
         
         # look in database first to see if it is there already
-        tweet = self.orm.query(Tweet).get(status['id'])
+        tweet = self.orm.query(Tweet).get(status.id)
         if tweet is None:
-            tweet = Tweet.fromJSON(status)
+            tweet = Tweet(status)
             new_tweet = True
         
         if rt_status is not None:
             self._normalize_entities(rt_status)
             # look in database first to see if it is there already
-            retweet = self.orm.query(Tweet).get(rt_status['id'])
+            retweet = self.orm.query(Tweet).get(rt_status.id)
             if retweet is None:
                 retweet = Tweet(rt_status)
                 new_retweet = True
@@ -156,23 +166,23 @@ class PollTermChecker(TermChecker):
 
         match = False
         
-        for ht_entity in status['entities']['hashtags']:
+        for ht_entity in status.entities['hashtags']:
             if ht_entity['text_n'] == key:
                 match = True
                 break
         
         if not match:
-            for mention in status['entities']['user_mentions']:
+            for mention in status.entities['user_mentions']:
                 if mention['screen_name_n'] == key:
                     match = True
                     break
         
         if not match:
-            if status['user']['screen_name_n'] == key:
+            if status.user.screen_name_n == key:
                 match = True
         
         if not match:
-            if key in status['text_n']:
+            if key in status.text_n:
                 match = True
             
         return match
@@ -195,8 +205,8 @@ class PollTermChecker(TermChecker):
         
         for status in tweets:
             # process the embedded tweets first
-            if 'retweeted_status' in status:
-                original = status['retweeted_status']
+            if hasattr(status, 'retweeted_status'):
+                original = status.retweeted_status
                 # and any terms associated with the original will also get put on the retweet
                 if not self._process_tweet(original, status):
                     unmapped += 1
