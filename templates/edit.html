@@ -63,8 +63,28 @@ $:csrf_token_input()
 <div class="row-fluid">
     <div class="span12">
         <div class="question-list">
-            $for question in poll.questions:
-                $:render_stream_item(question)
+        $for question in poll.questions:
+            <div class="question">
+                <input class="subject" type="text" value="$question.subject"/>
+                <textarea class="question-text">$question.question_text</textarea>
+                <ul>
+                $for choice in question.answer_choices:
+                    <li>
+                        <div class="choice">$choice</div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
+    <script id="question-template" type="text/template">
+        <input class="subject" type="text" value="<%=subject%>" />
+        <textarea class="question-text"><%=question_text%></textarea>
+        <ul class="answer-choices">
+        <% _.each(answer_choices, function(choice) { %>
+            <li>
+                <div class="choice"><%=choice%></div>
+            </li>
+        <% }); %>
+        </ul>
+    </script>
 </div>

@@ -1,4 +1,6 @@
 import web
+import simplejson as json
+
 from web import form
 from model import Poll
 
@@ -7,10 +9,8 @@ from . import pagerender as render
 
 edit_form = form.Form(
     form.Textbox('email', inputs.nullable(inputs.valid_email),
-                 description='Your email',
                  class_="editable", placeholder="Email"),
     form.Textbox('title', form.notnull,
-                 description='Event Name',
                  class_='editable', autocomplete="off",
                  placeholder="My Awesome Event"),
     form.Textbox('start_time', form.notnull, inputs.valid_time,
@@ -30,14 +30,7 @@ edit_form = form.Form(
                  placeholder="mm/dd/yyyy",
                  autocomplete="off"),
     form.Textbox('twitter_hashtag', form.notnull, inputs.valid_hashtag, inputs.legal_url_validator,
-                 class_='editable'),
-    inputs.TZTimezone('tz_timezone', form.notnull, inputs.valid_timezone),
-    form.Checkbox('tz_timezone_save', value="yes"),
-    form.Hidden('gmt_offset', type='hidden'),
-    form.Button('submit', type='submit', 
-                class_="btn btn-primary",
-                description='Save',
-                html="Save Changes")
+                 class_='editable')
 )
 
 class edit:
@@ -66,11 +59,28 @@ class edit:
         form.stop_date.value = stop_date
         form.stop_time.value = stop_time
         
-        # save/retrieve the timezone in the poll itself
-        if poll.user.olson_timezone:
-            form.tz_timezone.set_timezone_code(poll.user.olson_timezone)
+        
+    def _ajax_message(self, type, message, about):
+        web.header('Content-Type', 'application/json')
+        return json.dumps({
+            'type': type,
+            'message': message,
+            'about': about
+        });
+    
+    def _post_question(self, user, poll, input):
+        # validate the input
+        if 'subject' not in input or len(input.subject.strip()) == 0:
+            return self._ajax_message('error', 'Required', 'subject')
+        
+        print input
+        
+        return self._ajax_message('wheee', 'asdf', None)
         
         
+    def _post_poll(self, user, poll, input):
+        pass
+    
     def GET(self, poll_url):
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
@@ -105,8 +115,10 @@ class edit:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
             raise web.ctx.notfound()
         
-        # update the poll based on the input
-        i = web.input()
+        input = web.input()
         
-        # generate an edit form
-        return render.edit(user, poll)
+        # Check if it is a poll update or a question update
+        if 'subject' in input:
+            return self._post_question(user, poll, input)
+        elif 'title' in input:
+            return self._post_poll(user, poll, input)

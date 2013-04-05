@@ -29,6 +29,7 @@ $def with (content)
         <script src="/static/js/vendor/jquery.event.swipe.js"></script>
         <script src="/static/js/vendor/bootstrap.js"></script>
         <script src="/static/js/vendor/bootstrap-datepicker.js"></script>
+        <script src="/static/js/vendor/underscore.js"></script>
         <script src="/static/js/vendor/moment.js"></script>
         
         <script src="/static/js/util.js"></script>
@@ -53,16 +54,14 @@ $def with (content)
             $:content.get('nav', '')
             <div class="container">
                 $ flash = web.ctx.flash.get(clear=True)
-                $if flash is None:
-                    <div class="flash hide">
-                $else:
-                    <div class="flash">
-                        $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'}
-                        $ cls = type_map[flash['type']]
-                        <div class="alert $cls fade in">
-                            <div class="close" data-dismiss="alert" >&times;</div>  
-                            $flash['message']
-                        </div>
+                <div class="flash">
+                $if flash is not None:
+                    $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'}
+                    $ cls = type_map[flash['type']]
+                    <div class="alert $cls fade in">
+                        <div class="close" data-dismiss="alert" >&times;</div>  
+                        $flash['message']
+                    </div>
                 </div>
                 $:content
             </div>
