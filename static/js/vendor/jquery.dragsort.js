@@ -10,6 +10,12 @@
             return;
         }
 
+        //mjbrooks: another method for stopping the drag/drop early
+        if (options == 'stop') {
+            $(this.selector).trigger('dragsort-stop');
+            return;
+        }
+
         var opts = $.extend({}, $.fn.dragsort.defaults, options);
         var lists = [];
         var list = null, lastPos = null;
@@ -40,13 +46,17 @@
                         opts.placeHolderTemplate = "<" + opts.tagName + ">&nbsp;</" + opts.tagName + ">";
 
                     //listidx allows reference back to correct list variable instance
-                    $(this.container).attr("data-listidx", i).mousedown(this.grabItem).bind("dragsort-uninit", this.uninit);
+                    $(this.container).attr("data-listidx", i).mousedown(this.grabItem).bind("dragsort-uninit", this.uninit)
+                        //mjbrooks: add handler for stop command
+                        .bind('dragsort-stop', this.dropItem);
                     this.styleDragHandlers(true);
                 },
 
                 uninit: function() {
                     var list = lists[$(this).attr("data-listidx")];
-                    $(list.container).unbind("mousedown", list.grabItem).unbind("dragsort-uninit");
+                    $(list.container).unbind("mousedown", list.grabItem).unbind("dragsort-uninit")
+                        //mjbrooks: unbind handler for stop command
+                        .unbind('dragsort-stop');
                     list.styleDragHandlers(false);
                 },
 
@@ -86,7 +96,8 @@
                         list.dragStart.call(listElem, e);
                         $(list.container).unbind("mousemove", trigger);
                     };
-                    $(list.container).mousemove(trigger).mouseup(function() { $(list.container).unbind("mousemove", trigger); $(dragHandle).css("cursor", $(dragHandle).attr("data-cursor")); });
+                    //mjbrooks: replaced $(dragHandle).attr("data-cursor") with '' in the cursor setting below.
+                    $(list.container).mousemove(trigger).mouseup(function() { $(list.container).unbind("mousemove", trigger); $(dragHandle).css("cursor", ''); });
                 },
 
                 dragStart: function(e) {
@@ -243,14 +254,19 @@
                     //list.draggedItem.attr("style", "") doesn't work on IE8 and jQuery 1.5 or lower
                     //list.draggedItem.removeAttr("style") doesn't work on chrome and jQuery 1.6 (works jQuery 1.5 or lower)
                     var orig = list.draggedItem.attr("data-origstyle");
+
                     list.draggedItem.attr("style", orig);
                     if (orig == "")
                         list.draggedItem.removeAttr("style");
                     list.draggedItem.removeAttr("data-origstyle");
 
-                    list.styleDragHandlers(true);
+                    //mjbrooks: Commented out this line. Why turn all the cursors into pointers on drop?
+                    //list.styleDragHandlers(true);
 
-                    list.placeHolderItem.before(list.draggedItem);
+                    //mjbrooks: added conditional in case the item was deleted
+                    if (list.draggedItem.parents().size()) {
+                        list.placeHolderItem.before(list.draggedItem);
+                    }
                     list.placeHolderItem.remove();
 
                     $("[data-droptarget], .dragSortItem").remove();
@@ -258,18 +274,26 @@
                     window.clearInterval(list.scroll.scrollY);
                     window.clearInterval(list.scroll.scrollX);
 
-                    //if position changed call dragEnd
-                    if (list.draggedItem.attr("data-origpos") != $(lists).index(list) + "-" + $(list.container).children().index(list.draggedItem))
-                        if (opts.dragEnd.apply(list.draggedItem) == false) { //if dragEnd returns false revert order
-                            var pos = list.draggedItem.attr("data-origpos").split('-');
-                            var nextItem = $(lists[pos[0]].container).children().not(list.draggedItem).eq(pos[1]);
-                            if (nextItem.size() > 0)
-                                nextItem.before(list.draggedItem);
-                            else if (pos[1] == 0) //was the only item in list
-                                $(lists[pos[0]].container).prepend(list.draggedItem);
-                            else //was the last item in list
-                                $(lists[pos[0]].container).append(list.draggedItem);
+                    //mjbrooks: add conditional so we don't do this if item removed
+                    if (list.draggedItem.parents().size()) {
+                        //if position changed call dragEnd
+                        if (list.draggedItem.attr("data-origpos") != $(lists).index(list) + "-" + $(list.container).children().index(list.draggedItem)) {
+                            if (opts.dragEnd.apply(list.draggedItem) == false) { //if dragEnd returns false revert order
+                                var pos = list.draggedItem.attr("data-origpos").split('-');
+                                var nextItem = $(lists[pos[0]].container).children().not(list.draggedItem).eq(pos[1]);
+                                if (nextItem.size() > 0)
+                                    nextItem.before(list.draggedItem);
+                                else if (pos[1] == 0) //was the only item in list
+                                    $(lists[pos[0]].container).prepend(list.draggedItem);
+                                else //was the last item in list
+                                    $(lists[pos[0]].container).append(list.draggedItem);
+                            }
                         }
+                    }
+
+                    //mjbrooks: Always call this so we can clean up after this makes a mess
+                    opts.dragStop.apply(list.draggedItem);
+
                     list.draggedItem.removeAttr("data-origpos");
 
                     list.draggedItem = null;
@@ -369,6 +393,7 @@
         dragSelector: "",
         dragSelectorExclude: "input, textarea",
         dragEnd: function() { },
+        dragStop: function() { },
         dragBetween: false,
         placeHolderTemplate: "",
         scrollContainer: window,

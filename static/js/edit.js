@@ -9,26 +9,7 @@
     var QUESTION_LIST_SELECTOR = '.question-list';
     var QUESTION_SELECTOR = '.question';
     
-    var QUESTION_EDITOR_SELECTOR = '.question-editor';
-    var EDITOR_PREV_BUTTON_SELECTOR = '.prev-button';
-    var EDITOR_NEXT_BUTTON_SELECTOR = '.next-button';
-
-    var QUESTION_SUBJECT_SELECTOR = '.question-subject';
-    var QUESTION_TEXT_SELECTOR = '.question-text';
-    var QUESTION_ANSWER_LIST_SELECTOR = '.answer-list';
-    var QUESTION_IMAGE_SELECTOR = '.question-image';
-    var QUESTION_IMAGE_INPUT_SELECTOR = '.question-image-input';
-    
-    var ANSWER_PALETTE_SELECTOR = '.answer-palette';
-    var ANSWER_CHOICE_SELECTOR = '.answer-choice';
-    var ANSWER_VALUE_SELECTOR = '.value';
-    var EDITABLE_VALUE_SELECTOR = '.editable';
-
-    var ANSWER_CHOICES_INPUT_SELECTOR = '.answer-choices';
-    var ANSWER_EDITOR_SELECTOR = '.answer-editor';
     var NEW_QUESTION_BUTTON_SELECTOR = '.new-question-button';
-    var QUESTION_SAVE_SELECTOR = '.question-save';
-    var QUESTION_CANCEL_SELECTOR = '.question-save';
     var QUESTION_DELETE_SELECTOR = '.question-delete';
     
     var EditApp = function() {
@@ -53,276 +34,63 @@
         //this.ui.eventTiming = $(EVENT_TIMING_SELECTOR);
         this.ui.questionList = $(QUESTION_LIST_SELECTOR);
         this.ui.newQuestionButton = $(NEW_QUESTION_BUTTON_SELECTOR);
-        
-        var editor = this.ui.editor = $(QUESTION_EDITOR_SELECTOR);
-        this.ui.editorPaletteNext = editor.find(EDITOR_NEXT_BUTTON_SELECTOR);
-        this.ui.editorPalettePrev = editor.find(EDITOR_PREV_BUTTON_SELECTOR);
 
-        this.ui.editorForm = editor.find('form');
-        this.ui.editorSubject = editor.find(QUESTION_SUBJECT_SELECTOR);
-        this.ui.editorText = editor.find(QUESTION_TEXT_SELECTOR);
-        this.ui.editorImage = editor.find(QUESTION_IMAGE_SELECTOR);
-        this.ui.editorImageInput = editor.find(QUESTION_IMAGE_INPUT_SELECTOR);
-        this.ui.answerPalette = editor.find(ANSWER_PALETTE_SELECTOR);
-        this.ui.answerPaletteItems = this.ui.answerPalette.find('ul');
-        this.ui.editorAnswersList = editor.find(QUESTION_ANSWER_LIST_SELECTOR);
-        this.ui.editorAnswersInput = editor.find(ANSWER_CHOICES_INPUT_SELECTOR);
-        
-        this.ui.editorSave = editor.find(QUESTION_SAVE_SELECTOR);
-        this.ui.editorCancel = editor.find(QUESTION_CANCEL_SELECTOR);
+        //Build the editor
+        this.editor = new rechattr.util.Editor();
     }
 
-    EditApp.prototype.shiftPalette = function(by) {
-        //Get the palette container width
-        var width = this.ui.answerPalette.width();
-
-        //Get the current relative offset
-        var offset = this.ui.answerPaletteItems.position().left;
-        var maxShift = this.ui.answerPaletteItems.width() - width;
-
-        var shift = offset - by * width * 0.9;
-
-        //Shift must be between -width and 0
-        shift = Math.min(0, Math.max(-maxShift, shift));
-        this.ui.answerPaletteItems.css('left', shift + 'px');
-
-        if (shift == -maxShift) {
-            this.ui.editorPaletteNext.attr('disabled', 'disabled');
-        } else {
-            this.ui.editorPaletteNext.removeAttr('disabled');
-        }
-
-        if (shift == 0) {
-            this.ui.editorPalettePrev.attr('disabled', 'disabled');
-        } else {
-            this.ui.editorPalettePrev.removeAttr('disabled');
-        }
-    }
 
     EditApp.prototype.attachEvents = function() {
         var self = this;
 
-        this.ui.editorPaletteNext.on('click', function(e) {
-            self.shiftPalette(1);
-        });
-
-        this.ui.editorPalettePrev.on('click', function(e) {
-            self.shiftPalette(-1);
-        });
-
         this.ui.newQuestionButton.on('click', function(e) {
-            self.showEditor()
+            self.showEditor(null)
         });
         
         //When a question is clicked, invoke the editor for that question
         this.ui.questionList.on('click', QUESTION_SELECTOR, function(e) {
             self.showEditor($(this));
         });
-        
-        // this.ui.answerPalette.on('mousedown', function(e) {
-            // var offset = self.ui.answerPaletteList.position();
-            // self.startingMousePos = e.pageX;
-            // self.dragDisplacement = offset.left;
-            // self.dragMax = self.ui.answerPaletteList.width();
-            // debugger;
-        // })
-        // .on('mousemove', function(e) {
-            // if (self.dragDisplacement) {
-                // var change = e.pageX - self.startingMousePos;
-                // var displacement = self.dragDisplacement + change;
-                // console.log(change, displacement);
-                // if (displacement > 0) {
-                    // displacement = 0;
-                // }
-                // self.ui.answerPaletteList.css('left', (displacement) + 'px');
-            // }
-        // });
-        // $(document).on('mouseup', function(e) {
-            // self.dragDisplacement = false;
-        // });
-        
-        this.ui.answerPalette.on('click', ANSWER_CHOICE_SELECTOR, function(e) {
-            var answerValue = $(this).find(ANSWER_VALUE_SELECTOR)
-            self.addAnswerChoice(answerValue.html())
-        });
-
-        this.ui.editorAnswersList.on('click', ANSWER_CHOICE_SELECTOR, function(e) {
-            if (self.engageAnswerEditor($(this))) {
-                e.preventDefault();
-                return false;
-            } else {
-                //The answer editor was not engaged. Uneditable.
-            }
-        });
-
-        this.ui.editorAnswersList.on('keyup', ANSWER_EDITOR_SELECTOR, function(e) {
-            self.captureEditorValue($(this));
-        });
-
-        this.ui.editorAnswersList.on('keydown', ANSWER_EDITOR_SELECTOR, function(e) {
-            //Catch enter presses
-            if (e.which == 13) {
-                e.preventDefault();
-
-                //self.disengageAnswerEditor($(this));
-                $(this).blur();
-                return false;
-            }
-        });
-
-        this.ui.editorAnswersList.on('blur', ANSWER_EDITOR_SELECTOR, function(e) {
-            self.disengageAnswerEditor($(this));
-        });
-
-        this.ui.editorAnswersList.dragsort({
-            dragSelector: 'li',
-            dragEnd: function() {
-                self.collectAnswers($(this));
-            }
-        });
     };
 
-    EditApp.prototype.engageAnswerEditor = function(answer) {
-        if (answer.is('.editing')) {
+    EditApp.prototype.showEditor = function(question) {
+
+        var self = this;
+
+        if (this.editor.isEditing(question)) {
             return;
         }
 
-        var answerValue = answer.find(EDITABLE_VALUE_SELECTOR);
+        //if already showing, hide first
+        if (this.editor.isShowing()) {
+            this.hideEditor();
 
-        //Editable if the value is straight text
-        if (answerValue.size()) {
-            answer.addClass('editing');
+            this.editor.ui.el.one('hidden', function() {
+                self.showEditor(question);
+            });
 
-            var value = answerValue.html();
-            var input = $('<input>')
-                .attr('type', 'text')
-                .addClass('answer-editor')
-                .val(value);
-
-            answer.append(input);
-
-            input.focus();
-
-            return true;
+            return;
         }
-    }
 
-    EditApp.prototype.captureEditorValue = function(editor) {
-        //Update the answer value from the input element
-        var value = editor.val();
-        var valueBox = editor.parent().find(ANSWER_VALUE_SELECTOR);
-        valueBox.text(value);
-    }
+        this.editor.blank();
 
-    EditApp.prototype.disengageAnswerEditor = function(editor) {
-        if (!editor.attr('disabled')) {
-            editor.parent().removeClass('editing');
-
-            editor.attr('disabled', 'disabled');
-
-            this.captureEditorValue(editor);
-            editor.remove();
-
-            //Store update the answer cache
-            this.collectAnswers();
-        }
-    }
-
-    EditApp.prototype.showEditor = function(question) {
-        //Blank the form
-        this.ui.editorForm[0].reset();
-        this.ui.editorAnswersList.empty();
-
-        var self = this;
         //Determine where in the question list the form should go
         if (question) {
+            //Fill the editor with content
+            this.editor.fill(question);
             //Position the editor
-            question.after(this.ui.editor);
-
-            //Populate the editor
-            var qData = new QuestionData(question);
-            this.ui.editorSubject.val(qData.subject);
-            this.ui.editorText.val(qData.question_text);
-            this.ui.editorImage.attr('src', qData.image_src);
-            self.setEditorAnswers(qData.answers);
-
+            question.after(this.editor.ui.el);
         } else {
-            this.ui.questionList.prepend(this.ui.editor);
-        }
-        
-        //Save which question we are editing
-        this.currentQuestion = question;
-        
-        //Expand the editor form
-        this.ui.editor.collapse('show');
-    };
-
-    var QuestionData = function(question) {
-        this.subject = question.find(QUESTION_SUBJECT_SELECTOR).text();
-        this.question_text = question.find(QUESTION_TEXT_SELECTOR).text();
-        this.image_src = question.find(QUESTION_IMAGE_SELECTOR).attr('src');
-        var answerList = question.find(QUESTION_ANSWER_LIST_SELECTOR);
-        var answers = this.answers = [];
-
-        answerList.children().each(function(index, listElement) {
-            var contents = $(listElement).find(ANSWER_VALUE_SELECTOR).html();
-            answers.push($.trim(contents));
-        });
-    };
-
-    EditApp.prototype.setEditorAnswers = function(answerList) {
-        var self = this;
-        $.each(answerList, function(index, html) {
-            var answer = generateAnswerChoice(html);
-            self.ui.editorAnswersList.append(answer);
-        });
-
-        this.ui.editorAnswersInput.val(JSON.stringify(answerList));
-    };
-
-    EditApp.prototype.addAnswerChoice = function(answerHtml, index) {
-        var answer = generateAnswerChoice(answerHtml);
-        var answerList = JSON.parse(this.ui.editorAnswersInput.val());
-
-        if (typeof(index) == 'undefined') {
-            this.ui.editorAnswersList.append(answer);
-            answerList.push($.trim(answerHtml));
-        } else {
-            //Have to insert it at a position -- todo
-            throw "not yet implemented";
+            //Just need a blank editor
+            this.ui.questionList.prepend(this.editor.ui.el);
         }
 
-        this.ui.editorAnswersInput.val(JSON.stringify(answerList));
-    }
+        this.editor.show(question);
 
-    EditApp.prototype.collectAnswers = function(answer) {
-        //Just blow away the stored answer value
-        var answerList = [];
-
-        this.ui.editorAnswersList.children().each(function(i, listElement) {
-            var answerText = $(listElement).find(ANSWER_VALUE_SELECTOR).html();
-            answerList.push($.trim(answerText));
-        });
-
-        this.ui.editorAnswersInput.val(JSON.stringify(answerList));
-    }
-
-    var generateAnswerChoice = function(answerHtml) {
-        //Generate an answer icon
-        var answer = $('<div>')
-            .addClass('value')
-            .html($.trim(answerHtml));
-
-        //Editable if nothing but text children
-        if (answer.children().size() == 0) {
-            answer.addClass('editable');
-        }
-
-        return $('<li>').addClass('answer-choice').html(answer);
     };
     
     EditApp.prototype.hideEditor = function() {
-        this.ui.editor.collapse('hide');
+        this.editor.hide();
     };
     
     EditApp.prototype.initQuestionList = function() {

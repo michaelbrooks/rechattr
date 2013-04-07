@@ -212,6 +212,20 @@
         var segments = Array.prototype.join.call(arguments, '/');
         return util.url.current + '/' + segments;
     }
+
+    util.events = {};
+
+    util.events.on = function() {
+        var $this = $(this);
+        return $this.on.apply($this, arguments);
+    }
+
+    util.events.trigger = function() {
+        var $this = $(this);
+        var eventName = arguments[0]
+        var data = Array.prototype.slice.call(arguments, 1);
+        return $this.trigger(eventName, data);
+    }
     
     rechattr.util = util;
     

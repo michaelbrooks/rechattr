@@ -18,7 +18,6 @@
     }
     
     Timeline.prototype.initUI = function(wrapper) {
-        this.$ = $(this);
         this.ui = {};
         
         this.ui.wrapper = wrapper;
@@ -39,12 +38,6 @@
         this.ui.timeline.append(bead);
         
         this.selectBead(bead);
-    }
-    
-    Timeline.prototype.trigger = function() {
-        var eventName = arguments[0]
-        var data = Array.prototype.slice.call(arguments, 1);
-        this.$.trigger(eventName, data);
     }
     
     Timeline.prototype.deleteBead = function(bead) {
@@ -144,7 +137,10 @@
         });
         
     }
-    
+
+    Timeline.prototype.on = rechattr.util.events.on;
+    Timeline.prototype.trigger = rechattr.util.events.trigger;
+
     rechattr.util.Timeline = Timeline;
     return Timeline;
 })()

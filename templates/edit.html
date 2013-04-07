@@ -73,118 +73,78 @@ $:csrf_token_input()
     </div>
 </div>
 <div class="question-editor collapse">
-    <form method="POST">
-        <div class="main-fields">
-            <div class="image-panel">
-                <div class="image-box">
-                    <img src="" class="question-image hide"/>
-                </div>
-                <div class="old-uploader">
-                    <label for="old-file-upload">Upload an image</label>
-                    <input type="file" name="image" class="question-image-input" id="old-file-upload"/>
-                </div>
+    <div class="main-fields">
+        <div class="image-panel">
+            <div class="image-box">
+                <img src="" class="question-image hide"/>
             </div>
-            <div class="text-fields clearfix">
-                <label class="question-label" for="question-subject">Q:</label>
-                <input type="text" name="subject" id="question-subject" autocomplete="off" class="question-subject" value="" placeholder="Magnets"/>
-                <input type="text" name="question_text" class="question-text" autocomplete="off" value="" placeholder="How do they work?"/>
-            </div>
-            <div class="answers-wrapper">
-                <div class="answers-label">A:</div>
-                <ul class="answer-list noselect"></ul>
-            </div>
-            <div class="answer-palette-instructions">Select some answer choices</div>
-            <div class="palette-wrapper">
-                <div class="prev-button btn noselect" disabled="disabled"><i class="icon-chevron-left"></i></div>
-                <div class="next-button btn noselect" disabled="disabled"><i class="icon-chevron-right"></i></div>
-                <div class="answer-palette noselect">
-                    <ul class="palette-items">
-                        <li class="answer-choice"><div class="value">
-                            [text]
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :)
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :(
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :P
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :|
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-thumbs-up"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-thumbs-down"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-heart"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-star"></i>
-                        </div></li>
-
-                        <li class="answer-choice"><div class="value">
-                            :)
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :(
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :P
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :|
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-thumbs-up"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-thumbs-down"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-heart"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-star"></i>
-                        </div></li>
-
-                        <li class="answer-choice"><div class="value">
-                            :)
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :(
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :P
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            :|
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-thumbs-up"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-thumbs-down"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-heart"></i>
-                        </div></li>
-                        <li class="answer-choice"><div class="value">
-                            <i class="icon-white icon-star"></i>
-                        </div></li>
-                    </ul>
-                </div>
+            <div class="old-uploader">
+                <label for="old-file-upload">Upload an image</label>
+                <input type="file" name="image" class="question-image-input" id="old-file-upload"/>
             </div>
         </div>
-        
-        <input type="hidden" name="answer_choices" class="answer-choices" value="[]"/>
-        <div class="form-controls">
-            <input type="submit" name="submit" value="Save" class="question-save btn btn-primary"/>
-            <div class="question-cancel btn">Cancel</div>
+        <div class="text-fields clearfix">
+            <label class="question-label" for="question-subject">Q:</label>
+            <input type="text" name="subject" id="question-subject" autocomplete="off" class="question-subject" value="" placeholder="Magnets"/>
+            <input type="text" name="question_text" class="question-text" autocomplete="off" value="" placeholder="How do they work?"/>
         </div>
-    </form>
+        <div class="answers-wrapper clearfix">
+            <div class="answers-label">A:</div>
+            <div class="trash-bin" title="drag here to delete"><i class="icon-trash icon-white"></i></div>
+            <ul class="answer-list noselect"></ul>
+        </div>
+        <!--<div class="answer-palette-instructions">Select some answer choices</div>-->
+        <div class="palette-wrapper">
+            <div class="prev-button btn noselect" disabled="disabled">
+                <i class="icon-white icon-chevron-left"></i>
+            </div>
+            <div class="next-button btn noselect">
+                <i class="icon-white icon-chevron-right"></i>
+            </div>
+            <div class="answer-palette noselect">
+                <ul class="palette-items" title="Click to add">
+                    <li class="answer-choice"><div class="value">
+                        [text]
+                    </div></li>
+                    <li class="answer-choice"><div class="value">
+                        :)
+                    </div></li>
+                    <li class="answer-choice"><div class="value">
+                        :(
+                    </div></li>
+                    <li class="answer-choice"><div class="value">
+                        :P
+                    </div></li>
+                    <li class="answer-choice"><div class="value">
+                        :|
+                    </div></li>
+                    <li class="answer-choice"><div class="value">
+                        <i class="icon-thumbs-up"></i>
+                    </div></li>
+                    <li class="answer-choice"><div class="value">
+                        <i class="icon-thumbs-down"></i>
+                    </div></li>
+                    <li class="answer-choice"><div class="value">
+                        <i class="icon-heart"></i>
+                    </div></li>
+                    <li class="answer-choice"><div class="value">
+                        <i class="icon-star"></i>
+                    </div></li>
+                    <li class="answer-choice img"><div class="value">
+                        <img src="/static/img/grumpy-64.png"/>
+                    </div></li>
+                    <li class="answer-choice img"><div class="value">
+                        <img src="/static/img/grumpy-64.png"/>
+                    </div></li>
+                    <li class="answer-choice img"><div class="value">
+                        <img src="/static/img/grumpy-64.png"/>
+                    </div></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="form-controls">
+        <div class="question-save btn btn-primary">Save</div>
+        <div class="question-cancel btn">Cancel</div>
+    </div>
 </div>
