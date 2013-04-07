@@ -13,7 +13,7 @@ from tweepy import Status
 
 # Get the shared base class for declarative ORM
 from model import Base
-from utils.dtutils import utc_aware
+from utils import dtutils
 from decorators import UTCDateTime
 
 urlTemplate = Template('<a target="_blank" href="${url}" title="${expanded_url}">${display_url}</a>')

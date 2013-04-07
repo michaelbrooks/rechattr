@@ -41,12 +41,15 @@ def utc_aware(dt=None):
 def dt_timestamp(dt):
     return calendar.timegm(dt.utctimetuple())
     
-def time_to(dt, long=False, showDays=False):
+def time_to(dt, dateFallback=False, long=False, showDays=False):
     now = utc_aware()
     delta = dt - now
-    return nice_delta(delta, long=long, showDays=showDays)
+    if dateFallback:
+        return nice_delta(delta, dateFallback=dt, long=long, showDays=showDays)
+    else:
+        return nice_delta(delta, long=long, showDays=showDays)
     
-def nice_delta(delta, long=False, showDays=False, sub=False):
+def nice_delta(delta, dateFallback=None, long=False, showDays=False, sub=False):
     if delta < zeroTime:
         return format_time('seconds', 0, long)
     elif delta < oneMinute:
@@ -58,12 +61,15 @@ def nice_delta(delta, long=False, showDays=False, sub=False):
     elif showDays:
         return format_time('days', delta.total_seconds() / (60.0*60*24), long)
     else:
-        return format_time('date', dt, long)
+        return format_time('date', dateFallback, long)
         
-def time_ago(dt, long=False, showDays=False):
+def time_ago(dt, dateFallback=False, long=False, showDays=False):
     now = utc_aware()
     delta = now - dt
-    return nice_delta(delta, long=long, showDays=showDays)
+    if dateFallback:
+        return nice_delta(delta, dateFallback=dt, long=long, showDays=showDays)
+    else:
+        return nice_delta(delta, long=long, showDays=showDays)
         
 def user_to_datetime(date_str, time_str, olsonCode):
     zone = tz(olsonCode)
