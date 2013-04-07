@@ -206,6 +206,13 @@
         }
     }
     
+    util.url = {}
+    util.url.current = document.location.href;
+    util.url.extend = function() {
+        var segments = Array.prototype.join.call(arguments, '/');
+        return util.url.current + '/' + segments;
+    }
+    
     rechattr.util = util;
     
     return util;

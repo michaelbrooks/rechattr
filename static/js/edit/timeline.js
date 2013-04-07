@@ -25,7 +25,6 @@
         this.ui.timeline = this.ui.wrapper.find(TIMELINE_SELECTOR);
         this.ui.timelineLine = this.ui.timeline.find(TIMELINE_LINE_SELECTOR);
         this.ui.timelineFocus = this.ui.timeline.find(TIMELINE_FOCUS_SELECTOR);
-        this.ui.timelineBeads = this.ui.timeline.find(TIMELINE_BEAD_SELECTOR);
     }
     
     Timeline.prototype.createBead = function(x, y) {
@@ -33,18 +32,30 @@
         
         var bead = $('<div>')
         .addClass('timeline-bead')
-        .css('left', x);
+        .css('left', (100 * percentThrough) + '%');
         
-        this.trigger('new-bead', bead);
+        this.trigger('new-bead', bead, percentThrough);
         
         this.ui.timeline.append(bead);
-        this.ui.timelineBeads = this.ui.timelineBeads.add(bead);
         
         this.selectBead(bead);
     }
     
-    Timeline.prototype.trigger = function(eventName, data) {
-        this.$.trigger(eventName, [data]);
+    Timeline.prototype.trigger = function() {
+        var eventName = arguments[0]
+        var data = Array.prototype.slice.call(arguments, 1);
+        this.$.trigger(eventName, data);
+    }
+    
+    Timeline.prototype.deleteBead = function(bead) {
+        if (this.selected == bead) {
+            this.selected = null;
+        }
+        if (this.dragging == bead) {
+            this.dragging = null;
+        }
+        
+        bead.remove();
     }
     
     Timeline.prototype.selectBead = function(bead) {
@@ -96,7 +107,8 @@
                 positioned = self.dragging;
             }
             
-            positioned.css('left', x);
+            var percentThrough = x / self.ui.wrapper.width();
+            positioned.css('left', (100 * percentThrough) + "%");
         })
         .on('mouseover', function(e) {
             if (!self.dragging) {

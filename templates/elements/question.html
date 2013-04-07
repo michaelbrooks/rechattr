@@ -15,8 +15,8 @@ $else:
         <div class="question-text">${question.question_text}</div>
         <ul class="answer-list">
         $for choice in question.get_answer_choices():
-            <li>
-                <div class="choice">$choice</div>
+            <li class="answer-choice">
+                <div class="value">$choice</div>
             </li>
         </ul>
         <div class="btn btn-danger question-delete">Delete</div>

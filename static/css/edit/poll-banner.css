@@ -1,0 +1,121 @@
+
+.poll-banner {
+    background: #18182E;
+    padding: 25px 20px 25px 20px;
+    
+    color: #D6D7F7;
+}
+
+.poll-banner .muted {
+    color: #858599
+}
+
+.poll-banner input[type="text"].editable,
+.poll-banner .editable input[type="text"]
+ {
+    background-color: transparent;
+    
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+  
+    -webkit-box-shadow: none;
+       -moz-box-shadow: none;
+            box-shadow: none;
+            
+    -webkit-transition: border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s;
+     -moz-transition: border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s;
+       -o-transition: border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s;
+          transition: border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s;
+
+            
+    border: 1px dashed #453E96;
+    
+    color: #D6D7F7;
+}
+
+.poll-banner input[type="text"].editable:focus,
+.poll-banner .editable input[type="text"]:focus {
+    background-color: #272155;
+    border-color: #39337A;
+    
+    -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+       -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+            
+    
+}
+
+.poll-banner .input-prepend.editable .add-on {
+    border-color: transparent;
+    background: transparent;
+    
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.poll-banner .event-hashtag {
+    position: relative;
+}
+
+.poll-banner .event-hashtag,
+.poll-banner .event-hashtag input {
+    font-size: 45px;
+    line-height: 50px;
+}
+.poll-banner .event-hashtag input {
+    height: 60px;
+    padding-left: 35px;
+    margin-left: 0;
+    min-width: 200px;
+}
+.poll-banner .event-hashtag .hashtag-hash {
+    position: absolute;
+    left: 8px;
+    line-height: 70px;
+    
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.poll-banner .event-timing {
+    text-align: right;
+}
+
+.poll-banner .event-timing .start-time,
+.poll-banner .event-timing .stop-time {
+    width: 60px;
+}
+
+.poll-banner .event-timing .start-date,
+.poll-banner .event-timing .stop-date {
+    margin-left: 8px;
+    width: 70px;
+}
+
+.poll-banner .event-title {
+    position: relative;
+    padding-right: 14px;
+}
+.poll-banner .event-title input {
+    width: 100%;
+    margin-right: -14px;
+    font-size: 18px;
+    line-height: 25px;
+    height: 25px;
+}
+
+.poll-banner .event-email {
+    text-align: right;
+}
+.poll-banner .event-email input {
+    width: 152px;
+    font-size: 18px;
+    line-height: 25px;
+    height: 25px;
+}
