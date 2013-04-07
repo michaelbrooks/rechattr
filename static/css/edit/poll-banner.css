@@ -83,17 +83,17 @@
     user-select: none;
 }
 
-.poll-banner .event-timing {
+.poll-banner .interval-field {
     text-align: right;
 }
 
-.poll-banner .event-timing .start-time,
-.poll-banner .event-timing .stop-time {
+.poll-banner .interval-field .start-time,
+.poll-banner .interval-field .stop-time {
     width: 60px;
 }
 
-.poll-banner .event-timing .start-date,
-.poll-banner .event-timing .stop-date {
+.poll-banner .interval-field .start-date,
+.poll-banner .interval-field .stop-date {
     margin-left: 8px;
     width: 70px;
 }

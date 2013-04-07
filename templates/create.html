@@ -66,8 +66,8 @@ $var nav: $:elements.nav('create', user=user)
     <div class="span12">
         $:csrf_token_input()
         <div class="pull-right">
-            <a class="btn btn-large" href="$urls.home()">Cancel</a>
             $:form.submit.render()
+            <a class="btn btn-large" href="$urls.home()">Cancel</a>
         </div>
     </div>
 </div>

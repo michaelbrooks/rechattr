@@ -3,7 +3,7 @@
     var TIME_FORMAT = 'h:mma';
     var DATE_FORMAT = 'M/DD/YYYY';
     
-    //var EVENT_TIMING_SELECTOR = '.event-timing';
+    var INTERVAL_FIELD_SELECTOR = '.interval-field';
     
     //var TIMELINE_WRAPPER_SELECTOR = '.timeline-wrapper';
     var QUESTION_LIST_SELECTOR = '.question-list';
@@ -19,7 +19,7 @@
         this.attachEvents();
         
         rechattr.util.initFlash();
-        
+
         // this.timeline = new rechattr.util.Timeline(this.ui.timelineWrapper);
         
         // this.attachTimelineEvents();
@@ -31,7 +31,7 @@
         this.ui = {};
         
         //this.ui.timelineWrapper = $(TIMELINE_WRAPPER_SELECTOR);
-        //this.ui.eventTiming = $(EVENT_TIMING_SELECTOR);
+        this.ui.intervalField = $(INTERVAL_FIELD_SELECTOR);
         this.ui.questionList = $(QUESTION_LIST_SELECTOR);
         this.ui.newQuestionButton = $(NEW_QUESTION_BUTTON_SELECTOR);
 
