@@ -295,9 +295,20 @@
     }
 
     Editor.prototype.saveAndClose = function() {
+        var self = this;
         this.saveAnswers();
-        this.data.updateQuestion();
-        this.hide();
+        if (this.data.dirty) {
+            rechattr.util.overlay.showLoading(this.ui.el);
+
+            this.data.submit()
+                .done(function() {
+                    self.data.updateQuestion();
+                    rechattr.util.overlay.hide(this.ui.el)
+                    self.hide();
+                });
+        } else {
+            this.hide();
+        }
     }
 
     Editor.prototype.hide = function() {
@@ -306,7 +317,7 @@
 
     Editor.prototype.show = function(question) {
         this.currentQuestion = question;
-
+        
         //Make sure the button scroller is the right size
         var paletteWidth = 0;
         $.each(this.ui.paletteList.children(), function(i, listItem) {
@@ -382,6 +393,7 @@
 
         if (question) {
             this.question = question;
+            this.data.id = question.data('id');
             this.data.subject = question.find(SUBJECT_INPUT_SELECTOR).text();
             this.data.question_text = question.find(TEXT_INPUT_SELECTOR).text();
             this.data.image_src = question.find(IMAGE_SELECTOR).attr('src');
@@ -392,6 +404,8 @@
                 var contents = $(listElement).find(ANSWER_VALUE_SELECTOR).html();
                 answers.push($.trim(contents));
             });
+
+            this._json_answers = JSON.stringify(answers);
         }
     };
 
@@ -400,6 +414,7 @@
             return;
         }
 
+        this.question.data('id', this.data.id);
         this.question.find(SUBJECT_INPUT_SELECTOR).text(this.data.subject);
         this.question.find(TEXT_INPUT_SELECTOR).text(this.data.question_text);
         this.question.find(IMAGE_SELECTOR).attr('src', this.data.image_src);
@@ -414,7 +429,12 @@
 
     QuestionData.prototype.set = function(member, value) {
         if (member in this.data) {
-            if (value !== this.data[member]) {
+            var changed = value !== this.data[member];
+            if ($.isArray(value)) {
+                changed = this._json_answers !== JSON.stringify(value);
+            }
+
+            if (changed) {
                 this.data[member] = value;
                 this.dirty = true;
             }
@@ -429,6 +449,19 @@
         } else {
             throw 'Data "' + member + '" not defined';
         }
+    }
+
+    QuestionData.prototype.submit = function() {
+        var self = this;
+
+        var url = rechattr.util.url.extend('question', this.data.id);
+        return $.post(url, this.data)
+            .done(function (response) {
+
+            })
+            .error(function (response) {
+
+            });
     }
 
     rechattr.util.Editor = Editor;

@@ -124,13 +124,17 @@ class edit:
             raise web.forbidden('You do not own that poll')
         
         # Check if it is a poll update or a question update
-        if type == 'question' and id is not None:
-            question = web.ctx.orm.query(model.Question).get(id)
-            # in case the question isn't for this poll!
-            if question.poll != poll:
-                return web.badrequest('Question not for this poll')
-                
+        if type == 'question':
+            question = None
+
+            if id is not None:
+                question = web.ctx.orm.query(model.Question).get(id)
+                # in case the question isn't for this poll!
+                if question.poll != poll:
+                    return web.badrequest('Question not for this poll')
+
             return self._post_question(user, poll, question)
+
         elif type == 'poll':
             return self._post_poll(user, poll)
         

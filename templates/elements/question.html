@@ -3,12 +3,11 @@ $if newItem:
     $ newItemClass='new-item'
 $else:
     $ newItemClass=''
-<div class="question stream-item $newItemClass" data-type="question">
+<div class="question stream-item $newItemClass" data-type="question" data-id="${question.id}">
     <div class="question-content">
         $ imgClass = 'has-image' if question.image_src is not None else ''
         <div class="question-header $imgClass">
-            $if question.image_src is not None:
-                <img class="question-image" src="$question.image_src" />
+            <img class="question-image" src="$question.image_src" />
             <strong class="question-subject">${question.subject}</strong>
             <div class="question-offset">${question.nice_offset()}</div>
         </div>

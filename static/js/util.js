@@ -226,7 +226,84 @@
         var data = Array.prototype.slice.call(arguments, 1);
         return $this.trigger(eventName, data);
     }
-    
+
+    /* from underscore.js */
+    var _idCounter = 0;
+    util.uniqueId = function(prefix) {
+        var id = ++_idCounter + '';
+        return prefix ? prefix + id : id;
+    };
+
+    var makeOverlay = function(loading) {
+        var $this = $(this);
+
+        if ($this.data('overlayId')) {
+            hideOverlay.call(this);
+        }
+
+        var overlayId = util.uniqueId('rc_overlay');
+
+        var overlay = $('<div>').addClass('rc-overlay');
+        overlay.toggleClass('loading', loading);
+        overlay.attr('id', overlayId);
+
+        $this.append(overlay);
+
+        $this.data('overlayId', overlayId);
+
+        setTimeout(function() {
+            overlay.addClass('in');
+
+            if (loading) {
+                overlay.addClass('.loading')
+                    .spin({
+                        color: '#333',
+                        hwaccel: true,
+                        position: 'absolute',
+                        radius: 8,
+                        width: 4,
+                        length: 13
+                    });
+            }
+        }, 1);
+    };
+
+    var hideOverlay = function() {
+        var $this = $(this);
+
+        var overlayId = $this.data('overlayId');
+        $this.removeData('overlayId');
+
+        var overlay = $('#' + overlayId);
+
+        if ($.support.transition) {
+            overlay.one($.support.transition.end, function() {
+                if (overlay.is('.loading')) {
+                    overlay.spin(false);
+                }
+                overlay.remove();
+            });
+        } else {
+            if (overlay.is('.loading')) {
+                overlay.spin(false);
+            }
+        }
+        overlay.removeClass('in').remove();
+    }
+
+    util.overlay = {};
+    util.overlay.show = function(selection) {
+        selection.each(makeOverlay);
+    }
+    util.overlay.showLoading = function(selection) {
+        selection.each(function() {
+            makeOverlay.call(this, true);
+        });
+    }
+    util.overlay.hide = function(selection) {
+        selection.each(hideOverlay);
+    }
+
     rechattr.util = util;
     
     return util;
