@@ -64,7 +64,9 @@ class Auth(object):
         
         # sign them in
         web.ctx.session['user_id'] = self._user.id
-        
+        web.ctx.session['oauth_key'] = auth.access_token.key
+        web.ctx.session['oauth_secret'] = auth.access_token.secret
+
         # don't need this any more
         del web.ctx.session['twitter_request_token']
         
@@ -74,10 +76,17 @@ class Auth(object):
         # Check for a signed in user
         if self._user is None and 'user_id' in web.ctx.session:
             user_id = web.ctx.session['user_id']
+            key = web.ctx.session['oauth_key']
+            secret = web.ctx.session['oauth_secret']
+
             self._user = web.ctx.orm.query(User).get(user_id)
-            
+            if self._user.oauth_key != key:
+                web.ctx.log.warn('Session key does not match user key')
+                self._user = None
+                return None
+
             # configure the access token for auth
-            self._oauth.set_access_token(self._user.oauth_key, self._user.oauth_secret)
+            self._oauth.set_access_token(key, secret)
         
         return self._user
         

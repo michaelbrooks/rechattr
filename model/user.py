@@ -17,8 +17,7 @@ class User(model.Base):
     created = Column(UTCDateTime, default=datetime.utcnow)
     
     oauth_key = Column(String)
-    oauth_secret = Column(String)
-    
+
     oauth_user_id = Column(BigInteger)
     oauth_provider = Column(String)
     username = Column(String)
@@ -40,7 +39,6 @@ class User(model.Base):
         
     def update(self, user_info, oauth_token):
         self.oauth_key = oauth_token.key
-        self.oauth_secret = oauth_token.secret
         
         self.user_cache = pickle.dumps(user_info)
         
