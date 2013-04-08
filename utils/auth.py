@@ -75,9 +75,12 @@ class Auth(object):
     def current_user(self):
         # Check for a signed in user
         if self._user is None and 'user_id' in web.ctx.session:
-            user_id = web.ctx.session['user_id']
-            key = web.ctx.session['oauth_key']
-            secret = web.ctx.session['oauth_secret']
+            user_id = web.ctx.session.get('user_id', None)
+            key = web.ctx.session.get('oauth_key', None)
+            secret = web.ctx.session.get('oauth_secret', None)
+
+            if not user_id or not key or not secret:
+                return None
 
             self._user = web.ctx.orm.query(User).get(user_id)
             if self._user.oauth_key != key:
