@@ -314,7 +314,7 @@
                     self.hide();
                 })
                 .error(function(response) {
-                    rechattr.util.flash.error(response.statusText);
+                    rechattr.util.flash.error(response.responseText);
                     rechattr.util.overlay.hide(self.ui.el);
                 });
         } else {
