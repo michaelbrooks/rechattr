@@ -7,6 +7,9 @@ if DATABASE_URL == None:
     exit(1)
 
 DEBUG = bool(os.environ.get('DEBUG', False))
+DEBUG_SERVER_PORT = os.environ.get('DEBUG_SERVER_PORT', 9999)
+DEBUG_SERVER_HOST = os.environ.get('DEBUG_SERVER_HOST', 'localhost')
+
 DB_DEBUG = bool(os.environ.get('DB_DEBUG', False))
 LOG_LEVEL = bool(os.environ.get('LOG_LEVEL', 'INFO' if DEBUG else 'ERROR'))
 

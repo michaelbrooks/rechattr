@@ -14,6 +14,15 @@ migrate.migrate(conf.ALEMBIC_VERSION)
 
 web.config.debug = conf.DEBUG
 
+if conf.DEBUG:
+    try:
+        import pydevd
+        pydevd.settrace(conf.DEBUG_SERVER_HOST, port=conf.DEBUG_SERVER_PORT, stdoutToServer=True, stderrToServer=True, suspend=False)
+    except ImportError:
+        print 'ERROR: Unable to import pydevd for remote debugging!'
+    except:
+        print 'ERROR: Could not connect to remote debugging server'
+
 web.config.session_parameters.cookie_name = 'rechattr_session_id'
 web.config.session_parameters.secret_key = conf.SESSION_ENCRYPTION_KEY
 
