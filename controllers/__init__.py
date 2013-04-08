@@ -15,7 +15,7 @@ elements = web.template.render('templates/elements', globals=helpers)
 
 helpers['elements'] = elements
 
-from model import Tweet
+from model import Tweet, Question
 def render_stream_item(item, newItem=False):
     itemType = type(item)
     if itemType is Tweet:
@@ -52,7 +52,7 @@ class AppUrls(object):
         '/sign_out',            'sign_in',
         '/([\w-]+)',            'poll',
         '/([\w-]+)/edit',       'edit',
-        '/([\w-]+)/edit/(\w+)/(\d+)',   'edit',
+        '/([\w-]+)/edit/(\w+)/(\d*)',   'edit',
         '/([\w-]+)/stream',     'stream',
         '/([\w-]+)/results',    'results'
     )

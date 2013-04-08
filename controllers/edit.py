@@ -61,15 +61,15 @@ class edit:
         form.stop_date.value = stop_date
         form.stop_time.value = stop_time
     
-    def _post_question(self, user, poll, question=None):
+    def _post_question(self, poll, question=None):
         # validate the input
         input = web.input(answer_choices=[])
         
         if 'subject' not in input or len(input.subject.strip()) == 0:
-            return web.badrequest('Question subject is required');
+            raise web.badrequest('Question subject is required');
         
-        if 'answer_choices' not in input:
-            return web.badrequest('You must have some answer choices');
+        if 'answer_choices' not in input or len(input.answer_choices) == 0:
+            raise web.badrequest('You must have some answer choices');
         
         if question is None:
             question = model.Question()
@@ -96,12 +96,12 @@ class edit:
         user = web.ctx.auth.current_user()
         if user is None:
             url = web.ctx.urls.sign_in(web.ctx.urls.poll_edit(poll))
-            return web.seeother(url) # go sign in and then come back
+            raise web.seeother(url) # go sign in and then come back
         
         # make sure it belongs to the current user
         if poll.user != user:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            return web.forbidden('You do not own that poll')
+            raise web.forbidden('You do not own that poll')
         
         form = edit_form()
         self._populate_form(form, poll)
@@ -116,7 +116,7 @@ class edit:
         user = web.ctx.auth.current_user()
         if user is None:
             url = web.ctx.urls.sign_in(web.ctx.urls.poll_edit(poll))
-            return web.seeother(url) # go sign in and then come back
+            raise web.seeother(url) # go sign in and then come back
         
         # make sure it belongs to the current user
         if poll.user != user:
@@ -127,18 +127,18 @@ class edit:
         if type == 'question':
             question = None
 
-            if id is not None:
+            if id:
                 question = web.ctx.orm.query(model.Question).get(id)
                 # in case the question isn't for this poll!
                 if question.poll != poll:
-                    return web.badrequest('Question not for this poll')
+                    raise web.badrequest('Question not for this poll')
 
-            return self._post_question(user, poll, question)
+            return self._post_question(poll, question)
 
         elif type == 'poll':
             return self._post_poll(user, poll)
         
-        return web.badrequest('Unrecognized update type')
+        raise web.badrequest('Unrecognized update type')
             
     def DELETE(self, poll_url, type, delete_id):
         # look up the poll based on the url
@@ -147,7 +147,7 @@ class edit:
         user = web.ctx.auth.current_user()
         if user is None:
             url = web.ctx.urls.sign_in(web.ctx.urls.poll_edit(poll))
-            return web.seeother(url) # go sign in and then come back
+            raise web.seeother(url) # go sign in and then come back
         
         # make sure it belongs to the current user
         if poll.user != user:
@@ -157,15 +157,15 @@ class edit:
         if type == 'question':
             question = web.ctx.orm.query(model.Question).get(delete_id)
             if question is None:
-                return web.badrequest('No such question')
+                raise web.badrequest('No such question')
             if question.poll != poll:
-                return web.badrequest('Question not for this poll')
+                raise web.badrequest('Question not for this poll')
             
             result = web.ctx.orm.delete(question)
             if result is None:
-                return web.internalerror(message='Question not deleted')
+                raise web.internalerror(message='Question not deleted')
             else:
                 return web.ctx.json(type='success', message='Question deleted')
         
-        return web.badrequest()
+        raise web.badrequest()
         

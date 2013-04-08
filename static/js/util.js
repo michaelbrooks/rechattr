@@ -94,6 +94,13 @@
             'message': message
         });
     }
+
+    util.flash.success = function(message) {
+        return util.flash({
+            'type': 'success',
+            'message': message
+        });
+    }
     
     util.hideFlash = function() {
         flashBox.find('.alert').addClass('very-slow-fade').alert('close');

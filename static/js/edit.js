@@ -51,6 +51,10 @@
         this.ui.questionList.on('click', QUESTION_SELECTOR, function(e) {
             self.showEditor($(this));
         });
+
+        this.editor.on('new-question', function(e, questionHtml) {
+            self.ui.questionList.append(questionHtml);
+        })
     };
 
     EditApp.prototype.showEditor = function(question) {
