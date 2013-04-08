@@ -12,13 +12,12 @@ $def with (poll)
     <div class="span6">
         <h3>Responses</h3>
         <table>
-            <tr><th>id</th><th>time</th><th>answers</th><th>comment</th></tr>
+            <tr><th>id</th><th>time</th><th>answer</th></tr>
             $for response in poll.responses:
                 <tr>
                 <td>$response.id</td>
                 <td>$response.created</td>
-                <td>$response.answers</td>
-                <td>$response.comment</td>
+                <td>$:response.answer</td>
                 </tr>
         </table>
     </div>

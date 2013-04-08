@@ -7,10 +7,8 @@ import utils
 from utils import twttr
 
 from . import pagerender as render
-from model import Poll, Response, Tweet
+from model import Poll, Response, Tweet, Question
 
-
-    
 
 tweet_form = form.Form(
     form.Textarea('tweet', form.notnull, 
@@ -70,8 +68,44 @@ class poll:
         return render.poll(user=user, poll=poll,
                            stream=stream, questions=questions,
                            tweetForm=tweetForm, stats=stats)
-    
-    def _process_tweet_input(self, poll, input):
+
+    def _process_answer(self, poll):
+        input = web.input();
+
+        questionId = input.get('id', None)
+        if questionId is None:
+            raise web.badrequest("Question id not provided")
+
+        question = web.ctx.orm.query(Question).get(questionId)
+        if question is None:
+            raise web.notfound('Question not found')
+
+        # make sure it belongs to this poll
+        if question.poll != poll:
+            raise web.badrequest('Question for wrong poll')
+
+        answer = input.get('answer', None)
+        if answer is None:
+            raise web.badrequest('Answer not provided')
+
+        answerChoices = question.get_answer_choices()
+        if answer not in answerChoices:
+            raise web.badrequest('Not a valid answer to this question')
+
+        # save the response
+        response = Response()
+        response.poll = poll
+        response.question = question
+        response.user = web.ctx.auth.current_user() # might be None
+        response.visit = None;
+        response.answer = answer
+
+        web.ctx.orm.add(response)
+
+        return 'Response recorded';
+
+    def _process_tweet_input(self, poll):
+        input = web.input()
         tweetForm = tweet_form()
         
         # Build a checker for the hashtag
@@ -155,23 +189,13 @@ class poll:
             # we only need to render a confirmation message
             return json.dumps(response)
     
-    def POST(self, poll_url):
+    def POST(self, poll_url, type):
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
-            
-        i = web.input()
-        if 'tweet' in i:
-            return self._process_tweet_input(poll, i)
+
+        if type == 'tweet':
+            return self._process_tweet_input(poll)
+        elif type == 'answer':
+            return self._process_answer(poll)
         else:
-            answers = web.input()
-            
-            # save the response
-            response = Response()
-            response.poll = poll;
-            response.visit = None;
-            response.comment = None;
-            response.answers = json.dumps(answers);
-            web.ctx.orm.add(response)
-        
-            # go to the results page
-            web.seeother(web.ctx.urls.poll_results(poll))
+            raise web.badrequest("Unknown request type %s." %(type));

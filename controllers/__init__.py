@@ -51,8 +51,10 @@ class AppUrls(object):
         '/sign_in',             'sign_in',
         '/sign_out',            'sign_in',
         '/([\w-]+)',            'poll',
+        '/([\w-]+)/(tweet)',      'poll', # for posting new tweets
+        '/([\w-]+)/(answer)',     'poll', # for answering questions
         '/([\w-]+)/edit',       'edit',
-        '/([\w-]+)/edit/(\w+)/(\d*)',   'edit',
+        '/([\w-]+)/edit/(\w+)/(\d*)',   'edit', # this is for REST only
         '/([\w-]+)/stream',     'stream',
         '/([\w-]+)/results',    'results'
     )
