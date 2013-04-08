@@ -12,7 +12,11 @@
 
     var PALETTE_SELECTOR = '.answer-palette';
     var ANSWER_CHOICE_SELECTOR = '.answer-choice';
-    var ANSWER_VALUE_SELECTOR = '.value';
+
+    var TEXT_VALUE_SELECTOR = '.value';
+    var IMAGE_VALUE_SELECTOR = '.image';
+    var ICON_VALUE_SELECTOR = '.icon';
+
     var EDITABLE_VALUE_SELECTOR = '.editable';
     var TRASH_SELECTOR = '.trash-bin';
 
@@ -85,8 +89,7 @@
 
 
         this.ui.palette.on('click', ANSWER_CHOICE_SELECTOR, function(e) {
-            var answerValue = $(this).find(ANSWER_VALUE_SELECTOR)
-            self.addAnswerChoice(answerValue.html())
+            self.addAnswerChoice($(this).html())
         });
 
         this.ui.answersList.on('keyup', ANSWER_EDITOR_SELECTOR, function(e) {
@@ -208,13 +211,13 @@
             return;
         }
 
-        var answerValue = answer.find(ANSWER_VALUE_SELECTOR);
+        var answerValue = answer.find(TEXT_VALUE_SELECTOR);
 
         //Editable if the value is straight text
         if (answerValue.size()) {
             answer.addClass('editing');
 
-            var value = answerValue.text();
+            var value = $.trim(answerValue.text());
             var input = $('<input>')
                 .attr('type', 'text')
                 .addClass('answer-editor')
@@ -231,7 +234,7 @@
     Editor.prototype.captureEditorValue = function(editor) {
         //Update the answer value from the input element
         var value = editor.val();
-        var valueBox = editor.parent().find(ANSWER_VALUE_SELECTOR);
+        var valueBox = editor.parent().find(TEXT_VALUE_SELECTOR);
         valueBox.text(value);
     }
 
@@ -359,7 +362,7 @@
 
         var answerList = [];
         this.ui.answersList.children().each(function(i, listElement) {
-            var answerText = $(listElement).find(ANSWER_VALUE_SELECTOR).html();
+            var answerText = $(listElement).html();
             answerList.push($.trim(answerText));
         });
 

@@ -4,7 +4,6 @@
     var TEXT_INPUT_SELECTOR = '.question-text';
     var ANSWER_LIST_SELECTOR = '.answer-list';
     var IMAGE_SELECTOR = '.question-image';
-    var ANSWER_VALUE_SELECTOR = '.value';
 
     //An object that collects data from the question display
     var QuestionData = function(question) {
@@ -31,7 +30,7 @@
             var answers = this.data.answer_choices;
 
             answerList.children().each(function(index, listElement) {
-                var contents = $(listElement).find(ANSWER_VALUE_SELECTOR).html();
+                var contents = $(listElement).html();
                 answers.push($.trim(contents));
             });
 
@@ -98,22 +97,15 @@
 
     QuestionData.prototype.choice = function(answerHtml) {
         //Generate an answer icon
-        var answer = $('<div>')
-            .addClass('value')
-            .html($.trim(answerHtml));
+        var answer = $(answerHtml);
 
         var listItem = $('<li>')
             .addClass('answer-choice')
-            .html(answer);
+            .append(answer);
 
-        //Editable if nothing but text children
-        if (answer.children().size() == 0) {
+        //Editable if a text value
+        if (answer.is('.value')) {
             listItem.addClass('editable');
-        }
-
-        //Image button if contains an image
-        if (answer.find('img').size() > 0) {
-            listItem.addClass('img');
         }
 
         return listItem;

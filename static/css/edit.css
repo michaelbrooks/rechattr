@@ -3,6 +3,7 @@
 @import url("rechattr.css");
 @import url("modules/sticky-footer.css");
 @import url("edit/timeline.css");
+@import url("edit/questions.css");
 @import url("edit/poll-banner.css");
 
 .question-editor {
@@ -154,8 +155,7 @@
     position: absolute;
     top: 0;
     padding: 5px;
-    height: 28px;
-    line-height: 28px;
+    line-height: 35px;
 
     background: #444;
     border: none;
@@ -241,51 +241,20 @@
 
 .question-editor .answers-wrapper .answer-list {
     list-style: none;
-    margin: 4px 0 0 38px;
+    margin: 0 0 0 38px;
     position: relative;
     min-height: 36px;
     width: 356px;
 }
 
 .question-editor .answer-choice {
-    float: left;
-
-    padding: 8px 12px;
-    margin: 0 4px 4px 0;
-
-     -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-
-    background: #B5D2E9;
-    color: #333;
-    
-    font-family: Verdana, Geneva, sans-serif;
     cursor: pointer;
-
-    position: relative;
-
-    -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow:    1px 1px 5px rgba(0, 0, 0, 0.5);
-    box-shadow:         1px 1px 5px rgba(0, 0, 0, 0.5);
-
-    -webkit-transition: background linear 0.2s, color linear 0.2s;
-    -moz-transition: background linear 0.2s, color linear 0.2s;
-    -ms-transition: background linear 0.2s, color linear 0.2s;
-    -o-transition: background linear 0.2s, color linear 0.2s;
-    transition: background linear 0.2s, color linear 0.2s;
+    height: 36px;
 }
 
-.question-editor .answer-choice.img {
-    height: 30px;
-    width: 30px;
-    overflow: hidden;
-    padding: 0;
-    border: 1px solid #AAA;
-}
-.question-editor .answer-choice.img img {
-    width: 30px;
-    height: 30px;
+.question-editor .answer-choice .image img {
+    width: 36px;
+    height: 36px;
 }
 
 .question-editor .answer-list .answer-choice.editable:hover {
@@ -311,23 +280,11 @@
 }
 
 .question-editor .answer-list .answer-choice {
-    padding: 3px 7px;
-    border: 5px solid transparent;
+    /*padding: 3px 7px;*/
+    /*border: 5px solid transparent;*/
 }
 
-.question-editor .answer-list .answer-choice.img {
-    height: 30px;
-    width: 30px;
-    overflow: hidden;
-    padding: 0;
-    border: 1px solid #AAA;
-}
-.question-editor .answer-list .answer-choice.img img {
-    width: 30px;
-    height: 30px;
-}
-
-.answer-list li.placeholder {
+.question-editor .answer-list li.placeholder {
     float: left;
     min-width: 30px;
 }
@@ -355,11 +312,6 @@
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-}
-
-.question-editor .answer-choice .value {
-    line-height: 16px;
-    height: 16px;
 }
 
 .question-editor .answer-palette .answer-choice {
