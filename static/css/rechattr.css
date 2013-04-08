@@ -58,7 +58,9 @@
 .twitter-icon {
     display: inline-block;
     vertical-align: middle;
-    background: url("../img/twitter-bird-light-bgs.png") cover no-repeat;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("../img/twitter-bird-light-bgs.png");
 }
 
 .twitter-icon.light {
