@@ -26,11 +26,12 @@ $var nav: $:elements.nav('myevents', user)
             </thead>
             <tbody>
             $for poll in polls:
+                $ poll_url = urls.poll(poll)
                 $ poll_edit_url = urls.poll_edit(poll)
                 $ poll_results_url = urls.poll_results(poll)
                 <tr class="poll-list-item">
                     <td class="poll-title">
-                        $poll.title <span class="poll-hashtag muted">$poll.twitter_hashtag</span>
+                        <a href="${poll_url}">$poll.title <span class="poll-hashtag muted">$poll.twitter_hashtag</span></a>
                     $if poll.is_active():
                         <span class="poll-timing-info">
                             Ends in $dtutils.time_to(poll.event_stop, long=True, showDays=True)
