@@ -46,16 +46,48 @@
         this.ui.newQuestionButton.on('click', function(e) {
             self.showEditor(null)
         });
-        
+
+        this.ui.questionList.on('click', QUESTION_DELETE_SELECTOR, function(e) {
+            self.deleteQuestion($(this).parents(QUESTION_SELECTOR));
+            e.preventDefault();
+            return false;
+        });
+
         //When a question is clicked, invoke the editor for that question
         this.ui.questionList.on('click', QUESTION_SELECTOR, function(e) {
             self.showEditor($(this));
         });
 
+        this.editor.on('cancel', function(e) {
+            self.hideEditor();
+        });
+
         this.editor.on('new-question', function(e, questionHtml) {
             self.ui.questionList.append(questionHtml);
-        })
+        });
+
+
     };
+
+    EditApp.prototype.deleteQuestion = function(question) {
+        var id = question.data('id');
+
+        $.ajax({
+            url: rechattr.util.url.extend('question', id),
+            type: 'DELETE'
+        })
+            .done(function(response) {
+                rechattr.util.flash.success('Question deleted');
+                question.one('hidden', function() {
+                    question.remove();
+                });
+                question.collapse('hide');
+            })
+            .error(function(xhr) {
+                console.log('Error deleting question', xhr);
+                rechattr.util.flash(xhr.responseText);
+            });
+    }
 
     EditApp.prototype.showEditor = function(question) {
 
@@ -90,10 +122,15 @@
         }
 
         this.editor.show(question);
-
+        if (question) {
+            question.collapse('hide');
+        }
     };
     
     EditApp.prototype.hideEditor = function() {
+        if (this.editor.currentQuestion) {
+            this.editor.currentQuestion.collapse('show');
+        }
         this.editor.hide();
     };
     

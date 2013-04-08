@@ -55,10 +55,15 @@
 
         this.ui.saveButton.on('click', function(e) {
             self.saveAndClose();
+            e.preventDefault();
+            return false;
         });
 
         this.ui.cancelButton.on('click', function(e) {
+            self.trigger('cancel');
             self.hide();
+            e.preventDefault();
+            return false;
         });
 
         this.ui.paletteNextButton.on('click', function(e) {

@@ -1,17 +1,19 @@
 
-.poll-banner {
+.light-on-dark {
     background: #18182E;
-    padding: 25px 20px 25px 20px;
-    
     color: #D6D7F7;
+}
+
+.poll-banner {
+    padding: 25px 20px 25px 20px;
 }
 
 .poll-banner .muted {
     color: #858599
 }
 
-.poll-banner input[type="text"].editable,
-.poll-banner .editable input[type="text"]
+.light-on-dark input[type="text"].editable,
+.light-on-dark .editable input[type="text"]
  {
     background-color: transparent;
     
@@ -34,8 +36,8 @@
     color: #D6D7F7;
 }
 
-.poll-banner input[type="text"].editable:focus,
-.poll-banner .editable input[type="text"]:focus {
+.light-on-dark input[type="text"].editable:focus,
+.light-on-dark .editable input[type="text"]:focus {
     background-color: #272155;
     border-color: #39337A;
     
@@ -46,7 +48,7 @@
     
 }
 
-.poll-banner .input-prepend.editable .add-on {
+.light-on-dark .input-prepend.editable .add-on {
     border-color: transparent;
     background: transparent;
     

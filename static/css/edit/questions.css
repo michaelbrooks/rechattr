@@ -1,10 +1,71 @@
-.question {
-    min-height: 51px;
+/* General answer-choice stuff */
+.answer-choice {
+    float: left;
+
+    padding: 0;
+    margin: 0 4px 4px 0;
+    overflow: hidden;
+
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+    background: #B5D2E9;
+    color: #333;
+
+    font-family: Verdana, Geneva, sans-serif;
+    cursor: default;
     position: relative;
-    padding: 9px 12px;
+
+    line-height: 36px;
+
+    -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow:    1px 1px 3px rgba(0, 0, 0, 0.5);
+    box-shadow:         1px 1px 3px rgba(0, 0, 0, 0.5);
+
+    -webkit-transition: background linear 0.2s, color linear 0.2s;
+    -moz-transition: background linear 0.2s, color linear 0.2s;
+    -ms-transition: background linear 0.2s, color linear 0.2s;
+    -o-transition: background linear 0.2s, color linear 0.2s;
+    transition: background linear 0.2s, color linear 0.2s;
+}
+
+.answer-choice .value,
+.answer-choice .icon {
+    padding: 0 12px;
+}
+
+.answer-choice .value{
+
+}
+
+.answer-choice .icon {
+
+}
+
+.answer-choice .image {
+    height: 100%;
+}
+.answer-choice .image img {
+    max-height: 100%;
+    position: relative;
+    top: -1px; /* not sure what this is about */
+}
+
+
+/* question editing stuff */
+
+.question {
+    position: relative;
+
+    border-bottom: 1px solid #eee;
 }
 
 .question-content {
+    padding: 12px;
+}
+
+.question-content.has-image {
     margin-left: 48px;
 }
 
@@ -12,7 +73,11 @@
 
 }
 
-.question-header .question-image {
+.question-content .question-header .question-image {
+    display: none;
+}
+
+.question-content.has-image .question-header .question-image {
     border: 0;
     width: 38px;
     height: 38px;
@@ -33,9 +98,12 @@
 }
 
 .question-header .question-offset {
-    font-size: 20px;
-    line-height: 30px;
-    color: #666;
+    font-size: 18px;
+    line-height: 24px;
+    color: #888;
+
+    float: right;
+    margin-right: 10px;
 }
 
 .question-header .question-delete {
@@ -70,72 +138,35 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    line-height: 24px;
 
-    margin-right: 10px;
-}
-
-
-.answer-choice {
-    float: left;
-
-    padding: 0;
-    margin: 0 4px 4px 0;
-    overflow: hidden;
-
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-
-    background: #B5D2E9;
-    color: #333;
-
-    font-family: Verdana, Geneva, sans-serif;
-    cursor: default;
-    position: relative;
-
-    -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    -moz-box-shadow:    1px 1px 3px rgba(0, 0, 0, 0.5);
-    box-shadow:         1px 1px 3px rgba(0, 0, 0, 0.5);
-
-    -webkit-transition: background linear 0.2s, color linear 0.2s;
-    -moz-transition: background linear 0.2s, color linear 0.2s;
-    -ms-transition: background linear 0.2s, color linear 0.2s;
-    -o-transition: background linear 0.2s, color linear 0.2s;
-    transition: background linear 0.2s, color linear 0.2s;
-}
-
-.answer-choice .value,
-.answer-choice .icon {
-    padding: 8px 12px;
-}
-
-.answer-choice .value{
-
-}
-
-.answer-choice .icon {
-
-}
-
-.answer-choice .image {
-    height: 100%;
-}
-.answer-choice .image img {
-    max-height: 100%;
+    position: absolute;
 }
 
 .question .answer-list {
     list-style: none;
     margin: 0;
     padding: 0;
-    float: left;
+
+    margin-left: 210px;
+    height: 26px;
+    overflow: hidden;
 }
 
 .question .answer-list .answer-choice {
-    height: 36px;
+    height: 24px;
+    line-height: 24px;
+    float: right;
+    background: #FFF;
+    border: 1px solid #DDD;
+    opacity: 0.4;
+    -webkit-box-shadow: none;
+    -moz-box-shadow:    none;
+    box-shadow:         none;
+
 }
 
 .question .answer-list .answer-choice .image img {
-    width: 36px;
-    height: 36px;
+    width: 24px;
+    height: 24px;
 }

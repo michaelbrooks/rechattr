@@ -79,7 +79,16 @@ class Poll(model.Base):
                         filter(model.Tweet.polls.contains(self)).\
                         order_by(model.Tweet.created.desc())
         return query.all()
-    
+
+    def questions_by_offset(self):
+
+        offsetSort = lambda q: \
+            float(q.trigger_info) \
+                if q.trigger_type == 'time_offset' \
+                else 0
+
+        return sorted(self.questions, key=offsetSort)
+
     def has_started(self):
         now = utc_aware()
         return now > self.event_start

@@ -6,10 +6,13 @@
 @import url("edit/questions.css");
 @import url("edit/poll-banner.css");
 
+html {
+    /* always show the scrollbar */
+    overflow-y: scroll;
+}
+
 .question-editor {
-    background: #333;
     position: relative;
-    color: #eee;
 }
 
 .question-editor form {
@@ -40,14 +43,16 @@
 }
 
 .question-editor .old-uploader {
-
+    float: left;
 }
 .question-editor .old-uploader input.question-image-input {
     width: 200px;
+    float: left;
+    clear: both;
 }
 
 .question-editor .old-uploader label {
-    width: 200px;
+    float: left;
     margin-bottom: 0;
 }
 
@@ -133,11 +138,12 @@
 }
 
 .question-editor .form-controls {
-    padding: 19px 20px 20px;
-    margin-top: 20px;
-    margin-bottom: 0;
-    background-color: #555;
+    padding: 0 0 10px 0;
+    margin: 0;
     text-align: right;
+}
+.question-editor .form-controls .btn {
+    margin-top: 10px;
 }
 
 .question-editor .answer-palette-instructions {
@@ -148,6 +154,13 @@
     position: relative;
     padding: 0 31px;
     margin-bottom: 10px;
+
+    -webkit-transition: opacity linear 0.2s;
+    -moz-transition: opacity linear 0.2s;
+    -ms-transition: opacity linear 0.2s;
+    -o-transition: opacity linear 0.2s;
+    transition: opacity linear 0.2s;
+
 }
 
 .question-editor .palette-wrapper .prev-button,
@@ -157,7 +170,7 @@
     padding: 5px;
     line-height: 35px;
 
-    background: #444;
+    background: #293C6D;
     border: none;
 
     -webkit-box-shadow: none;
@@ -173,12 +186,12 @@
 
 .question-editor .palette-wrapper .prev-button:hover,
 .question-editor .palette-wrapper .next-button:hover {
-    background: #555;
+    background: #3C5699;
 }
 
 .question-editor .palette-wrapper .prev-button:active,
 .question-editor .palette-wrapper .next-button:active {
-    background: #444;
+    background: #304988;
     -webkit-box-shadow: inset 0px 0px 3px rgba(100, 100, 100, 0.75);
     -moz-box-shadow:    inset 0px 0px 3px rgba(100, 100, 100, 0.75);
     box-shadow:         inset 0px 0px 3px rgba(100, 100, 100, 0.75);
@@ -207,7 +220,7 @@
     -moz-border-radius: 5px;
     border-radius: 5px;
 
-    background: #555;
+    background: #2A3C52;
     -webkit-box-shadow: inset 0px 0px 5px rgba(50, 50, 50, 0.75);
     -moz-box-shadow:    inset 0px 0px 5px rgba(50, 50, 50, 0.75);
     box-shadow:         inset 0px 0px 5px rgba(50, 50, 50, 0.75);
@@ -316,10 +329,18 @@
 
 .question-editor .answer-palette .answer-choice {
     cursor: copy;
+    opacity: 0.5;
+
+    -webkit-transition: all linear 0.2s;
+    -moz-transition: all linear 0.2s;
+    -ms-transition: all linear 0.2s;
+    -o-transition: all linear 0.2s;
+    transition: all linear 0.2s;
 }
 
 .question-editor .answer-palette .answer-choice:hover {
     background: #D1E5F5;
+    opacity: 1;
 }
 
 .question-editor .answer-palette .answer-choice:active {
@@ -341,12 +362,12 @@
     transition: all linear 0.2s;
 
     text-align: center;
-    border: 4px #555 dotted;
+    border: 4px #293C6D dotted;
     background: transparent;
 }
 
 .question-editor .answers-wrapper .trash-bin.trash-activate {
-    background: rgb(85, 85, 85);
+    background: #293C6D;
 
     -webkit-box-shadow: 0px 0px 3px rgba(85, 85, 85, 0.75);
     -moz-box-shadow:    0px 0px 3px rgba(85, 85, 85, 0.75);

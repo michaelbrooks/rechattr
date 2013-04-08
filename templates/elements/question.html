@@ -3,18 +3,19 @@ $if newItem:
     $ newItemClass='new-item'
 $else:
     $ newItemClass=''
-<div class="question stream-item clearfix $newItemClass"
+<div class="question collapse in stream-item clearfix $newItemClass"
      data-type="question"
      data-id="${question.id}"
      data-trigger-type="${question.trigger_type}"
      data-trigger-info="${question.trigger_info}">
-    <div class="question-content">
-        $ imgClass = 'has-image' if question.image_src is not None else ''
-        <div class="question-header $imgClass">
+    $ imgClass = 'has-image' if question.image_src is not None else ''
+    <div class="question-content $imgClass">
+        <div class="question-header">
             <img class="question-image" src="$question.image_src" />
             <strong class="question-subject">${question.subject}</strong>
-            <span class="question-offset">@${question.nice_offset()}</span>
-            <div class="close question-delete">&times;</div>
+
+            <div title="Delete this question" class="close question-delete">&times;</div>
+            <span class="question-offset">@ ${question.nice_offset()}</span>
         </div>
         <div class="question-body">
         <div class="question-text">${question.question_text}</div>

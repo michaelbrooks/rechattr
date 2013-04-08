@@ -162,10 +162,7 @@ class edit:
                 raise web.badrequest('Question not for this poll')
             
             result = web.ctx.orm.delete(question)
-            if result is None:
-                raise web.internalerror(message='Question not deleted')
-            else:
-                return web.ctx.json(type='success', message='Question deleted')
+            return web.ctx.json(type='success', message='Question deleted')
         
         raise web.badrequest()
         
