@@ -55,11 +55,15 @@
     padding: 9px 12px;
     border-bottom: 1px solid #ddd;
     opacity: 1;
-    -webkit-transition: opacity 200ms linear, background 3s ease-in-out 2s;
-     -moz-transition: opacity 200ms linear, background 3s ease-in-out 2s;
-       -o-transition: opacity 200ms linear, background 3s ease-in-out 2s;
-          transition: opacity 200ms linear, background 3s ease-in-out 2s;
 }
+
+.chatter.panel .stream-list .stream-item {
+    -webkit-transition: opacity 200ms linear, background 3s ease-in-out 2s;
+    -moz-transition: opacity 200ms linear, background 3s ease-in-out 2s;
+    -o-transition: opacity 200ms linear, background 3s ease-in-out 2s;
+    transition: opacity 200ms linear, background 3s ease-in-out 2s;
+}
+
 .stream-list .stream-item:last-child {
     border-bottom: none;
 }

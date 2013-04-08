@@ -1,8 +1,8 @@
-$def with (user, poll, items, tweetForm, stats)
+$def with (user, poll, stream, questions, tweetForm, stats)
 $var css: poll.css
 $var js_app: PollApp
 $var poll: $poll.poll_url_code
-$var current_time: ${items[0].created_timestamp() if len(items) > 0 else time.time()}
+$var current_time: ${stream[0].created_timestamp() if len(stream) > 0 else time.time()}
 $ sign_in_url = urls.sign_in(urls.poll(poll))
 <div class="row-fluid">
     <div class="feedback panel in">
@@ -33,9 +33,15 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
                         </div>
                     </div>
             </div>
-            <p>Blah blah blah blah</p>
-            <p>blah blah asdf asdf asdf </p>
-            <p>this is some placeholder text</p>
+            <div class="feedback-instructions">share your feedback</div>
+            <div class="stream">
+                <div class="stream-list">
+                    $ highlight = True
+                    $for item in questions:
+                        $:render_stream_item(item, highlight=highlight)
+                        $ highlight = False
+                </div>
+            </div>
         </div>
     </div>
     
@@ -52,7 +58,7 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
             </div>
             <div class="stream">
                 <div class="stream-list">
-                $for item in items:
+                $for item in stream:
                     $:render_stream_item(item)
                 </div>
             </div>
@@ -74,6 +80,15 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
                 $:tweetForm.form_submit.render()
                 $:tweetForm.submit.render()
                 <div class="tweet-message-box"><span class="tweet-length-message"></span></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal question-modal fade hide">
+        <div class="modal-body">
+            <form method="POST" class="question-form">
+                <div class="question-wrapper">
+                </div>
             </form>
         </div>
     </div>

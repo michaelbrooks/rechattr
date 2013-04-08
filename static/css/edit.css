@@ -2,8 +2,9 @@
 @import url("bootstrap-responsive.css");
 @import url("rechattr.css");
 @import url("modules/sticky-footer.css");
+@import url("modules/questions.css");
 @import url("edit/timeline.css");
-@import url("edit/questions.css");
+@import url("edit/question-list.css");
 @import url("edit/poll-banner.css");
 
 html {

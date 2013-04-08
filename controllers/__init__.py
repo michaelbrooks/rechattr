@@ -16,12 +16,12 @@ elements = web.template.render('templates/elements', globals=helpers)
 helpers['elements'] = elements
 
 from model import Tweet, Question
-def render_stream_item(item, newItem=False):
+def render_stream_item(item, newItem=False, highlight=False):
     itemType = type(item)
     if itemType is Tweet:
-        return elements.tweet(item, newItem)
+        return elements.tweet(item, newItem, highlight)
     elif itemType is Question:
-        return elements.question(item, newItem)
+        return elements.question(item, newItem, highlight)
 
 helpers['render_stream_item'] = render_stream_item
 

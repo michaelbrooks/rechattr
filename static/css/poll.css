@@ -3,6 +3,78 @@
 @import url("rechattr.css");
 @import url("modules/tweetstream.css");
 @import url("modules/tweets.css");
+@import url("modules/questions.css");
 @import url("poll/mobile-poll.css");
 @import url("poll/tweet-box.css");
 @import url("poll/user-panel.css");
+
+
+.feedback.panel .question .close {
+    display: none;
+}
+
+.feedback.panel .question .question-offset {
+    display: none;
+}
+
+
+.feedback.panel .stream-list .question {
+    background: transparent;
+    margin-bottom: 5px;
+    border: none;
+    padding: 0;
+
+    cursor: pointer;
+
+    -webkit-transition: opacity 200ms linear, background 200ms linear;
+    -moz-transition: opacity 200ms linear, background 200ms linear;
+    -o-transition: opacity 200ms linear, background 200ms linear;
+    transition: opacity 200ms linear, background 200ms linear;
+}
+
+
+.feedback.panel .stream-list .question.highlight {
+    background: #418556;
+}
+
+.feedback.panel .stream-list .question:hover {
+    background: #555;
+}
+
+.feedback.panel .stream-list .question.highlight:hover {
+    background: #489f69;
+}
+
+.feedback.panel .feedback-instructions {
+    text-align: center;
+    color: #aaa;
+
+    font-style: italic;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.feedback.panel .stream-header,
+.feedback.panel .stream-list .question-subject,
+.feedback.panel .stream-list .question-text {
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
+}
+
+.feedback.panel .stream-list .question-subject {
+    color: #eee;
+    font-size: 18px;
+}
+
+.feedback.panel .stream-list .question-text {
+    color: #ccc;
+    font-size: 14px;
+    line-height: 20px;
+    height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.feedback.panel .stream-list .answer-list {
+    display: none;
+}

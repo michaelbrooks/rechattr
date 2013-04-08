@@ -1,9 +1,7 @@
-$def with (question,newItem=False)
-$if newItem:
-    $ newItemClass='new-item'
-$else:
-    $ newItemClass=''
-<div class="question collapse in stream-item clearfix $newItemClass"
+$def with (question,newItem=False, highlight=False)
+$ newItemClass = 'new-item' if newItem else ''
+$ highlightClass = 'highlight' if highlight else ''
+<div class="question collapse in stream-item clearfix $newItemClass $highlightClass"
      data-type="question"
      data-id="${question.id}"
      data-trigger-type="${question.trigger_type}"
