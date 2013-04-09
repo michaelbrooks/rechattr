@@ -70,7 +70,8 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
     $ tweetModalVisibility = 'in' if tweetForm.tweet.value else "hide"
     <div class="modal tweet-modal fade $tweetModalVisibility">
         <div class="modal-body">
-            <form method="POST" class="tweet-form">
+            $ tweet_url = urls.poll(poll) + '/tweet'
+            <form method="POST" action="${tweet_url}" class="tweet-form">
                 <div class="tweet-input-wrapper">
                     $:tweetForm.tweet.render()
                     <div class="hashtag-box fade in" data-hashtag="${poll.twitter_hashtag}">
