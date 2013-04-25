@@ -17,6 +17,7 @@
     var TWEET_INPUT_WRAPPER_SELECTOR = '.tweet-input-wrapper';
     var TWEET_LENGTH_MESSAGE_SELECTOR = '.tweet-length-message';
     var TWEET_SUBMIT_BUTTON_SELECTOR = '.tweet-submit';
+    var TWEET_CANCEL_BUTTON_SELECTOR = '.tweet-cancel';
     var TWEET_FORM_SELECTOR = '.tweet-form';
     var HASHTAG_BOX_SELECTOR = '.hashtag-box';
 
@@ -76,6 +77,7 @@
         this.ui.hashtagBox = $(HASHTAG_BOX_SELECTOR);
         this.ui.tweetLengthMessage = $(TWEET_LENGTH_MESSAGE_SELECTOR);
         this.ui.tweetSubmitButton = $(TWEET_SUBMIT_BUTTON_SELECTOR);
+        this.ui.tweetCancelButton = $(TWEET_CANCEL_BUTTON_SELECTOR);
         this.ui.tweetForm = $(TWEET_FORM_SELECTOR);
 
         this.ui.questionBox = $(QUESTION_MODAL_SELECTOR);

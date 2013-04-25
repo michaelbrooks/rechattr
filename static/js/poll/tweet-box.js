@@ -62,6 +62,10 @@
         this.ui.tweetBox.on('shown', function(e) {
             activateTweetBox.call(self, e);
         });
+
+        this.ui.tweetCancelButton.on('click', function(e) {
+            self.ui.tweetBox.modal('hide');
+        });
         
         //If there is already input, it must be a failed POST so bring it back up
         if (this.ui.tweetInput.val()) {

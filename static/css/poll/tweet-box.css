@@ -9,6 +9,10 @@
     line-height: 30px; /* as high as the submit button */
 }
 
+.tweet-cancel {
+    float: left;
+}
+
 .tweet-input-wrapper {
     position: relative;
     margin: 0;
