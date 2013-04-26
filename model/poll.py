@@ -104,7 +104,7 @@ class Poll(model.Base):
         # convert the older_than into an offset against the event start
         older_than_offset = (older_than - self.event_start).total_seconds()
         older_than_offset = model.Question.trigger_seconds < older_than_offset
-        query = query.filter(older_than_offset & manuallyTriggered)
+        query = query.filter(older_than_offset | manuallyTriggered)
 
         if newer_than:
             # convert the newer_than into an offset against the event start
