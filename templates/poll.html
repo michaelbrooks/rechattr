@@ -3,6 +3,7 @@ $var css: poll.css
 $var js_app: PollApp
 $var poll: $poll.poll_url_code
 $var current_time: ${ dtutils.dt_timestamp(stream[0].get_time()) if len(stream) > 0 else time.time()}
+$var end_of_stream: ${ dtutils.dt_timestamp(stream[-1].get_time()) if len(stream) > 0 else time.time()}
 $ sign_in_url = urls.sign_in(urls.poll(poll))
 <div class="row-fluid">
     <div class="panel in">
@@ -40,6 +41,8 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
                 $for item in stream:
                     $:render_stream_item(item)
                 </div>
+            </div>
+            <div class="stream-footer">
             </div>
         </div>
     </div>

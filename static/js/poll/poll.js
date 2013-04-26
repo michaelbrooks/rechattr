@@ -1,11 +1,13 @@
 (function() {
     var CONTAINER_SELECTOR = '.container';
     var PANEL_SELECTOR = '.panel';
+    var PANEL_SCROLL_BOX_SELECTOR = '.panel-content';
     var POLL_TITLE_SELECTOR = '.segment-title';
     var CHATTER_NOTIFY_SELECTOR = '.chatter-notify';
     var FEEDBACK_NOTIFY_SELECTOR = '.feedback-notify';
     var STREAM_LIST_ITEMS_SELECTOR = '.stream-list';
     var STREAM_HEADER_SELECTOR = '.stream-header';
+    var STREAM_FOOTER_SELECTOR = '.stream-footer';
     
     var MODAL_BACKDROP_SELECTOR = '.modal-backdrop';
     
@@ -56,11 +58,13 @@
         
         this.ui.container = $(CONTAINER_SELECTOR);
         this.ui.panel = $(PANEL_SELECTOR);
+        this.ui.panelScroll = this.ui.panel.find(PANEL_SCROLL_BOX_SELECTOR);
         this.ui.pollTitle = $(POLL_TITLE_SELECTOR);
         this.ui.chatterNotify = $(CHATTER_NOTIFY_SELECTOR);
         this.ui.feedbackNotify = $(FEEDBACK_NOTIFY_SELECTOR);
         this.ui.streamList = this.ui.panel.find(STREAM_LIST_ITEMS_SELECTOR);
         this.ui.streamHeader = this.ui.panel.find(STREAM_HEADER_SELECTOR);
+        this.ui.streamFooter = this.ui.panel.find(STREAM_FOOTER_SELECTOR);
 
         //Not used??
         //this.ui.modalBackdrop = $(MODAL_BACKDROP_SELECTOR);
