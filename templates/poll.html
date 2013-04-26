@@ -47,7 +47,7 @@ $var nav=poll_nav()
     <div class="chatter-notify glow-notify"></div>
     
     $ tweetModalVisibility = 'in' if tweetForm.tweet.value else "hide"
-    <div class="modal tweet-modal fade $tweetModalVisibility">
+    <div class="modal tweet-modal $tweetModalVisibility">
         <div class="modal-body">
             $ tweet_url = urls.poll(poll) + '/tweet'
             <form method="POST" action="${tweet_url}" class="tweet-form">
@@ -65,7 +65,7 @@ $var nav=poll_nav()
         </div>
     </div>
 
-    <div class="modal question-modal fade hide">
+    <div class="modal question-modal hide">
         <div class="modal-body">
             <form method="POST" class="question-form">
                 <div class="question-wrapper">
