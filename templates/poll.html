@@ -5,35 +5,32 @@ $var poll: $poll.poll_url_code
 $var current_time: ${ dtutils.dt_timestamp(stream[0].get_time()) if len(stream) > 0 else time.time()}
 $var end_of_stream: ${ dtutils.dt_timestamp(stream[-1].get_time()) if len(stream) > 0 else time.time()}
 $ sign_in_url = urls.sign_in(urls.poll(poll))
-<div class="row-fluid">
-    <div class="panel in">
-        <div class="panel-title">
-            <span class="brand">re:chattr</span>
-            <span class="poll-title">$poll.title</span>
-            <span class="twitter-info">$poll.twitter_hashtag</span>
-        </div>
-        <div class="panel-content">
-            <div class="user-panel">
+$def poll_nav():
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <!--<a class="brand" href="${urls.home()}">re:chattr</a>-->
+                <span class="brand">re:chattr</span>
+                <span class="pull-right user-panel">
                 $if user is None:
-                    <a class="sign-in-button" href="${sign_in_url}">
+                    <a class="sign-in-button btn btn-info" href="${sign_in_url}">
                         <span class="twitter-icon light"></span> Sign in with Twitter
                     </a>
                 $else:
-                    <div class="user-info">
-                        <div class="user-wrapper">
-                            <div class="twitter-author">
-                                <img class="avatar" src="${user.profile_image_url}" alt="${user.username}" />
-                                <strong class="full-name">@${user.username}</strong>
-                                <span class="screen-name">${user.full_name}</span>
-                            </div>
-                            $:elements.user_stats(stats)
-                            <button class="btn btn-small btn-info new-tweet-button tooltip-below"
-                                    title="Compose new tweet">
-                                <span class="twitter-icon light"></span>
-                            </button>
-                        </div>
-                    </div>
+                    <span class="screen-name">@${user.username}</span>
+                    <button class="btn btn-small btn-info new-tweet-button tooltip-below"
+                            title="Compose new tweet">
+                        <span class="twitter-icon light"></span>
+                    </button>
+                </span>
             </div>
+        </div>
+    </div>
+$var nav=poll_nav()
+<div class="row-fluid">
+    <div class="panel in">
+        <div class="panel-content">
+            <h4 class="welcome">Let's chat with <span class="poll-title">$poll.title</span>!</h4>
             <div class="stream-header">
             </div>
             <div class="stream">
