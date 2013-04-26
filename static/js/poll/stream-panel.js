@@ -63,7 +63,13 @@
             
             // Add the items to the stream list
             this.ui.streamList.prepend(pending);
-            
+
+            //Find the first question and pull it to the top
+            var question = this.ui.streamList.find('.question').first();
+            if (question.length) {
+                this.ui.streamList.prepend(question);
+            }
+
             // Do any remaining processing on the items
             processItems.call(this, pending);
             
@@ -160,7 +166,12 @@
         attachInteractions.call(this);
         attachEventHandlers.call(this);
         startPoll.call(this);
-        
+
+        //move the most recent question to the top
+        var question = this.ui.streamList.find('.question').first()
+        if (question.length) {
+            this.ui.streamList.prepend(question);
+        }
         //Process initial stream items
         processItems.call(this, this.ui.streamList.children());
     };
