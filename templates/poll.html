@@ -1,8 +1,8 @@
-$def with (user, poll, stream, questions, tweetForm, stats)
+$def with (user, poll, stream, tweetForm, stats)
 $var css: poll.css
 $var js_app: PollApp
 $var poll: $poll.poll_url_code
-$var current_time: ${stream[0].created_timestamp() if len(stream) > 0 else time.time()}
+$var current_time: ${ dtutils.dt_timestamp(stream[0].get_time()) if len(stream) > 0 else time.time()}
 $ sign_in_url = urls.sign_in(urls.poll(poll))
 <div class="row-fluid">
     <div class="feedback panel in">
@@ -36,10 +36,6 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
             <div class="feedback-instructions">share your feedback</div>
             <div class="stream">
                 <div class="stream-list">
-                    $ highlight = True
-                    $for item in questions:
-                        $:render_stream_item(item, highlight=highlight)
-                        $ highlight = False
                 </div>
             </div>
         </div>

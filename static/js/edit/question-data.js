@@ -11,8 +11,8 @@
             subject: "",
             question_text: "",
             image_src: "",
-            trigger_type: 'time_offset',
-            trigger_info: 0,
+            trigger_manual: false,
+            trigger_seconds: null,
             answer_choices: []
         }
         this.dirty = false;
@@ -20,8 +20,8 @@
         if (question) {
             this.question = question;
             this.data.id = question.data('id');
-            this.data.trigger_type = question.data('trigger-type');
-            this.data.trigger_info = question.data('trigger-info');
+            this.data.trigger_manual = question.data('trigger-manual');
+            this.data.trigger_seconds = question.data('trigger-seconds');
 
             this.data.subject = question.find(SUBJECT_INPUT_SELECTOR).text();
             this.data.question_text = question.find(TEXT_INPUT_SELECTOR).text();

@@ -147,6 +147,6 @@ class Tweet(Base):
             offset += len(replacement) - (end - start)
             
         return text
-            
-    def created_timestamp(self):
-        return dtutils.dt_timestamp(self.created)
+
+    def get_time(self):
+        return self.created

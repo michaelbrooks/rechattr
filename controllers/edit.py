@@ -79,8 +79,7 @@ class edit:
         question.subject = input.subject
         question.question_text = input.question_text
         question.set_answer_choices(input['answer_choices'])
-        question.trigger_type = input.trigger_type
-        question.trigger_info = input.trigger_info
+        question.trigger_seconds = input.trigger_seconds
         web.ctx.orm.flush()
         
         return render_stream_item(question)

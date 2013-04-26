@@ -1,6 +1,6 @@
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer, String, DateTime
+from sqlalchemy import Integer, String, Boolean, Float
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime, timedelta
 import simplejson as json
@@ -25,13 +25,13 @@ class Question(Base):
                         backref=backref('questions', order_by=created))
     
     # Question info
-    trigger_type = Column(String, default='time_offset')
-    trigger_info = Column(String)
+    trigger_manual = Column(Boolean, default=False)
+    trigger_seconds = Column(Float, default=None)
     image_src = Column(String)
     subject = Column(String)
     question_text = Column(String)
     answer_choices = Column(String)
-    
+
     def get_answer_choices(self):
         if not hasattr(self, '_cached_answers'):
             self._cached_answers = json.loads(self.answer_choices)
@@ -41,22 +41,33 @@ class Question(Base):
         self.answer_choices = json.dumps(answers)
         self._cached_answers = answers
         
-    def percent_through_poll(self):
-        if self.trigger_type != 'time_offset':
+    def percent_through_event(self):
+        """
+        Get the percent through the event when this question
+        is triggered. If there is no trigger time, this will return None.
+
+        :return:
+        """
+        if self.trigger_seconds is None:
             return None
-        seconds = float(self.trigger_info)
         duration = self.poll.duration().total_seconds()
-        return seconds / duration;
+        return self.trigger_seconds / duration;
         
     def nice_offset(self):
-        if self.trigger_type != 'time_offset':
+        if self.trigger_seconds is None:
             return None
-        delta = timedelta(seconds=float(self.trigger_info))
+
+        delta = timedelta(seconds=self.trigger_seconds)
         return dtutils.nice_delta(delta, sub=True)
         
     def triggered(self):
-        if self.trigger_type == 'time_offset':
-            seconds = self.trigger_info
+        # see if manually triggered first
+        if self.trigger_manual:
+            return True
+
+        # then see if time triggered
+        if self.trigger_seconds is not None:
+            seconds = self.trigger_seconds
             trigger_delta = timedelta(0, seconds)
             
             start = self.poll.event_start
@@ -64,14 +75,21 @@ class Question(Base):
             delta = now - start
             
             return delta > trigger_delta
-        elif self.trigger_type == 'manual':
-            triggered = self.trigger_info
-            return bool(triggered)
-    
+
+        return False
+
+    def get_time(self):
+        if self.trigger_seconds is None:
+            return None
+
+        offset_delta = timedelta(seconds=self.trigger_seconds)
+        return self.poll.event_start + offset_delta
+
     def manual_trigger(self):
-        if self.trigger_type != 'manual':
-            raise Exception("Cannot manually trigger question with trigger type %s" %(self.trigger_type))
-        
-        # Record the time the manual trigger was activated
-        self.trigger_info = time.time()
+        # Mark the question as triggered manually
+        self.trigger_manual = True
+
+        # Record the time offset against the poll start, in seconds
+        offset_delta = (utc_aware() - self.poll.event_start)
+        self.trigger_seconds = offset_delta.total_seconds()
         

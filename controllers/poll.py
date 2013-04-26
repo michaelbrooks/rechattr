@@ -56,8 +56,7 @@ class poll:
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
         user = web.ctx.auth.current_user()
-        stream = poll.tweet_stream(web.ctx.orm)
-        questions = reversed(poll.questions_by_offset())
+        stream = poll.get_stream(limit=10)
 
         tweetForm = tweet_form()
         if user is not None:
@@ -66,7 +65,7 @@ class poll:
             stats = None
         # display the poll
         return render.poll(user=user, poll=poll,
-                           stream=stream, questions=questions,
+                           stream=stream,
                            tweetForm=tweetForm, stats=stats)
 
     def _process_answer(self, poll):
@@ -169,8 +168,7 @@ class poll:
             if invalidInput:
                 # we have to re-render the whole page
                 web.ctx.flash.set(response)
-                questions = reversed(poll.questions_by_offset())
-                stream = poll.tweet_stream(web.ctx.orm)
+                stream = poll.get_stream(limit=20)
                 user = web.ctx.auth.current_user()
                 
                 if user is not None:
@@ -179,7 +177,7 @@ class poll:
                     stats = None
                     
                 return render.poll(user=user, poll=poll,
-                                   stream=stream, questions=questions,
+                                   stream=stream,
                                    tweetForm=tweetForm, stats=stats)
             else:
                 # redirect to avoid double submit
