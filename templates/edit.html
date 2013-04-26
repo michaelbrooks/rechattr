@@ -57,8 +57,11 @@ $:csrf_token_input()
                 <div class="timeline-tick timeline-stop"></div>
                 <div class="timeline-focus fade"></div>
                 $for question in poll.questions:
-                    $ percent = 100 * question.percent_through_poll()
-                    <div class="timeline-bead" data-id="${question.id}" style="left: ${percent}%"></div>
+                    $ percent = question.percent_through_event()
+                    $if percent is not None:
+                        <div class="timeline-bead" data-id="${question.id}" style="left: ${100 * percent}%"></div>
+                    $else:
+                        <div class="timeline-bead" data-id="${question.id}"></div>
             </div>
         </div>
         <div class="new-question-button btn btn-success">New Question</div>
@@ -67,7 +70,7 @@ $:csrf_token_input()
 <div class="row-fluid">
     <div class="span12">
         <div class="question-list">
-        $for question in poll.questions_by_offset():
+        $for question in poll.questions:
             $:elements.question(question)
         </div>
     </div>

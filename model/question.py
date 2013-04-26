@@ -55,7 +55,7 @@ class Question(Base):
         
     def nice_offset(self):
         if self.trigger_seconds is None:
-            return None
+            return 'manual'
 
         delta = timedelta(seconds=self.trigger_seconds)
         return dtutils.nice_delta(delta, sub=True)

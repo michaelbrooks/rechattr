@@ -85,7 +85,7 @@ class Poll(model.Base):
 
         return query.all()
 
-    def questions_by_offset(self, session=None, limit=10, older_than=None):
+    def triggered_questions(self, session=None, limit=10, older_than=None):
 
         if session is None:
             session = Session.object_session(self)
@@ -112,17 +112,13 @@ class Poll(model.Base):
             older_than = utc_aware()
 
         tweets = self.tweet_stream(limit=limit, older_than=older_than)
-        questions = self.questions_by_offset(limit=limit, older_than=older_than)
-
-        print tweets, questions
+        questions = self.triggered_questions(limit=limit, older_than=older_than)
 
         # merge the two lists, up to the limit
         merged = []
         tweet_cursor = 0
         question_cursor = 0
         while len(merged) < limit:
-
-            print merged, tweet_cursor, question_cursor
 
             next_tweet = None
             if tweet_cursor < len(tweets):
@@ -132,8 +128,6 @@ class Poll(model.Base):
             if question_cursor < len(questions):
                 next_question = questions[question_cursor]
 
-            print next_tweet, next_question
-
             if next_tweet and next_question:
                 # compare to see which is newer
                 if next_question.get_time() < next_tweet.created:
@@ -142,8 +136,6 @@ class Poll(model.Base):
                 else:
                     # the tweet was newer, so nullify the question and drop through
                     next_question = None
-
-            print next_tweet, next_question
 
             if next_tweet:
                 # use the tweet

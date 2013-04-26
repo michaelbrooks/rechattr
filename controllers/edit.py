@@ -66,10 +66,10 @@ class edit:
         input = web.input(answer_choices=[])
         
         if 'subject' not in input or len(input.subject.strip()) == 0:
-            raise web.badrequest('Question subject is required');
+            raise web.badrequest('Question subject is required')
         
         if 'answer_choices' not in input or len(input.answer_choices) == 0:
-            raise web.badrequest('You must have some answer choices');
+            raise web.badrequest('You must have some answer choices')
         
         if question is None:
             question = model.Question()
@@ -79,7 +79,13 @@ class edit:
         question.subject = input.subject
         question.question_text = input.question_text
         question.set_answer_choices(input['answer_choices'])
-        question.trigger_seconds = input.trigger_seconds
+
+        if input.trigger_seconds:
+            try:
+                question.trigger_seconds = float(input.trigger_seconds)
+            except:
+                raise web.badrequest('Invalid trigger time for this question')
+
         web.ctx.orm.flush()
         
         return render_stream_item(question)
