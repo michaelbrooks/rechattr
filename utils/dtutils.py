@@ -62,7 +62,7 @@ def nice_delta(delta, dateFallback=None, long=False, showDays=False, sub=False):
         return format_time('hours', round(delta.seconds / (60.0*60)), long)
     elif showDays:
         return format_time('days', delta.total_seconds() / (60.0*60*24), long)
-    else:
+    elif dateFallback:
         return format_time('date', dateFallback, long)
         
 def time_ago(dt, dateFallback=False, long=False, showDays=False):

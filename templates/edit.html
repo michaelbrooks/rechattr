@@ -43,12 +43,12 @@ $:csrf_token_input()
             This event ended 
             <span class="time-since-end time-interval">$dtutils.time_ago(poll.event_stop, long=True, showDays=True)</span>
             ago and lasted for 
-            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration())</span>.
+            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration(), long=True, showDays=True)</span>.
         $else:
             This event begins in 
             <span class="time-before-start time-interval">$dtutils.time_to(poll.event_start, long=True, showDays=True)</span>
             and lasts for
-            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration())</span>.
+            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration(), long=True, showDays=True)</span>.
         </p>
         <div class="timeline-wrapper hide">
             <div class="timeline">
