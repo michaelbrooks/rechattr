@@ -18,13 +18,15 @@ time_formats = {
     'minutes': ("%dm", "%d minutes"),
     'hours': ("%dh", "%d hours"),
     'days': ("%dd", "%d days"),
-    'date': ("%d %b", "%d %b %Y"),
+    'date': ("%b", "%b %Y"),
 }
-def format_time(unit, value, type):
+def format_time(unit, value, long):
     typeIndex = 1 if long else 0
     format = time_formats[unit][typeIndex]
     if unit == 'date':
-        return value.strftime(format)
+        tail = value.strftime(format)
+        day = value.strftime('%d').lstrip('0')
+        return "%s %s" %(day, tail)
     else:
         result = format %(value)
         if long and value == 1:
