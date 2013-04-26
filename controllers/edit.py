@@ -106,7 +106,7 @@ class edit:
         # make sure it belongs to the current user
         if poll.user != user:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden('You do not own that poll')
+            raise web.forbidden()
         
         form = edit_form()
         self._populate_form(form, poll)
@@ -126,7 +126,7 @@ class edit:
         # make sure it belongs to the current user
         if poll.user != user:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden('You do not own that poll')
+            raise web.forbidden()
         
         # Check if it is a poll update or a question update
         if type == 'question':
@@ -157,7 +157,7 @@ class edit:
         # make sure it belongs to the current user
         if poll.user != user:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden('You do not own that poll')
+            raise web.forbidden()
             
         if type == 'question':
             question = web.ctx.orm.query(model.Question).get(delete_id)
