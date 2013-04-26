@@ -11,7 +11,7 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
             <span class="poll-title">$poll.title</span>
             <span class="twitter-info">$poll.twitter_hashtag</span>
         </div>
-        <div class="feedback-content panel-content">
+        <div class="chatter-content panel-content">
             <div class="user-panel">
                 $if user is None:
                     <a class="sign-in-button" href="${sign_in_url}">
@@ -33,23 +33,6 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
                         </div>
                     </div>
             </div>
-            <div class="feedback-instructions">share your feedback</div>
-            <div class="stream">
-                <div class="stream-list">
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="feedback-notify glow-notify"></div>
-    
-    <div class="chatter panel out">
-        <div class="segment-title rotate panel-title">
-                <span class="brand">re:chattr</span>
-                <span class="poll-title">$poll.title</span>
-                <span class="twitter-info">$poll.twitter_hashtag</span>
-        </div>
-        <div class="chatter-content panel-content">            
             <div class="stream-header">
             </div>
             <div class="stream">
@@ -60,7 +43,7 @@ $ sign_in_url = urls.sign_in(urls.poll(poll))
             </div>
         </div>
     </div>
-    
+
     <div class="chatter-notify glow-notify"></div>
     
     $ tweetModalVisibility = 'in' if tweetForm.tweet.value else "hide"
