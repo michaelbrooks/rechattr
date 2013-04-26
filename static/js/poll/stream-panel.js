@@ -3,6 +3,7 @@ define(function (require) {
     var $ = require('jquery');
     var config = require('config');
     var dtutils = require('util/dtutils');
+    var overlay = require('util/overlay');
 
     var STREAM_NOTIFY_SELECTOR = '.stream-notify';
     var STREAM_INTERVAL_SECONDS = 20;
@@ -113,8 +114,8 @@ define(function (require) {
 
     var showLoadingMore = function () {
         console.log("Loading more items...");
-        this.ui.streamFooter.html(getNotify('Loading...'));
-        this.ui.streamFooter.addClass('in');
+//        this.ui.streamFooter.addClass('in');
+        overlay.showLoading(this.ui.streamFooter);
     }
 
     var checkForMore = function() {
@@ -147,15 +148,14 @@ define(function (require) {
                 noMoreItems = true;
             }
 
-            self.ui.streamFooter.removeClass('in').empty();
+            overlay.hide(self.ui.streamFooter);
 
             loadingMoreItems = false;
         });
 
         request.error(function(xhr) {
             console.log("Error loading items", xhr);
-            self.ui.streamFooter.html(getNotify('Sorry, please try later.'));
-            self.ui.streamFooter.removeClass('in').empty();
+            overlay.hide(self.ui.streamFooter);
 
             loadingMoreItems = false;
         });
@@ -224,17 +224,14 @@ define(function (require) {
         this.on('show-pending-items', showPendingItems, this);
 
         var self = this;
-        this.ui.panelScroll.on('scroll', function() {
+        $(window).on('scroll', function() {
             if (loadingMoreItems) {
                 return;
             }
 
-            var bottom = 0;
-            self.ui.panelScroll.children().each(function(){
-                bottom += $(this).outerHeight();
-            });
+            var bottom = $(document).outerHeight();
 
-            var scrollBottom = self.ui.panelScroll.scrollTop() + self.ui.panelScroll.height();
+            var scrollBottom = $(window).scrollTop() + $(window).height();
 
             if (scrollBottom == bottom) {
                 checkForMore.apply(self);
