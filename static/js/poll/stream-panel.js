@@ -89,9 +89,10 @@
             if (typeof response === 'string') {
                 response = JSON.parse(response)
             }
-            
-            lastCheck = response.time;
+
             if (response.items > 0) {
+                //only update the response time if there were items returned because otherwise it is unreliable
+                lastCheck = response.time;
                 newItems.call(self, response.items, response.html)
             }
         });

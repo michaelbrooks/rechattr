@@ -71,48 +71,58 @@ class Poll(model.Base):
                        filter(model.Response.poll ==self).\
                        count()
     
-    def tweet_stream(self, session=None, limit=10, older_than=None):
+    def tweet_stream(self, session=None, limit=10, older_than=None, newer_than=None):
         if session is None:
             session = Session.object_session(self)
 
-        if older_than is None:
-            older_than = utc_aware()
-
         query = session.query(model.Tweet).\
-                        filter(model.Tweet.polls.contains(self), model.Tweet.created < older_than).\
-                        order_by(model.Tweet.created.desc()).\
-                        limit(limit)
+                        filter(model.Tweet.polls.contains(self))
+
+        if older_than:
+            query = query.filter(model.Tweet.created < older_than)
+        if newer_than:
+            query = query.filter(model.Tweet.created > newer_than)
+
+        query = query.order_by(model.Tweet.created.desc()).\
+                      limit(limit)
 
         return query.all()
 
-    def triggered_questions(self, session=None, limit=10, older_than=None):
+    def triggered_questions(self, session=None, limit=10, older_than=None, newer_than=None):
+
+        if older_than is None:
+            older_than = utc_aware()
 
         if session is None:
             session = Session.object_session(self)
 
-        if older_than is None:
-            older_than = utc_aware()
+        query = session.query(model.Question).\
+                        filter(model.Question.poll == self)
+
+        manuallyTriggered = model.Question.trigger_manual == True
 
         # convert the older_than into an offset against the event start
         older_than_offset = (older_than - self.event_start).total_seconds()
+        older_than_offset = model.Question.trigger_seconds < older_than_offset
+        query = query.filter(older_than_offset & manuallyTriggered)
+
+        if newer_than:
+            # convert the newer_than into an offset against the event start
+            newer_than_offset = (newer_than - self.event_start).total_seconds()
+            query = query.filter(model.Question.trigger_seconds > newer_than_offset)
 
         # Conditions for select
-        oldEnough = model.Question.trigger_seconds < older_than_offset
-        manuallyTriggered = model.Question.trigger_manual == True
-
-        query = session.query(model.Question).\
-                        filter(model.Question.poll == self, oldEnough | manuallyTriggered).\
-                        order_by(model.Question.trigger_seconds.desc()).\
-                        limit(limit)
+        query = query.order_by(model.Question.trigger_seconds.desc()).\
+                      limit(limit)
 
         return query.all()
 
-    def get_stream(self, session=None, limit=10, older_than=None):
+    def get_stream(self, session=None, limit=10, older_than=None, newer_than=None):
         if older_than is None:
             older_than = utc_aware()
 
-        tweets = self.tweet_stream(limit=limit, older_than=older_than)
-        questions = self.triggered_questions(limit=limit, older_than=older_than)
+        tweets = self.tweet_stream(limit=limit, older_than=older_than, newer_than=newer_than)
+        questions = self.triggered_questions(limit=limit, older_than=older_than, newer_than=newer_than)
 
         # merge the two lists, up to the limit
         merged = []
