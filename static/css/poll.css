@@ -6,7 +6,26 @@
 @import url("modules/questions.css");
 @import url("poll/mobile-poll.css");
 @import url("poll/tweet-box.css");
+@import url("poll/question-box.css");
 @import url("poll/user-panel.css");
+
+
+.panel .stream-list {
+    background: #efefef;
+}
+
+
+.panel .stream-list .tweet {
+
+}
+
+
+
+
+
+
+
+
 
 
 .panel .question .close {
@@ -45,27 +64,12 @@
     background: #489f69;
 }
 
-.panel .feedback-instructions {
-    text-align: center;
-    color: #aaa;
-
-    font-style: italic;
-    font-size: 12px;
-    margin-bottom: 5px;
-}
-
-.panel .stream-header,
-.panel .stream-list .question-subject,
-.panel .stream-list .question-text {
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.7);
-}
-
-.panel .stream-list .question-subject {
+.panel .stream-list .question .question-subject {
     color: #eee;
     font-size: 18px;
 }
 
-.panel .stream-list .question-text {
+.panel .stream-list .question .question-text {
     color: #ccc;
     font-size: 14px;
     line-height: 20px;
@@ -75,77 +79,6 @@
     text-overflow: ellipsis;
 }
 
-.panel .stream-list .answer-list {
+.panel .stream-list .question .answer-list {
     display: none;
 }
-
-
-
-
-.question-modal .question {
-    border: 0;
-}
-
-.question-modal .question-content {
-    padding: 0;
-    margin: 0;
-}
-
-.question-modal .answer-list {
-    margin-top: 5px;
-}
-
-.question-modal .answer-choice {
-    margin: 0 6px 6px 0;
-
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-
-    line-height: 48px;
-
-    text-align: center;
-}
-
-@media (max-width: 480px) {
-    .question-modal .answer-choice {
-        min-width: 46%;
-        margin: 0 2% 6px 2%;
-        border: 0;
-    }
-}
-
-.question-modal .answer-choice .value,
-.question-modal .answer-choice .icon {
-    padding: 0 20px;
-}
-
-
-.question-modal .question-content.has-image .question-header {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.question-modal .question-content.has-image .question-image {
-    position: static;
-    top: 0;
-    left: 0;
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    display: inline
-}
-
-.question-modal .question-content .close {
-    display: none;
-}
-
-.question-modal .question-content .question-offset {
-    display: none;
-}
-
-.question-modal .question-subject {
-    font-size: 18px;
-}
-
