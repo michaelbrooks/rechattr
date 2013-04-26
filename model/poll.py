@@ -140,7 +140,7 @@ class Poll(model.Base):
 
             if next_tweet and next_question:
                 # compare to see which is newer
-                if next_question.get_time() < next_tweet.created:
+                if next_question.get_time() > next_tweet.get_time():
                     # the question was newer, so nullify the tweet and drop through
                     next_tweet = None
                 else:
