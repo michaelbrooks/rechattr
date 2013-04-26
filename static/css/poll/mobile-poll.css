@@ -61,3 +61,20 @@ html, body {
     -webkit-box-shadow: 0px 0px 10px 10px rgba(255, 248, 46, 1);
     box-shadow: 0px 0px 10px 10px rgba(255, 248, 46, 1);
 }
+
+/* Compress things up a bit */
+.panel .stream-list .tweet {
+    min-height: auto;
+    padding: 9px 9px;
+}
+
+.panel .stream-list .tweet .tweet-content {
+    margin-left: 42px;
+}
+
+.panel .stream-list .tweet .avatar {
+    width: 32px;
+    height: 32px;
+    top: 9px;
+    left: 9px;
+}

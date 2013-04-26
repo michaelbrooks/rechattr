@@ -10,22 +10,11 @@
 @import url("poll/user-panel.css");
 
 
+/* A light background for the items */
 .panel .stream-list {
     background: #efefef;
+    padding: 8px 0;
 }
-
-
-.panel .stream-list .tweet {
-
-}
-
-
-
-
-
-
-
-
 
 
 .panel .question .close {
@@ -38,8 +27,8 @@
 
 
 .panel .stream-list .question {
-    background: transparent;
-    margin-bottom: 5px;
+    background: #A24747;
+
     border: none;
     padding: 0;
 
@@ -49,6 +38,12 @@
     -moz-transition: opacity 200ms linear, background 200ms linear;
     -o-transition: opacity 200ms linear, background 200ms linear;
     transition: opacity 200ms linear, background 200ms linear;
+
+    -webkit-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.38);
+    -moz-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.38);
+    box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.38);
+
+    margin: 0px 8px;
 }
 
 
@@ -57,7 +52,7 @@
 }
 
 .panel .stream-list .question:hover {
-    background: #555;
+    background: #883131;
 }
 
 .panel .stream-list .question.highlight:hover {
@@ -65,18 +60,24 @@
 }
 
 .panel .stream-list .question .question-subject {
-    color: #eee;
+    color: #fff;
     font-size: 18px;
+
+    text-shadow: 2px 1px 2px rgba(30, 0, 58, 0.69);
+    filter: dropshadow(color=rgba(30, 0, 58, 0.69), offx=1, offy=1);
 }
 
 .panel .stream-list .question .question-text {
-    color: #ccc;
+    color: #efefef;
     font-size: 14px;
     line-height: 20px;
     height: 20px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    text-shadow: 1px 1px 2px rgba(30, 0, 58, 0.69);
+    filter: dropshadow(color=rgba(30, 0, 58, 0.69), offx=1, offy=1);
 }
 
 .panel .stream-list .question .answer-list {
