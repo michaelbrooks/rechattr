@@ -10,7 +10,7 @@ $ highlightClass = 'highlight' if highlight else ''
         <small class="tweet-time">
             <a target="_blank" class="created-at"
                href="https://twitter.com/${tweet.screen_name}/status/${tweet.id}"
-               data-created="${tweet.created_timestamp()}">$dtutils.time_ago(tweet.created, dateFallback=True)</a>
+               data-created="${dtutils.dt_timestamp(tweet.get_time())}">$dtutils.time_ago(tweet.created, dateFallback=True)</a>
         </small>
         <div class="tweet-text">$:tweet.enriched_tweet_text()</div>
     </div>
