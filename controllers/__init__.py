@@ -3,8 +3,16 @@ from urllib import urlencode
 import utils
 import appconfig
 
+path_map = {}
+
 def static_file(path):
-    return appconfig.STATIC_ROOT + "/" + path
+    if path in path_map:
+        path = path_map[path]
+
+    if not appconfig.DEVELOPMENT_ASSETS:
+        return appconfig.STATIC_ROOT + "/build/" + path
+    else:
+        return appconfig.STATIC_ROOT + "/" + path
 
 helpers = {
     'web': web,

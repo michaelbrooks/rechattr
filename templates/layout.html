@@ -9,28 +9,41 @@ $def with (content)
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         $ css = content.get('css', 'main.css')
+        $ js_app = content.get('js_app', None)
+
         <link rel="stylesheet" href="${static_file('css/' + css)}">
 
-        $if app_context == 'development':
-            <script src="$static_file('js/module-config.js')"></script>
+        if $js_app is not None:
+            $if app_context == 'development':
+                <script src="$static_file('js/vendor/require.js')"></script>
+                <script src="$static_file('js/require-config.js')"></script>
+                <script type="text/javascript">
+                    //Have to make sure that we override the common config's base url with the real one
+                    require.config({
+                        'baseUrl': "${static_file('js')}"
+                    });
+                </script>
+            $else:
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+                <script src="${static_file('js/' + js_app + '.js')}"></script>
+                <script type="text/javascript">
+                    //A shim since jQuery didn't know about define when it initialized
+                    define('jquery', function() {
+                        return jQuery;
+                    });
+                </script>
+            <!--<script src="/static/js/vendor/modernizr.js"></script>-->
+
             <script type="text/javascript">
-                window.require.baseUrl = "${static_file('js')}";
-            </script>
-            <script src="$static_file('js/vendor/require.js')"></script>
+                define('config', {
+                    poll: "$content.get('poll', 'undefined')",
+                    time: $content.get('current_time', time.time()),
+                    end_of_stream: $content.get('end_of_stream', time.time())
+                });
 
-        <!--<script src="/static/js/vendor/modernizr.js"></script>-->
-
-        <script type="text/javascript">
-            define('config', {
-                poll: "$content.get('poll', 'undefined')",
-                time: $content.get('current_time', time.time()),
-                end_of_stream: $content.get('end_of_stream', time.time())
-            });
-
-            $ js_app = content.get('js_app', None)
-            $if js_app:
+                //Start the app
                 require(["${js_app}"]);
-        </script>
+            </script>
     </head>
     <body>
         <div id="wrap">
