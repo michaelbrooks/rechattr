@@ -9,6 +9,7 @@ from utils import twttr
 from . import pagerender as render
 from model import Poll, Response, Tweet, Question
 
+DEFAULT_STREAM_LIMIT = 20
 
 tweet_form = form.Form(
     form.Textarea('tweet', form.notnull, 
@@ -56,8 +57,8 @@ class poll:
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
         user = web.ctx.auth.current_user()
-        stream = poll.get_stream(limit=10)
-
+        stream = poll.get_stream(limit=DEFAULT_STREAM_LIMIT)
+        print stream
         tweetForm = tweet_form()
         if user is not None:
             stats = user.poll_stats(web.ctx.orm, poll)
@@ -168,7 +169,7 @@ class poll:
             if invalidInput:
                 # we have to re-render the whole page
                 web.ctx.flash.set(response)
-                stream = poll.get_stream(limit=20)
+                stream = poll.get_stream(limit=DEFAULT_STREAM_LIMIT)
                 user = web.ctx.auth.current_user()
                 
                 if user is not None:
