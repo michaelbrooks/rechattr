@@ -7,33 +7,6 @@ html, body {
     padding: 0;
 }
 
-.panel .panel-content, .panel .panel-title {
-    -webkit-transition: visibility 0s linear 0.4s, opacity 0.4s linear;
-     -moz-transition: visibility 0s linear 0.4s, opacity 0.4s linear;
-       -o-transition: visibility 0s linear 0.4s, opacity 0.4s linear;
-          transition: visibility 0s linear 0.4s, opacity 0.4s linear;
-          
-    opacity: 0;
-    visibility: hidden;
-}
-
-.panel.in .panel-title, .panel.almost-in .panel-title {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.panel.out .panel-title, .panel.almost-out .panel-title {
-    visibility:visible;
-    opacity:1;
-    transition-delay:0s;
-}
-
-.panel.in .panel-content, .panel.almost-in .panel-content {
-    visibility:visible;
-    opacity:1;
-    transition-delay:0s;
-}
-
 #wrap {
     height: 100%;
 }
@@ -46,107 +19,22 @@ html, body {
     max-width: none;
 }
 
-.feedback {
+.panel {
     background-color: #404040;
+    /*background-color: #EFEFEF;*/
+    height: 100%;
     width: 100%;
-    height: 100%;
-}
-
-.feedback-content {
-    /* Padding for the chatter tab on the right so content doesn't go behind */
-    padding-right: 32px;
-    
-    height: 100%;
-    position: relative;
 }
 
 
-
-
-.chatter {
-    background-color: #EFEFEF;
+.panel-content {
     height: 100%;
-    position: absolute;
-    top: 0;
-    left: 100%;
     width: 100%;
-    
-    /* Pull it over so it hangs in the side */
-    margin-left: -32px;
-    
-    -webkit-transition: left 300ms ease-in-out;
-    -moz-transition: left 300ms ease-in-out;
-    -ms-transition: left 300ms ease-in-out;
-    -o-transition: left 300ms ease-in-out;
-    transition: left 300ms ease-in-out;
-    
-    -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
-}
-
-.chatter.in {
-    /* 64px because of the -32 left margin */
-    left: 64px;
-}
-
-.chatter-content {
-    height: 100%;
     position: relative;
-    
+
     overflow-x: hidden;
     overflow-y: auto;
-    
-    /* Padding for the title on the left so content doesn't hang out */
-    margin-right: 32px;
-}
 
-.segment-title {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: default;
-    
-    height: 32px;
-    white-space: nowrap;
-	overflow: hidden;
-    line-height: 32px;
-    font-size: 14px;
-    
-    position: absolute;
-    bottom: -18px;
-    left: 0;
-
-    -webkit-transform-origin: left top;
-    -moz-transform-origin: left top;
-    -ms-transform-origin: left top;
-    -o-transform-origin: left top;
-    transform-origin: left top;
-}
-
-.feedback .segment-title {
-    color: #eee;
-}
-
-.chatter .segment-title {
-    color: #333;
-}
-
-.segment-title .poll-title {
-    font-weight: bold;
-}
-
-.rotate {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-    
-    /* Should be unset in IE9+ I think. */
-    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 
 .glow-notify {
@@ -172,19 +60,4 @@ html, body {
     
     -webkit-box-shadow: 0px 0px 10px 10px rgba(255, 248, 46, 1);
     box-shadow: 0px 0px 10px 10px rgba(255, 248, 46, 1);
-}
-
-.chatter-notify {
-    left: 100%;
-}
-
-.feedback-notify {
-    right: 100%;    
-}
-
-.no-transition {
-    -webkit-transition: none;
-     -moz-transition: none;
-       -o-transition: none;
-          transition: none;
 }

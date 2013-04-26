@@ -1,9 +1,7 @@
 (function() {
-    var CHATTER_SELECTOR = '.chatter';
-    var FEEDBACK_SELECTOR = '.feedback';
     var CONTAINER_SELECTOR = '.container';
-    var CHATTER_POLL_TITLE_SELECTOR = '.chatter .segment-title';
-    var FEEDBACK_POLL_TITLE_SELECTOR = '.feedback .segment-title';
+    var PANEL_SELECTOR = '.panel';
+    var POLL_TITLE_SELECTOR = '.segment-title';
     var CHATTER_NOTIFY_SELECTOR = '.chatter-notify';
     var FEEDBACK_NOTIFY_SELECTOR = '.feedback-notify';
     var STREAM_LIST_ITEMS_SELECTOR = '.stream-list';
@@ -46,7 +44,7 @@
         rechattr.util.initFlash();
         
         rechattr.extension.StreamPanel.call(this);
-        rechattr.extension.MobilePanels.call(this);
+//        rechattr.extension.MobilePanels.call(this);
         rechattr.extension.TweetBox.call(this);
         rechattr.extension.QuestionBox.call(this);
         
@@ -57,14 +55,12 @@
         this.ui = {};
         
         this.ui.container = $(CONTAINER_SELECTOR);
-        this.ui.feedback = $(FEEDBACK_SELECTOR);
-        this.ui.chatter = $(CHATTER_SELECTOR);
-        this.ui.chatterPollTitle = $(CHATTER_POLL_TITLE_SELECTOR);
-        this.ui.feedbackPollTitle = $(FEEDBACK_POLL_TITLE_SELECTOR);
+        this.ui.panel = $(PANEL_SELECTOR);
+        this.ui.pollTitle = $(POLL_TITLE_SELECTOR);
         this.ui.chatterNotify = $(CHATTER_NOTIFY_SELECTOR);
         this.ui.feedbackNotify = $(FEEDBACK_NOTIFY_SELECTOR);
-        this.ui.streamList = this.ui.chatter.find(STREAM_LIST_ITEMS_SELECTOR);
-        this.ui.streamHeader = this.ui.chatter.find(STREAM_HEADER_SELECTOR);
+        this.ui.streamList = this.ui.panel.find(STREAM_LIST_ITEMS_SELECTOR);
+        this.ui.streamHeader = this.ui.panel.find(STREAM_HEADER_SELECTOR);
 
         //Not used??
         //this.ui.modalBackdrop = $(MODAL_BACKDROP_SELECTOR);
@@ -82,8 +78,6 @@
 
         this.ui.questionBox = $(QUESTION_MODAL_SELECTOR);
         this.ui.questionWrapper = this.ui.questionBox.find(QUESTION_WRAPPER_SELECTOR);
-
-        this.ui.questionList = this.ui.feedback.find(STREAM_LIST_ITEMS_SELECTOR);
     }
     
     PollApp.prototype.on = function(event, fun, context) {

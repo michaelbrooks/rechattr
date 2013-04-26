@@ -5,7 +5,7 @@
     var attachInteractions = function() {
         var self = this;
 
-        this.ui.questionList.on('click', QUESTION_SELECTOR, function(e) {
+        this.ui.streamList.on('click', QUESTION_SELECTOR, function(e) {
             fillQuestionModal.call(self, $(this));
             self.ui.questionBox.modal('show');
         });

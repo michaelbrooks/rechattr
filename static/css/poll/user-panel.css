@@ -58,17 +58,16 @@
     border-radius: 4px;
     
     color: #EEE;
-    padding: 9px 12px;
+    padding: 9px 9px;
     -webkit-box-shadow: inset 0 0 5px 0 rgba(30, 30, 30, 0.4);
     box-shadow: inset 0 0 5px 0 rgba(30, 30, 30, 0.4);
-    
-    min-height: 48px; /* for the avatar */
+
     position: relative;
 }
 
 .user-info .user-wrapper {
 
-    padding-left: 58px;
+    padding-left: 52px;
     padding-right: 32px;
     position: relative;
 }
@@ -93,6 +92,8 @@
     left: 0;
     -webkit-box-shadow: 0 0 5px 0 rgba(30, 30, 30, 0.6);
     box-shadow: 0 0 5px 0 rgba(30, 30, 30, 0.6);
+    width: 42px;
+    height: 42px;
 }
 
 .user-panel .user-stats {
