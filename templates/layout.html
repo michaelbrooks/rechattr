@@ -13,7 +13,7 @@ $def with (content)
 
         <link rel="stylesheet" href="${static_file('css/' + css)}">
 
-        if $js_app is not None:
+        $if js_app is not None:
             $if app_context == 'development':
                 <script src="$static_file('js/vendor/require.js')"></script>
                 <script src="$static_file('js/require-config.js')"></script>
