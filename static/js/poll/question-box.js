@@ -1,4 +1,9 @@
-(function() {
+define(function(require) {
+
+    var $ = require('jquery');
+    var url = require('util/url');
+    var flash = require('util/flash');
+
     var QUESTION_SELECTOR = '.question';
     var ANSWER_SELECTOR = '.answer-choice';
 
@@ -38,19 +43,19 @@
         var self = this;
         var question = answer.parents('.question');
 
-        var url = rechattr.util.url.extend('answer');
+        var requestUrl = url.extend('answer');
         var data = {
             id: question.data('id'),
             answer: $.trim(answer.html())
         };
 
-        var request = $.post(url, data);
+        var request = $.post(requestUrl, data);
         request.done(function(response) {
-            rechattr.util.flash.success(response);
+            flash.success(response);
             self.ui.questionBox.modal('hide');
         });
         request.error(function(xhr) {
-            rechattr.util.flash.error(xhr.responseText);
+            flash.error(xhr.responseText);
         });
     }
 
@@ -58,7 +63,6 @@
         attachInteractions.call(this);
         // catchSubmit.call(this);
     }
-    
-    rechattr.extension.QuestionBox = QuestionBox;
+
     return QuestionBox;
-})();
+});

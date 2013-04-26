@@ -1,6 +1,6 @@
 $def with (user, poll, stream, tweetForm, stats)
 $var css: poll.css
-$var js_app: PollApp
+$var js_app: poll
 $var poll: $poll.poll_url_code
 $var current_time: ${ dtutils.dt_timestamp(stream[0].get_time()) if len(stream) > 0 else time.time()}
 $var end_of_stream: ${ dtutils.dt_timestamp(stream[-1].get_time()) if len(stream) > 0 else time.time()}

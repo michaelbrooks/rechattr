@@ -10,7 +10,7 @@
 @import url("poll/user-panel.css");
 
 .panel .stream-list {
-    padding: 8px 0;
+    padding: 0 0 48px 0;
 }
 
 .panel .question .close {
@@ -39,7 +39,7 @@
     -moz-box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.38);
     box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.38);
 
-    margin: 0px 8px;
+    margin: 5px 8px;
 }
 
 

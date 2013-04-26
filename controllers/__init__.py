@@ -1,12 +1,18 @@
 import web, time
 from urllib import urlencode
 import utils
+import appconfig
+
+def static_file(path):
+    return appconfig.STATIC_ROOT + "/" + path
 
 helpers = {
     'web': web,
     'time': time,
     'dtutils': utils.dtutils,
-    'csrf_token_input': utils.csrf_token_input
+    'csrf_token_input': utils.csrf_token_input,
+    'app_context': 'development' if appconfig.DEVELOPMENT_ASSETS else 'production',
+    'static_file': static_file
 }
 
 render = web.template.render('templates/', globals=helpers)

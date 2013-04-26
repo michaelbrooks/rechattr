@@ -1,4 +1,10 @@
-(function() {
+define(function(require) {
+    var $ = require('jquery');
+    require('vendor/jquery.dragsort');
+    var QuestionData = require('edit/question-data');
+    var overlay = require('util/overlay');
+    var flash = require('util/flash');
+    var events = require('util/events');
 
     var QUESTION_EDITOR_SELECTOR = '.question-editor';
     var PREV_BUTTON_SELECTOR = '.prev-button';
@@ -284,14 +290,14 @@
 
         this.ui.answersList.empty();
 
-        this.data = new rechattr.util.QuestionData();
+        this.data = new QuestionData();
     }
 
     Editor.prototype.fill = function(questionItem) {
         var self = this;
 
         //Populate the editor
-        this.data = new rechattr.util.QuestionData(questionItem);
+        this.data = new QuestionData(questionItem);
         this.ui.subject.val(this.data.get('subject'));
         this.ui.questionText.val(this.data.get('question_text'));
         this.ui.image.attr('src', this.data.get('image_src'));
@@ -306,12 +312,12 @@
         var self = this;
         this.saveAnswers();
         if (this.data.dirty) {
-            rechattr.util.overlay.showLoading(this.ui.el);
+            overlay.showLoading(this.ui.el);
 
             this.data.submit()
                 .done(function(questionHtml) {
-                    rechattr.util.flash.success('Question saved');
-                    rechattr.util.overlay.hide(self.ui.el)
+                    flash.success('Question saved');
+                    overlay.hide(self.ui.el)
 
                     if (self.data.question) {
                         self.data.question.replaceWith(questionHtml);
@@ -322,8 +328,8 @@
                     self.hide();
                 })
                 .error(function(response) {
-                    rechattr.util.flash.error(response.responseText);
-                    rechattr.util.overlay.hide(self.ui.el);
+                    flash.error(response.responseText);
+                    overlay.hide(self.ui.el);
                 });
         } else {
             this.hide();
@@ -360,7 +366,7 @@
         }
     }
 
-    Editor.prototype.saveAnswers = function(answer) {
+    Editor.prototype.saveAnswers = function() {
         this.data.set('subject', this.ui.subject.val());
         this.data.set('question_text', this.ui.questionText.val());
         this.data.set('image_src', this.ui.image.attr('src'));
@@ -374,9 +380,8 @@
         this.data.set('answer_choices', answerList);
     }
 
-    Editor.prototype.on = rechattr.util.events.on;
-    Editor.prototype.trigger = rechattr.util.events.trigger;
+    //Mixin events
+    events(Editor);
 
-    rechattr.util.Editor = Editor;
     return Editor;
-})();
+});

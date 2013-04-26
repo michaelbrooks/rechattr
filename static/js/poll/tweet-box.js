@@ -1,7 +1,9 @@
-(function() {
-    TWEET_LENGTH = 140;
-    TWEET_LENGTH_WARNING_CLASS = 'length-warning';
-    TWEET_LENGTH_INVALID_CLASS = 'length-invalid';
+define(function(require) {
+    var twitter = require('util/twitter');
+
+    var TWEET_LENGTH = 140;
+    var TWEET_LENGTH_WARNING_CLASS = 'length-warning';
+    var TWEET_LENGTH_INVALID_CLASS = 'length-invalid';
     
     var hashtag = null;
     var hashtagContains = null;
@@ -77,12 +79,11 @@
     var TweetBox = function() {
         hashtag = this.ui.hashtagBox.data('hashtag');
         hashtagLength = hashtag.length;
-        hashtagContains = rechattr.util.twitter.hashtag_contains(hashtag);
+        hashtagContains = twitter.hashtag_contains(hashtag);
         
         attachInteractions.call(this);
         // catchSubmit.call(this);
     }
-    
-    rechattr.extension.TweetBox = TweetBox;
+
     return TweetBox;
-})();
+});

@@ -1,4 +1,11 @@
-(function() {
+define(function(require) {
+
+    var $ = require('jquery');
+    require('vendor/bootstrap');
+    require('vendor/bootstrap-datepicker');
+    require('modules/bootstrap-dropdownmenu');
+    var moment = require('moment');
+    var dtutils = require('util/dtutils');
 
     var TIME_FORMAT = 'h:mma';
     var DATE_FORMAT = 'M/DD/YYYY';
@@ -124,7 +131,7 @@
         this.ui.startTime.toggleClass(INVALID_CLASS, false);
         
         var dateOfStart = getDateOnly(this.model.startTime);
-        var timeSeries = rechattr.util.getHourlyTimes(dateOfStart);
+        var timeSeries = dtutils.getHourlyTimes(dateOfStart);
         var selectedTime = nextNearestTime(this.model.startTime, timeSeries);
         this.ui.startTimePicker.dropdownmenu('menu', timeSeries);
         this.ui.startTimePicker.dropdownmenu('update', selectedTime);
@@ -155,11 +162,11 @@
         var timeSeries;
         if (this.sameDay) {
             //Generate a set of times only after the current START time
-            timeSeries = rechattr.util.getHourlyTimes(this.model.startTime, NUM_HALFS_TO_INCLUDE);
+            timeSeries = dtutils.getHourlyTimes(this.model.startTime, NUM_HALFS_TO_INCLUDE);
         } else {
             //Generate a set of times on the day of the current stop time
             var dateOfStop = getDateOnly(this.model.stopTime);
-            timeSeries = rechattr.util.getHourlyTimes(dateOfStop);
+            timeSeries = dtutils.getHourlyTimes(dateOfStop);
         }
         
         //Get the time right after the stop time for the menu
@@ -422,7 +429,6 @@
             return false;
         });
     }
-    
-    rechattr.util.IntervalSelection = IntervalSelection;
+
     return IntervalSelection;
-})()
+});

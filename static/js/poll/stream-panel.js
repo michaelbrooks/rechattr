@@ -1,19 +1,24 @@
-(function () {
+define(function (require) {
+
+    var $ = require('jquery');
+    var config = require('config');
+    var dtutils = require('util/dtutils');
 
     var STREAM_NOTIFY_SELECTOR = '.stream-notify';
     var STREAM_INTERVAL_SECONDS = 20;
     var TIME_UPDATE_INTERVAL_SECONDS = 60;
     var ITEM_CREATED_AT_SELECTOR = '.created-at';
 
-    var pollId = rechattr.config.poll;
-    var mostRecentItemTime = rechattr.config.time;
-    var oldestItemTime = rechattr.config.end_of_stream;
+    var pollId = config.poll;
+    var mostRecentItemTime = config.time;
+    var oldestItemTime = config.end_of_stream;
+
     var streamInterval = null;
     var timeUpdateInterval = null;
     var pendingItems = null;
     var noMoreItems = null;
     var loadingMoreItems = null;
-    var streamUrl = rechattr.config.poll + "/stream";
+    var streamUrl = config.poll + "/stream";
 
     var startPoll = function () {
         var self = this;
@@ -178,7 +183,7 @@
             if (!created) {
                 return;
             }
-            created = rechattr.util.time_ago(created);
+            created = dtutils.time_ago(created);
             $this.text(created);
         });
     }
@@ -203,13 +208,13 @@
                 timeElement.data('created', new Date(created * 1000));
             }
 
-            var itemType = $this.data('stream-item-type');
+            var itemType = $this.data('type');
             switch (itemType) {
                 case 'tweet':
-                    rechattr.extension.Tweet($this);
+                    //Tweet($this);
                     break;
-                case 'request':
-                    rechattr.extension.FeedbackRequest($this);
+                case 'question':
+                    //Question($this);
                     break;
             }
         });
@@ -238,16 +243,6 @@
     }
 
     var StreamPanel = function () {
-        //FOR TESTING//
-        // var tweets = this.ui.streamList.children().slice(0,5);
-        // tweets.remove();
-        // tweets.addClass('new-item');
-        // var self = this;
-        // setTimeout(function() {
-        // newItems.call(self, tweets.size(), tweets);
-        // }, 5000);
-        //FOR TESTING//
-
         attachInteractions.call(this);
         attachEventHandlers.call(this);
         startPoll.call(this);
@@ -261,6 +256,5 @@
         processItems.call(this, this.ui.streamList.children());
     };
 
-    rechattr.extension.StreamPanel = StreamPanel;
     return StreamPanel;
-})();
+});

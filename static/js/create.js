@@ -1,19 +1,13 @@
-(function() {
+define(function(require) {
 
-    var TIME_FORMAT = 'h:mma';
-    var DATE_FORMAT = 'M/DD/YYYY';
-    var DATE_PICKER_FORMAT = 'm/dd/yyyy'
-    
+    var IntervalSelection = require('modules/interval-selection');
+
     var INTERVAL_FIELD_SELECTOR = '.interval-field';
-    
-    var DEFAULT_DURATION = 60*60; //1 hour in seconds
-    
+
     var CreateApp = function() {
-        var self = this;
-        
-        this.intervalSelector = new rechattr.util.IntervalSelection($(INTERVAL_FIELD_SELECTOR));
+        this.intervalSelector = new IntervalSelection($(INTERVAL_FIELD_SELECTOR));
     }
-    
-    rechattr.classes.CreateApp = CreateApp;
-    return CreateApp;
-})()
+
+    window.app = new CreateApp();
+    return window.app;
+});

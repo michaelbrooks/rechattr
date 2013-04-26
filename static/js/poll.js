@@ -1,4 +1,18 @@
-(function() {
+define(function(require) {
+
+    var $ = require('jquery');
+    require('vendor/bootstrap');
+    var flash = require('util/flash');
+    var StreamPanel = require('poll/stream-panel');
+    var QuestionBox = require('poll/question-box');
+    var TweetBox = require('poll/tweet-box');
+    var events = require('util/events');
+    //var MobilePanels = require('poll/mobile-panels');
+
+    //Turn off []-appending to posted arrays
+    //More: http://forum.jquery.com/topic/jquery-post-1-4-1-is-appending-to-vars-when-posting-from-array-within-array
+    $.ajaxSettings.traditional = true;
+
     var CONTAINER_SELECTOR = '.container';
     var PANEL_SELECTOR = '.panel';
     var PANEL_SCROLL_BOX_SELECTOR = '.panel-content';
@@ -43,12 +57,12 @@
         
         this.$ = $(this);
         
-        rechattr.util.initFlash();
+        flash.initFlash();
         
-        rechattr.extension.StreamPanel.call(this);
-//        rechattr.extension.MobilePanels.call(this);
-        rechattr.extension.TweetBox.call(this);
-        rechattr.extension.QuestionBox.call(this);
+        StreamPanel.call(this);
+        //MobilePanels.call(this);
+        TweetBox.call(this);
+        QuestionBox.call(this);
         
         this.attachInteractions();
     };
@@ -83,27 +97,15 @@
         this.ui.questionBox = $(QUESTION_MODAL_SELECTOR);
         this.ui.questionWrapper = this.ui.questionBox.find(QUESTION_WRAPPER_SELECTOR);
     }
-    
-    PollApp.prototype.on = function(event, fun, context) {
-        if (context) {
-            return this.$.on(event, function() {
-                fun.apply(context, arguments);
-            });
-        } else {
-            return this.$.on.apply(this.$, arguments);
-        }
-    }
-    
-    PollApp.prototype.trigger = function() {
-        return this.$.trigger.apply(this.$, arguments);
-    }
-    
+
     PollApp.prototype.attachInteractions = function() {
         $('.tooltip-below').tooltip({
             placement: 'bottom'
         });
     }
-    
-    rechattr.classes.PollApp = PollApp;
-    return PollApp;
-})();
+
+    events(PollApp);
+
+    window.app = new PollApp();
+    return window.app;
+});

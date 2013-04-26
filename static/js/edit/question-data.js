@@ -1,4 +1,6 @@
-(function() {
+define(function(require) {
+
+    var url = require('util/url');
 
     var SUBJECT_INPUT_SELECTOR = '.question-subject';
     var TEXT_INPUT_SELECTOR = '.question-text';
@@ -85,7 +87,7 @@
     QuestionData.prototype.submit = function() {
         var self = this;
 
-        var url = rechattr.util.url.extend('question', this.data.id);
+        var url = url.extend('question', this.data.id);
         return $.post(url, this.data)
             .done(function (response) {
                 self.dirty = false;
@@ -111,7 +113,5 @@
         return listItem;
     };
 
-
-    rechattr.util.QuestionData = QuestionData;
     return QuestionData;
-})();
+});

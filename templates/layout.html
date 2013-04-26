@@ -9,51 +9,28 @@ $def with (content)
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         $ css = content.get('css', 'main.css')
-        <link rel="stylesheet" href="/static/css/${css}">
-		
-		<script src="/static/js/vendor/modernizr.js"></script>
+        <link rel="stylesheet" href="${static_file('css/' + css)}">
+
+        $if app_context == 'development':
+            <script src="$static_file('js/module-config.js')"></script>
+            <script type="text/javascript">
+                window.require.baseUrl = "${static_file('js')}";
+            </script>
+            <script src="$static_file('js/vendor/require.js')"></script>
+
+        <!--<script src="/static/js/vendor/modernizr.js"></script>-->
+
         <script type="text/javascript">
-            window.rechattr = {
-                config: {
-                    app_name: "$content.get('js_app', 'undefined')",
-                    poll: "$content.get('poll', 'undefined')",
-                    time: $content.get('current_time', time.time()),
-                    end_of_stream: $content.get('end_of_stream', time.time())
-                },
-                classes: {},
-                extension: {}
-            };
+            define('config', {
+                poll: "$content.get('poll', 'undefined')",
+                time: $content.get('current_time', time.time()),
+                end_of_stream: $content.get('end_of_stream', time.time())
+            });
+
+            $ js_app = content.get('js_app', None)
+            $if js_app:
+                require(["${js_app}"]);
         </script>
-        
-        <script src="/static/js/vendor/jquery.js"></script>
-        <script src="/static/js/vendor/jquery.event.move.js"></script>
-        <script src="/static/js/vendor/jquery.event.swipe.js"></script>
-        <script src="/static/js/vendor/jquery.dragsort.js"></script>
-        <script src="/static/js/vendor/spin.js"></script>
-        <script src="/static/js/vendor/jquery.spin.js"></script>
-        <script src="/static/js/vendor/bootstrap.js"></script>
-        <script src="/static/js/vendor/bootstrap-datepicker.js"></script>
-        <script src="/static/js/vendor/underscore.js"></script>
-        <script src="/static/js/vendor/moment.js"></script>
-        
-        <script src="/static/js/util.js"></script>
-        <script src="/static/js/modules/bootstrap-dropdownmenu.js"></script>
-        <script src="/static/js/modules/interval-selection.js"></script>
-        
-        <script src="/static/js/create.js"></script>
-        <script src="/static/js/edit.js"></script>
-        
-        <script src="/static/js/edit/timeline.js"></script>
-        <script src="/static/js/edit/question-data.js"></script>
-        <script src="/static/js/edit/editor.js"></script>
-        
-        <script src="/static/js/poll/stream-panel.js"></script>
-        <script src="/static/js/poll/poll.js"></script>
-        <script src="/static/js/poll/feedback-request.js"></script>
-        <script src="/static/js/poll/tweet-box.js"></script>
-        <script src="/static/js/poll/question-box.js"></script>
-        
-        <script src="/static/js/main.js"></script>
     </head>
     <body>
         <div id="wrap">
@@ -65,7 +42,7 @@ $def with (content)
                     $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'}
                     $ cls = type_map[flash['type']]
                     <div class="alert $cls fade in">
-                        <div class="close" data-dismiss="alert" >&times;</div>  
+                        <div class="close" data-dismiss="alert" >&times;</div>
                         $flash['message']
                     </div>
                 </div>
@@ -77,13 +54,13 @@ $def with (content)
         </div>
         <div id="footer">
           <div class="container">
-            <p class="muted credit"><strong>re:chattr</strong> brought to you by 
+            <p class="muted credit"><strong>re:chattr</strong> brought to you by
                 <a href="http://twitter.com/anachrobot">@anachrobot</a>/<a href="http://anachrobot.us">katie</a>
-                + 
+                +
                 <a href="http://twitter.com/mjbrks">@mjbrks</a>/<a href="http://students.washignton.edu/mjbrooks">michael</a>
             </p>
           </div>
         </div>
-        
+
     </body>
 </html>
