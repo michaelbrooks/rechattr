@@ -58,7 +58,7 @@ class poll:
         poll = self._get_poll(poll_url)
         user = web.ctx.auth.current_user()
         stream = poll.get_stream(limit=DEFAULT_STREAM_LIMIT)
-        print stream
+        
         tweetForm = tweet_form()
         if user is not None:
             stats = user.poll_stats(web.ctx.orm, poll)
