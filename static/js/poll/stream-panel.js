@@ -3,7 +3,6 @@ define(function (require) {
     var $ = require('jquery');
     var config = require('config');
     var dtutils = require('util/dtutils');
-    var overlay = require('util/overlay');
 
     var STREAM_NOTIFY_SELECTOR = '.stream-notify';
     var STREAM_INTERVAL_SECONDS = 20;
@@ -115,7 +114,6 @@ define(function (require) {
     var showLoadingMore = function () {
         console.log("Loading more items...");
 //        this.ui.streamFooter.addClass('in');
-//        overlay.showLoading(this.ui.streamFooter);
         this.ui.streamFooter.find('.static-spinner').removeClass('hide');
     }
 
