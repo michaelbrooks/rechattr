@@ -60,11 +60,11 @@
     vertical-align: middle;
     background-size: cover;
     background-repeat: no-repeat;
-    background-image: url("../img/twitter-bird-light-bgs.png");
+    background-image: url("../../img/twitter-bird-light-bgs.png");
 }
 
 .twitter-icon.light {
-    background-image: url("../img/twitter-bird-dark-bgs.png");
+    background-image: url("../../img/twitter-bird-dark-bgs.png");
 }
 
 .noselect {
