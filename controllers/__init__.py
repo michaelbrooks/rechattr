@@ -9,10 +9,7 @@ def static_file(path):
     if path in static_file_versions:
         path = "%s?v=%s" %(path, static_file_versions[path])
 
-    if not appconfig.DEVELOPMENT_ASSETS:
-        return appconfig.STATIC_ROOT + "/build/" + path
-    else:
-        return appconfig.STATIC_ROOT + "/" + path
+    return appconfig.STATIC_ROOT + path
 
 helpers = {
     'web': web,

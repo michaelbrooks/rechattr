@@ -82,4 +82,38 @@ app.notfound = controllers.notfound
 app.add_processor(controllers.load_notfound)
 
 if __name__ == "__main__":
-    app.run()
+    import sys, os
+    from web.utils import listget, intget
+    from web.net import validaddr, validip
+
+    server = None
+    def runsimple(func, server_address=("0.0.0.0", 8080)):
+        """
+        Runs [CherryPy][cp] WSGI server hosting WSGI app `func`.
+        The directory `static/` is hosted statically.
+
+        [cp]: http://www.cherrypy.org
+        """
+        global server
+        func = web.httpserver.StaticMiddleware(func, conf.STATIC_ROOT) #This is the whole point of these shenanigans
+        func = web.httpserver.LogMiddleware(func)
+
+        server = web.httpserver.WSGIServer(server_address, func)
+
+        if server.ssl_adapter:
+            print "https://%s:%d/" % server_address
+        else:
+            print "http://%s:%d/" % server_address
+
+        try:
+            server.start()
+        except (KeyboardInterrupt, SystemExit):
+            server.stop()
+            server = None
+
+
+    server_addr = validip(listget(sys.argv, 1, ''))
+    if os.environ.has_key('PORT'): # e.g. Heroku
+        server_addr = ('0.0.0.0', intget(os.environ['PORT']))
+
+    runsimple(wsgi_app, server_addr)
