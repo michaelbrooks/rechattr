@@ -115,6 +115,18 @@ define(function (require) {
         console.log("Loading more items...");
 //        this.ui.streamFooter.addClass('in');
         this.ui.streamFooter.find('.static-spinner').removeClass('hide');
+        this.ui.streamFooter.removeClass('clickable');
+    }
+
+    var hideLoadingMore = function() {
+        this.ui.streamFooter.find('.static-spinner').addClass('hide');
+        this.ui.streamFooter.addClass('clickable');
+    }
+
+    var showNoMoreToLoad = function() {
+        this.ui.streamFooter.find('.static-spinner').removeClass('hide');
+        this.ui.streamFooter.removeClass('clickable');
+        this.ui.streamFooter.text("That's all, folks.");
     }
 
     var checkForMore = function() {
@@ -142,19 +154,19 @@ define(function (require) {
                 //only update the time if there were items returned because otherwise it is undefined
                 oldestItemTime = response.time_from;
                 addItemsAtBottom.call(self, $(response.html))
+                hideLoadingMore.apply(self);
             } else {
                 console.log('No more items');
+                showNoMoreToLoad.apply(self);
                 noMoreItems = true;
             }
-
-            self.ui.streamFooter.find('.static-spinner').addClass('hide');
 
             loadingMoreItems = false;
         });
 
         request.error(function(xhr) {
             console.log("Error loading items", xhr);
-            self.ui.streamFooter.find('.static-spinner').addClass('hide');
+            hideLoadingMore.apply(self);
 
             loadingMoreItems = false;
         });
@@ -223,18 +235,12 @@ define(function (require) {
         this.on('show-pending-items', showPendingItems, this);
 
         var self = this;
-        $(window).on('scroll', function() {
+        this.ui.streamFooter.on('click', function(e) {
             if (loadingMoreItems) {
                 return;
             }
 
-            var bottom = $(document).outerHeight();
-
-            var scrollBottom = $(window).scrollTop() + $(window).height();
-
-            if (scrollBottom == bottom) {
-                checkForMore.apply(self);
-            }
+            checkForMore.apply(self);
         });
     }
 
