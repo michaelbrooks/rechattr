@@ -11,12 +11,14 @@ module.exports = function (grunt) {
         // Configure the copy task to move files from the development to production folders
         copy: {
             dist: {
-                files: [{
-                    expand: true,
-                    cwd: 'static/',
-                    src: ['favicon.png', 'img/**'],
-                    dest: 'dist/'
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'static/',
+                        src: ['favicon.png', 'img/**'],
+                        dest: 'dist/'
+                    }
+                ]
             }
         },
 
@@ -25,12 +27,14 @@ module.exports = function (grunt) {
                 optimizationLevel: 1
             },
             dist: {
-                files: [{
-                    expand: true,
-                    cwd: 'static/',
-                    src: ['favicon.png', 'img/**'],
-                    dest: 'dist/'
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'static/',
+                        src: ['favicon.png', 'img/**'],
+                        dest: 'dist/'
+                    }
+                ]
             }
         },
 
@@ -45,6 +49,21 @@ module.exports = function (grunt) {
             }
         },
 
+        enhancecss: {
+            options: {
+                root: 'dist/css/',
+                stamp: true
+            },
+            dist: {
+                files: [ {
+                    expand: true,
+                    cwd: 'dist/css/',
+                    src: ['*.css'],
+                    dest: 'dist/css/'
+                }]
+            }
+        },
+
         cssmin: {
             options: {
                 root: 'static/css',
@@ -54,7 +73,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'static/css/',
+                        cwd: 'static/css',
                         src: ['*.css'],
                         dest: 'dist/css'
                     }
@@ -139,14 +158,14 @@ module.exports = function (grunt) {
                 format: 'json',
                 basedir: 'dist/',
                 banner: "map = ",
-                formatter: function(hashes, banner) {
+                formatter: function (hashes, banner) {
                     return banner + JSON.stringify(hashes, null, 2);
                 },
-                complete: function(hashes) {
+                complete: function (hashes) {
                     //Unixize the paths
                     var result = {};
                     for (path in hashes) {
-                        result[path.replace(/\\/g,'/')] = hashes[path];
+                        result[path.replace(/\\/g, '/')] = hashes[path];
                     }
                     return result;
                 }
@@ -171,6 +190,115 @@ module.exports = function (grunt) {
             }
         }
     });
+
+    (function () {
+        var fs = require('fs');
+        var path = require('path');
+        var util = require('util');
+        var EnhanceCSS = require('enhance-css');
+
+        var enhancer = function (source, argv, callback) {
+            var options = {
+                source: null,
+                rootPath: null,
+                assetHosts: null,
+                pregzip: false,
+                noEmbed: false,
+                cryptedStamp: false,
+                stamp: false
+            };
+
+            if (!source) {
+                throw "Source required";
+            }
+
+            if (argv.noEmbed)
+                options.noEmbed = argv.noEmbed;
+            if (argv.assetHosts)
+                options.assetHosts = argv.assetHosts;
+            if (argv.pregzip)
+                options.pregzip = argv.pregzip;
+            if (argv.cryptedStamp)
+                options.cryptedStamp = argv.cryptedStamp;
+            if (argv.stamp)
+                options.stamp = argv.stamp;
+
+            options.rootPath = argv.root || process.cwd();
+
+            var e = new EnhanceCSS({ rootPath: options.rootPath,
+                assetHosts: options.assetHosts,
+                noEmbedVersion: options.noEmbed,
+                cryptedStamp: options.cryptedStamp,
+                pregzip: options.pregzip,
+                stamp: options.stamp
+            });
+
+            e.process(source, function (error, data) {
+                if (error)
+                    throw error;
+
+                var result;
+                if (options.noEmbed) {
+                    result = data.notEmbedded;
+                }
+                else {
+                    result = data.embedded;
+                }
+
+                if (options.pregzip) {
+                    callback(result.compresed);
+                } else {
+                    callback(result.plain);
+                }
+            });
+        }
+
+
+        var helper = require('grunt-lib-contrib').init(grunt);
+
+        grunt.registerMultiTask('enhancecss', 'Enhance CSS files.', function () {
+            var options = this.options({
+                report: false
+            });
+
+            this.files.forEach(function (f) {
+                var source = f.src.filter(function (filepath) {
+                    // Warn on and remove invalid source files (if nonull was set).
+                    if (!grunt.file.exists(filepath)) {
+                        grunt.log.warn('Source file "' + filepath + '" not found.');
+                        return false;
+                    } else {
+                        return true;
+                    }
+                })
+                    .map(grunt.file.read)
+                    .join(grunt.util.normalizelf(grunt.util.linefeed));
+
+                try {
+                    enhancer(source, options, function (data) {
+
+                        if (data.length < 1) {
+                            grunt.log.warn('Destination not written because enhanced CSS was empty.');
+                        } else {
+                            if (options.banner) {
+                                data = options.banner + grunt.util.linefeed + data;
+                            }
+
+                            grunt.file.write(f.dest, data);
+                            grunt.log.writeln('File ' + f.dest + ' created.');
+                            if (options.report) {
+                                helper.minMaxInfo(data, source, options.report);
+                            }
+                        }
+                    });
+                } catch (e) {
+                    grunt.log.error(e);
+                    grunt.fail.warn('css enhancement failed.');
+                }
+            });
+
+        });
+    })();
 
     // Load plugins here
     grunt.loadNpmTasks('grunt-contrib-watch');
