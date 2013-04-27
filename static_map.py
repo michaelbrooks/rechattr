@@ -1,0 +1,21 @@
+map = {
+  "css/create.css": "160a2f7ec19432174e3f98d09d902454",
+  "css/edit.css": "304c37f37e945a681d9ec94b56a368bf",
+  "css/main.css": "5db1241223ad03698d91239243e5aa41",
+  "css/myevents.css": "3c718e4e5d118b4f4fd381f5edc2b522",
+  "css/poll.css": "9a1c1b92f59c5f0b794d2b710eb0a6c7",
+  "css/welcome.css": "fd218f50ad2b53e9a4ccfc8d3eaf43b3",
+  "favicon.png": "d1978770d6c3b5d213c3e0b0743a42d2",
+  "img/glyphicons-halflings-white.png": "9bbc6e9602998a385c2ea13df56470fd",
+  "img/glyphicons-halflings.png": "90233c9067e91fc860cacaa1e5e2b696",
+  "img/grumpy-32.png": "5a1a4fd8925cbd627f8cb5456c3a1b0d",
+  "img/grumpy-48.png": "561f6e577e6d382b0a5e7f588d4696cc",
+  "img/grumpy-64.png": "0afa513bb9345cddbbad981db7f6a8cf",
+  "img/grumpy.png": "7b7db1a41cb967a885dcba6a018a8131",
+  "img/loading.gif": "a51c5608d01acf32df728f299767f82b",
+  "img/twitter-bird-dark-bgs.png": "98398768a3e3e67cca754debe367f653",
+  "img/twitter-bird-light-bgs.png": "9566bf71307be7f26fd612ee9069a92a",
+  "js/create.js": "16c325240ba99ba4dcebebceb36a0e7d",
+  "js/edit.js": "d949525323bc8b14013c5b16d7c5972e",
+  "js/poll.js": "3e208b24c899e61117e754910ee64988"
+}

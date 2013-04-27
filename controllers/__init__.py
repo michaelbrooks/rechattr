@@ -3,11 +3,11 @@ from urllib import urlencode
 import utils
 import appconfig
 
-path_map = {}
+static_file_versions = appconfig.static_file_versions()
 
 def static_file(path):
-    if path in path_map:
-        path = path_map[path]
+    if path in static_file_versions:
+        path = "%s?v=%s" %(path, static_file_versions[path])
 
     if not appconfig.DEVELOPMENT_ASSETS:
         return appconfig.STATIC_ROOT + "/build/" + path

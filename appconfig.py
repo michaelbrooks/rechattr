@@ -27,3 +27,11 @@ ALEMBIC_VERSION = os.environ.get('ALEMBIC_VERSION', 'head')
 
 _default_key = hashlib.sha1("%s%s" %(random.random(), time.time())).hexdigest()
 SESSION_ENCRYPTION_KEY = os.environ.get('SESSION_ENCRYPTION_KEY', _default_key)
+
+def static_file_versions():
+    """
+    Load a map from static file names (relative to static_root)
+    to hash values that can be used as file versions.
+    """
+    from static_map import map
+    return map
