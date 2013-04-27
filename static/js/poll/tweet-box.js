@@ -35,10 +35,14 @@ define(function(require) {
         }
     }
     
-    var activateTweetBox = function(e) {
+    var activateTweetBox = function() {
+        this.ui.tweetBox.modal('show');
         this.ui.tweetInput.focus();
-        
         updateTweetLengthMessage.call(this);
+    }
+
+    var deactivateTweetBox = function() {
+        this.ui.tweetBox.modal('hide');
     }
     
     var attachInteractions = function() {
@@ -58,15 +62,15 @@ define(function(require) {
         });
         
         this.ui.newTweetButton.on('click', function(e) {
-            self.ui.tweetBox.modal('show');
+            activateTweetBox.call(self);
         });
         
         this.ui.tweetBox.on('shown', function(e) {
-            activateTweetBox.call(self, e);
+            activateTweetBox.call(self);
         });
 
         this.ui.tweetCancelButton.on('click', function(e) {
-            self.ui.tweetBox.modal('hide');
+            deactivateTweetBox.call(self);
         });
         
         //If there is already input, it must be a failed POST so bring it back up

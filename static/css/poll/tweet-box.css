@@ -42,7 +42,7 @@
        -o-transition: border linear 0.2s, box-shadow linear 0.2s;
           transition: border linear 0.2s, box-shadow linear 0.2s;
           
-    height: 130px;
+    height: 110px;
     width: 100%;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -90,7 +90,8 @@
     
     display: inline-block;
     resize: none;
-    height: 100px;
+    height: 80px;
+    overflow-y: auto;
     width: 100%;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -126,7 +127,26 @@
     color: red;
 }
 
+@media (max-width: 480px) {
+    .tweet-modal {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        border: none;
+        -webkit-border-radius: 0;
+           -moz-border-radius: 0;
+                border-radius: 0;
+    }
+
+    .tweet-modal .modal-body {
+        padding: 10px;
+    }
+}
+
 .tweet-modal .modal-header h3 {
     font-size: 16px;
     line-height: 20px;
 }
+
