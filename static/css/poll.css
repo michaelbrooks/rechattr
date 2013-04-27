@@ -10,7 +10,6 @@
 @import url("poll/user-panel.css");
 
 .panel .panel-content {
-    padding-bottom: 48px; /* for the stream footer */
 }
 
 .panel .question .close {
@@ -80,10 +79,23 @@
     display: none;
 }
 
-
 .stream-footer {
-    position:absolute;
-    bottom: 0;
     height: 48px;
-    width: 100%;
+    text-align: center;
+    line-height: 48px;
+}
+
+.stream-footer .static-spinner {
+    width: 32px;
+    height: 32px;
+    margin-left: -35px;
+
+    background-image: url('../img/loading.gif');
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.stream-footer .static-spinner.hide {
+    display: none;
 }

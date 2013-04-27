@@ -115,7 +115,8 @@ define(function (require) {
     var showLoadingMore = function () {
         console.log("Loading more items...");
 //        this.ui.streamFooter.addClass('in');
-        overlay.showLoading(this.ui.streamFooter);
+//        overlay.showLoading(this.ui.streamFooter);
+        this.ui.streamFooter.find('.static-spinner').removeClass('hide');
     }
 
     var checkForMore = function() {
@@ -148,14 +149,14 @@ define(function (require) {
                 noMoreItems = true;
             }
 
-            overlay.hide(self.ui.streamFooter);
+            self.ui.streamFooter.find('.static-spinner').addClass('hide');
 
             loadingMoreItems = false;
         });
 
         request.error(function(xhr) {
             console.log("Error loading items", xhr);
-            overlay.hide(self.ui.streamFooter);
+            self.ui.streamFooter.find('.static-spinner').addClass('hide');
 
             loadingMoreItems = false;
         });
