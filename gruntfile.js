@@ -1,11 +1,18 @@
 module.exports = function (grunt) {
 
-    // Configuration goes here
-    grunt.initConfig({
+    var taskConfig = {
         pkg: grunt.file.readJSON('package.json'),
+        dirs: {
+            src: "static/",
+            src_js: "static/js/",
+            src_css: "static/css/",
+            dist: "dist/",
+            dist_js: "dist/js",
+            dist_css: "dist/css"
+        },
 
         clean: {
-            dist: ['dist']
+            dist: ['<%=dirs.dist%>']
         },
 
         // Configure the copy task to move files from the development to production folders
@@ -14,9 +21,9 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'static/',
+                        cwd: '<%=dirs.src%>',
                         src: ['favicon.png', 'img/**'],
-                        dest: 'dist/'
+                        dest: '<%=dirs.dist%>/'
                     }
                 ]
             }
@@ -30,9 +37,9 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'static/',
+                        cwd: '<%=dirs.src%>',
                         src: ['favicon.png', 'img/**'],
-                        dest: 'dist/'
+                        dest: '<%=dirs.dist%>'
                     }
                 ]
             }
@@ -44,25 +51,8 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    src: ['static/css/**.css', '!static/css/vendor/**.css']
+                    src: ['<%=dirs.src_css%>/**.css', '!<%=dirs.src_css%>/vendor/**.css']
                 }
-            }
-        },
-
-        cssmin: {
-            options: {
-                root: 'static/css',
-                keepBreaks: true
-            },
-            dist: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'static/css',
-                        src: ['*.css'],
-                        dest: 'dist/css'
-                    }
-                ]
             }
         },
 
@@ -100,48 +90,43 @@ module.exports = function (grunt) {
                     }
                 },
                 src: [
-                    'static/js/**.js',
-                    '!static/js/vendor/**.js'
+                    '<%=dirs.src_js%>/**.js',
+                    '!<%=dirs.src_js%>/vendor/**.js'
                 ]
             }
         },
 
+        //This is sort-of like a regular requirejs config, but it is expanded
+        //into valid configuration by a function below
         requirejs: {
-            options: {
-                baseUrl: "static/js",
-                mainConfigFile: "static/js/require-config.js",
-                optimize: "uglify",
+            js: {
+                options: {
+                    baseUrl: "<%=dirs.src_js%>",
+                    mainConfigFile: "<%=dirs.src_js%>/require-config.js",
 
-                //All the built layers will use almond.
-                name: 'vendor/almond'
+                    //Compress the js files
+                    optimize: "uglify",
+
+                    //All the built layers will use almond.
+                    name: 'vendor/almond',
+
+                    //Exclude jquery and the dummy config file
+                    exclude: ['jquery', 'config']
+                },
+                modules: ['poll', 'edit', 'create']
             },
-            poll: {
+            css: {
                 options: {
-                    include: ['poll'],
-                    exclude: ['jquery', 'config'],
-                    out: 'dist/js/poll.js'
-                }
-            },
-            edit: {
-                options: {
-                    include: ['edit'],
-                    exclude: ['jquery', 'config'],
-                    out: 'dist/js/edit.js'
-                }
-            },
-            create: {
-                options: {
-                    include: ['create'],
-                    exclude: ['jquery', 'config'],
-                    out: 'dist/js/create.js'
-                }
+                    optimizeCss: 'standard'
+                },
+                modules: ['create', 'edit', 'main', 'myevents', 'poll', 'welcome']
             }
         },
 
         cachebuster: {
             options: {
                 format: 'json',
-                basedir: 'dist/',
+                basedir: '<%=dirs.dist%>',
                 banner: "map = ",
                 formatter: function (hashes, banner) {
                     return banner + JSON.stringify(hashes, null, 2);
@@ -156,7 +141,7 @@ module.exports = function (grunt) {
                 }
             },
             dist: {
-                src: ['dist/**'],
+                src: ['<%=dirs.dist%>/**'],
                 dest: ['static_map.py']
             }
         },
@@ -165,16 +150,62 @@ module.exports = function (grunt) {
             options: {
                 interrupt: true
             },
+            gruntfile: {
+                files: ['<%= jshint.gruntfile.src %>'],
+                tasks: ['jshint:gruntfile']
+            },
             scripts: {
-                files: ['gruntfile.js', 'static/js/**.js', '!static/js/vendor/**.js'],
-                tasks: ['jshint', 'requirejs']
+                files: ['<%= jshint.dist.src %>'],
+                tasks: ['jshint:dist', 'buildjs']
             },
             styles: {
-                files: ['static/css/**.css', '!static/css/vendor/**.css'],
-                tasks: ['csslint', 'cssmin']
+                files: ['<%= csslint.dist.src %>'],
+                tasks: ['csslint', 'buildcss']
             }
         }
-    });
+    };
+
+
+    function buildRequireJSConfig() {
+        var _ = require('underscore');
+
+        var from = taskConfig.requirejs;
+        var result = {};
+
+        //Register the shorthand tasks
+        _.each(from, function(config, key) {
+            grunt.registerTask('build' + key, config.modules.map(function(name) {
+                return 'requirejs:' + key + '-' + name;
+            }));
+        });
+
+        //Go through the JS modules
+        from.js.modules.forEach(function(name) {
+            result['js-' + name] = {
+                options: _.defaults({
+                    include: [name],
+                    out: '<%= dirs.dist_js %>/' + name + '.js'
+                }, from.js.options)
+            }
+        });
+
+        //Go through the CSS modules
+        from.css.modules.forEach(function(name) {
+            result['css-' + name] = {
+                options: _.defaults({
+                    cssIn: '<%=dirs.src_css%>/' + name + '.css',
+                    out: '<%=dirs.dist_css%>/' + name + '.css'
+                }, from.css.options)
+            };
+        });
+
+        taskConfig.requirejs = result;
+    }
+
+    buildRequireJSConfig();
+
+    grunt.initConfig(taskConfig);
+
 
     // Load plugins here
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -185,11 +216,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-csslint');
 
     grunt.loadNpmTasks('grunt-contrib-requirejs');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
 
     grunt.loadNpmTasks('grunt-cachebuster');
 
     // Define your tasks here
-    grunt.registerTask('default', ['clean', 'jshint', 'csslint', 'requirejs', 'cssmin', 'copy', 'imagemin', 'cachebuster']);
+    grunt.registerTask('default', ['clean', 'jshint', 'csslint', 'buildjs', 'buildcss', 'copy', 'imagemin', 'cachebuster']);
 };
