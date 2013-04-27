@@ -126,7 +126,7 @@ define(function (require) {
     var showNoMoreToLoad = function() {
         this.ui.streamFooter.find('.static-spinner').removeClass('hide');
         this.ui.streamFooter.removeClass('clickable');
-        this.ui.streamFooter.text("That's all, folks.");
+        this.ui.streamFooter.text("That's all we have, folks.");
     }
 
     var checkForMore = function() {
