@@ -44,3 +44,5 @@ nosetests.xml
 
 # node
 node_modules
+
+static_map.py
