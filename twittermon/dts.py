@@ -58,7 +58,7 @@ class DynamicTwitterStream(object):
         if len(self.trackingTerms) > 0:
         
             # build a new stream
-            self.stream = Stream(self.auth, self.listener, stall_warnings=True, timeout=20)
+            self.stream = Stream(self.auth, self.listener, stall_warnings=True)
             
             self.streamingThread = threading.Thread(target=self._launch_stream)
             self.streamingThread.start()
