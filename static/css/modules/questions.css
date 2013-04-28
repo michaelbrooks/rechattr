@@ -6,9 +6,9 @@
     margin: 0 4px 4px 0;
     overflow: hidden;
 
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
 
     background: #B5D2E9;
     color: #333;

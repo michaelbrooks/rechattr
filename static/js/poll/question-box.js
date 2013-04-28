@@ -1,4 +1,4 @@
-define(function(require) {
+define(function (require) {
 
     var $ = require('jquery');
     var url = require('util/url');
@@ -8,11 +8,11 @@ define(function(require) {
     var ANSWER_SELECTOR = '.answer-choice';
     var ANSWER_LIST_SELECTOR = '.answer-list';
 
-    var attachInteractions = function() {
+    var attachInteractions = function () {
         var self = this;
 
         //We have to do this first so that it overrides the general question-box click below
-        this.ui.streamList.on('click', ANSWER_SELECTOR, function(e) {
+        this.ui.streamList.on('click', ANSWER_SELECTOR, function (e) {
             answerQuestion.call(self, $(this));
 
             //Prevent propagation to the background
@@ -24,14 +24,14 @@ define(function(require) {
             //We already have css to hide the box, but this will let the collapse plugin function later
             .addClass('collapse');
 
-        this.ui.streamList.on('click', QUESTION_SELECTOR, function(e) {
+        this.ui.streamList.on('click', QUESTION_SELECTOR, function (e) {
             //Expand the answer list
             toggleQuestion.call(self, $(this));
         });
 
     }
 
-    var toggleQuestion = function(question, toggle) {
+    var toggleQuestion = function (question, toggle) {
         if (typeof toggle === 'undefined') {
             question.find(ANSWER_LIST_SELECTOR).collapse('toggle');
         } else if (toggle) {
@@ -39,9 +39,40 @@ define(function(require) {
         } else {
             question.find(ANSWER_LIST_SELECTOR).collapse('hide');
         }
+
+        question.toggleClass('activated', toggle);
+
+        if (question.is('.activated')) {
+            //Calculate the height of the question, once expanded
+            var height = question.height();
+            question.find('.answer-choice').each(function () {
+                height += $(this).outerHeight(true);
+            });
+
+            //Get the amount we need to scroll by
+            var top = question.offset().top - $(window).scrollTop()
+            var bottom = top + height;
+
+            var viewTop = $('.navbar').height();
+            var viewBottom = $(window).height();
+
+            var newTop = top;
+            if (top < viewTop) {
+                newTop = viewTop + 10;
+            } else if (bottom > viewBottom) {
+                //Slide up so the bottom is on screen, but don't push the top out
+                newTop = Math.max(viewTop, viewBottom - height - 10);
+            }
+
+            if (newTop != top) {
+                $('html, body').animate({
+                    scrollTop: question.offset().top - newTop
+                }, 400);
+            }
+        }
     }
 
-    var fillQuestionModal = function(question) {
+    var fillQuestionModal = function (question) {
         question = question.clone();
 
         //Extract the question subject because it is awkwardly placed
@@ -59,7 +90,7 @@ define(function(require) {
         this.ui.questionWrapper.html(question);
     }
 
-    var answerQuestion = function(answer) {
+    var answerQuestion = function (answer) {
         var self = this;
         var question = answer.parents('.question');
 
@@ -70,16 +101,16 @@ define(function(require) {
         };
 
         var request = $.post(requestUrl, data);
-        request.done(function(response) {
+        request.done(function (response) {
             flash.success(response);
             toggleQuestion.call(self, question, false);
         });
-        request.error(function(xhr) {
+        request.error(function (xhr) {
             flash.error(xhr.responseText);
         });
     }
 
-    var QuestionBox = function() {
+    var QuestionBox = function () {
         attachInteractions.call(this);
         // catchSubmit.call(this);
     }
