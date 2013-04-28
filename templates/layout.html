@@ -9,7 +9,7 @@ $def with (content)
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         $ css = content.get('css', 'main.css')
-        $ js_app = content.get('js_app', None)
+        $ js_app = content.get('js_app', 'default')
 
         <link rel="stylesheet" href="${static_file('css/' + css)}">
 

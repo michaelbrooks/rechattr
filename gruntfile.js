@@ -97,7 +97,7 @@ module.exports = function (grunt) {
                     //Exclude jquery and the dummy config file
                     exclude: ['jquery', 'config']
                 },
-                modules: ['poll', 'edit', 'create']
+                modules: ['poll', 'edit', 'create', 'default']
             },
             css: {
                 options: {
