@@ -2,7 +2,22 @@ import web
 
 profile_stats = []
 
+
 def sql(app):
+    """
+    Sets up SQLAlchemy profiling using sqltap.
+
+    When enabled, a route is added at /~sql_profiler that can be used
+    to access reports.
+
+    The report can be filtered to specific request paths:
+    For example, to view query statistics for requests to "/my/awesome/page",
+    visit /~sql_profiler/my/awesome/page
+
+    To clear the stored statistics, add ?clear to the url.
+
+    :param app A web.py application
+    """
     print "Loading sqltap SQL profiler"
     import sqltap
 
@@ -26,7 +41,10 @@ def sql(app):
 
             if 'clear' in input:
                 profile_stats = [x for x in profile_stats if x not in stats]
-                return 'Statistics cleared!'
+                if queryPath:
+                    return 'SQL statistics cleared for %s!' %(queryPath)
+                else:
+                    return 'All SQL statistics cleared!'
 
             # save the stacks because sqltap clobbers them - we might want them again later
             for qs in stats:
