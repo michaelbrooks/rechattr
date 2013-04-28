@@ -11,9 +11,10 @@
     "npm": "1.1.65"
   },
   "scripts": {
-    "postinstall": "node grunt dist"
+    "postinstall": "./node_modules/.bin/grunt dist"
   },
   "dependencies": {
+    "grunt-cli": "~0.1.7",
     "grunt": "~0.4.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-requirejs": "~0.4.0",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.4.3",
-    "grunt-contrib-csslint": "~0.1.2"
+    "grunt-contrib-csslint": "~0.1.2",
+    "grunt-contrib-watch": "~0.3.1"
   }
 }
