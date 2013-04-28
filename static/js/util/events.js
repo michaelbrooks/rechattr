@@ -1,4 +1,4 @@
-define(['jquery'], function ($) {
+  define(['jquery'], function ($) {
 
     var on = function () {
         var $this = $(this);

@@ -76,7 +76,9 @@
 }
 
 .panel .stream-list .question .answer-list {
-    display: none;
+    position: relative;
+    height: 0;
+    overflow: hidden;
 }
 
 .stream-footer {

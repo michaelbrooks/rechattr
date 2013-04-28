@@ -6,19 +6,39 @@ define(function(require) {
 
     var QUESTION_SELECTOR = '.question';
     var ANSWER_SELECTOR = '.answer-choice';
+    var ANSWER_LIST_SELECTOR = '.answer-list';
 
     var attachInteractions = function() {
         var self = this;
 
-        this.ui.streamList.on('click', QUESTION_SELECTOR, function(e) {
-            fillQuestionModal.call(self, $(this));
-            self.ui.questionBox.modal('show');
-        });
-
-        this.ui.questionBox.on('click', ANSWER_SELECTOR, function(e) {
+        //We have to do this first so that it overrides the general question-box click below
+        this.ui.streamList.on('click', ANSWER_SELECTOR, function(e) {
             answerQuestion.call(self, $(this));
+
+            //Prevent propagation to the background
+            e.preventDefault();
+            return false;
         });
 
+        this.ui.streamList.find(ANSWER_LIST_SELECTOR)
+            //We already have css to hide the box, but this will let the collapse plugin function later
+            .addClass('collapse');
+
+        this.ui.streamList.on('click', QUESTION_SELECTOR, function(e) {
+            //Expand the answer list
+            toggleQuestion.call(self, $(this));
+        });
+
+    }
+
+    var toggleQuestion = function(question, toggle) {
+        if (typeof toggle === 'undefined') {
+            question.find(ANSWER_LIST_SELECTOR).collapse('toggle');
+        } else if (toggle) {
+            question.find(ANSWER_LIST_SELECTOR).collapse('show');
+        } else {
+            question.find(ANSWER_LIST_SELECTOR).collapse('hide');
+        }
     }
 
     var fillQuestionModal = function(question) {
@@ -52,7 +72,7 @@ define(function(require) {
         var request = $.post(requestUrl, data);
         request.done(function(response) {
             flash.success(response);
-            self.ui.questionBox.modal('hide');
+            toggleQuestion.call(self, question, false);
         });
         request.error(function(xhr) {
             flash.error(xhr.responseText);
