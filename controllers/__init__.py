@@ -21,7 +21,8 @@ helpers = {
     'ga': {
         'id': appconfig.GOOGLE_ANALYTICS_ID,
         'domain': appconfig.GOOGLE_ANALYTICS_DOMAIN
-    }
+    },
+    'campaigns': appconfig.CAMPAIGN_MODES
 }
 
 render = web.template.render('templates/', globals=helpers)

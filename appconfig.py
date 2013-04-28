@@ -32,6 +32,8 @@ SESSION_ENCRYPTION_KEY = os.environ.get('SESSION_ENCRYPTION_KEY', _default_key)
 GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', None)
 GOOGLE_ANALYTICS_DOMAIN = os.environ.get('GOOGLE_ANALYTICS_DOMAIN', None)
 
+CAMPAIGN_MODES = os.environ.get('CAMPAIGN_MODES', '').split(',')
+
 def static_file_versions():
     """
     Load a map from static file names (relative to static_root)
