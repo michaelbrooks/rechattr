@@ -99,9 +99,10 @@ define(function(require) {
     }
 
     PollApp.prototype.attachInteractions = function() {
-        $('.tooltip-below').tooltip({
-            placement: 'bottom'
-        });
+//        $('.tooltip-below').tooltip({
+//            placement: 'bottom'
+//        });
+        //removed tooltip because it doesn't work on phones
     }
 
     events(PollApp);

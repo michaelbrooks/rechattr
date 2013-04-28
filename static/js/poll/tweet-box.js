@@ -36,13 +36,12 @@ define(function(require) {
     }
     
     var activateTweetBox = function() {
-        this.ui.tweetBox.modal('show');
+        this.ui.tweetBox.collapse('show');
         this.ui.tweetInput.focus();
-        updateTweetLengthMessage.call(this);
     }
 
     var deactivateTweetBox = function() {
-        this.ui.tweetBox.modal('hide');
+        this.ui.tweetBox.collapse('hide');
     }
     
     var attachInteractions = function() {
@@ -75,8 +74,8 @@ define(function(require) {
         
         //If there is already input, it must be a failed POST so bring it back up
         if (this.ui.tweetInput.val()) {
-            this.ui.tweetBox.modal('show');
             activateTweetBox.call(this);
+            updateTweetLengthMessage.call(this);
         }
     }
     
