@@ -87,8 +87,8 @@ define(function(require) {
     QuestionData.prototype.submit = function() {
         var self = this;
 
-        var url = url.extend('question', this.data.id);
-        return $.post(url, this.data)
+        var urlStr = url.extend('question', this.data.id);
+        return $.post(urlStr, this.data)
             .done(function (response) {
                 self.dirty = false;
             })
