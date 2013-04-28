@@ -7,6 +7,12 @@ $def with (content)
         <link rel='shortcut icon' href="/static/favicon.png"/>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="re:chattr - feedback + conversation for your event" />
+        <meta property="og:type" content="company" />
+        <meta property="og:site_name" content="re:chattr - feedback + conversation for your event" />
+        <meta property="og:description" content="<p>get real-time feedback via blissfully lightweight polls* and&nbsp;reflect on results + twitter backchannel discussions in one persistent&nbsp;location</p>
+        <p><span style='font-size:.8em'>* kitties optional :)</span></p>" />
+        <meta property="og:url" content="rechattr.com" />
 
         $ css = content.get('css', 'main.css')
         $ js_app = content.get('js_app', 'default')
@@ -74,6 +80,7 @@ $def with (content)
             </p>
           </div>
         </div>
+        <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
         $if ga['id'] is not None:
             $:elements.analytics(ga['id'], ga['domain'])
     </body>

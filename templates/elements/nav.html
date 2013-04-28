@@ -9,33 +9,41 @@ $def menu_item(name, text=None, url=None, body=None):
         <li>$:body</li>
 
 <div class="navbar navbar-static-top">
-  <div class="navbar-inner">
-    <div class="container">
- 
-      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
- 
-      <!-- Be sure to leave the brand out there if you want it shown -->
-      <a class="brand" href="${urls.home()}">re:chattr</a>
- 
-      <!-- Everything you want hidden at 940px or less, place within here -->
-      <div class="nav-collapse collapse">
-        <ul class="nav pull-right">
-            $:menu_item('welcome', 'Home', urls.home())
-            $if user is None:
-                $:menu_item('sign_in', '<b>Sign in</b>', urls.sign_in())
+    <div class="navbar-inner">
+        <div class="container">
+
+            <a class="brand" href="${urls.home()}">re:chattr</a>
+
+            $# No menu during the demo campaign
+            $if 'demo' in campaigns:
+                <ul class="nav pull-right">
+                    $if user is None:
+                        $:menu_item('sign_in', '<b>Sign me up!</b>', urls.sign_in())
+                    $else:
+                        $:menu_item('sign_out', 'Sign out', urls.sign_out())
+                </ul>
             $else:
-                $ create_button = elements.create_button(class_="", html="New Event", white=False)
-                $:menu_item('create', body=create_button)
-                $:menu_item('myevents', 'My Events', urls.polls_list())
-                $:menu_item('sign_out', 'Sign out', urls.sign_out())
-        </ul>
-      </div>
- 
+                <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+
+                <!-- Everything you want hidden at 940px or less, place within here -->
+                <div class="nav-collapse collapse">
+                    <ul class="nav pull-right">
+                        $:menu_item('welcome', 'Home', urls.home())
+                        $if user is None:
+                            $:menu_item('sign_in', '<b>Sign in</b>', urls.sign_in())
+                        $else:
+                            $ create_button = elements.create_button(class_="", html="New Event", white=False)
+                            $:menu_item('create', body=create_button)
+                            $:menu_item('myevents', 'My Events', urls.polls_list())
+                            $:menu_item('sign_out', 'Sign out', urls.sign_out())
+                    </ul>
+                </div>
+
+        </div>
     </div>
-  </div>
 </div>
