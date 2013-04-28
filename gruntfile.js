@@ -126,7 +126,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 src: ['<%=dirs.dist%>/**'],
-                dest: ['static_map.py']
+                dest: 'static_map.py'
             }
         },
 
