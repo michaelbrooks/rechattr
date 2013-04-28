@@ -41,10 +41,17 @@ define(function (require) {
     }
 
     var newItems = function (itemCount, html) {
+        console.log("Received", itemCount, "new items");
+
+        //Filter out all text nodes
+        var newItems = $(html).filter(function(i, el) {
+            return el.nodeType != 3;
+        });
+
         if (pendingItems) {
-            pendingItems = $(html).add(pendingItems);
+            pendingItems = newItems.add(pendingItems);
         } else {
-            pendingItems = $(html);
+            pendingItems = newItems;
         }
 
         notifyNewItems.call(this, pendingItems);
@@ -57,7 +64,6 @@ define(function (require) {
     }
 
     var notifyNewItems = function (items) {
-        console.log("Received", items.size(), "new items");
         var notify = getNotify(items.size() + " new tweets");
         this.ui.streamHeader.html(notify);
         this.ui.streamHeader.addClass('in');
