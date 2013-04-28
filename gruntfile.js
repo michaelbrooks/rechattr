@@ -221,5 +221,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-cachebuster');
 
     // Define your tasks here
+    grunt.registerTask('dist', ['clean', 'buildjs', 'buildcss', 'copy', 'imagemin', 'cachebuster']);
     grunt.registerTask('default', ['clean', 'jshint', 'csslint', 'buildjs', 'buildcss', 'copy', 'imagemin', 'cachebuster']);
 };
