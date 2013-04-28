@@ -29,22 +29,6 @@ module.exports = function (grunt) {
             }
         },
 
-        imagemin: {
-            options: {
-                optimizationLevel: 1
-            },
-            dist: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%=dirs.dist%>',
-                        src: ['favicon.png', 'img/**'],
-                        dest: '<%=dirs.dist%>'
-                    }
-                ]
-            }
-        },
-
         csslint: {
             options: {
                 import: 0
@@ -216,11 +200,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-csslint');
 
     grunt.loadNpmTasks('grunt-contrib-requirejs');
-    grunt.loadNpmTasks('grunt-contrib-imagemin');
 
     grunt.loadNpmTasks('grunt-cachebuster');
 
     // Define your tasks here
-    grunt.registerTask('dist', ['clean', 'buildjs', 'buildcss', 'copy', 'imagemin', 'cachebuster']);
-    grunt.registerTask('default', ['clean', 'jshint', 'csslint', 'buildjs', 'buildcss', 'copy', 'imagemin', 'cachebuster']);
+    grunt.registerTask('dist', ['clean', 'buildjs', 'buildcss', 'copy', 'cachebuster']);
+    grunt.registerTask('default', ['clean', 'jshint', 'csslint', 'buildjs', 'buildcss', 'copy', 'cachebuster']);
 };
