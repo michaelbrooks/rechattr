@@ -46,7 +46,7 @@ def load_sqla(handler):
         raise
     finally:
         web.ctx.orm.commit()
-        # web.ctx.orm.expunge_all() 
+        # web.ctx.orm.expunge_all()
 
 def load_session(handler):
     # make the url manager available
@@ -73,6 +73,11 @@ def load_session(handler):
     return handler()
         
 app.add_processor(load_sqla)
+
+if conf.PROFILE_SQL:
+    from utils import profiler
+    profiler.sql(app)
+
 app.add_processor(load_session)
 
 sessionStore = AlchemyStore()

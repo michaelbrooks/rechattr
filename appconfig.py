@@ -34,6 +34,8 @@ GOOGLE_ANALYTICS_DOMAIN = os.environ.get('GOOGLE_ANALYTICS_DOMAIN', None)
 
 CAMPAIGN_MODES = os.environ.get('CAMPAIGN_MODES', '').split(',')
 
+PROFILE_SQL = bool(os.environ.get('PROFILE_SQL', False))
+
 def static_file_versions():
     """
     Load a map from static file names (relative to static_root)
