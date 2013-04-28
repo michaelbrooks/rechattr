@@ -1,14 +1,22 @@
-import db, model
+import db
 import appconfig as conf
 
 from model import Tweet, Poll
 
-from datetime import datetime
 from threading import Lock
 import time
 
-from twittermon import TermChecker, DynamicTwitterStream, JsonStreamListener
+from twittermon import TermChecker, DynamicTwitterStream, JsonStreamListener, tlog
 from tweepy import OAuthHandler, Status
+
+if conf.DEBUG:
+    try:
+        import pydevd
+        pydevd.settrace(conf.DEBUG_SERVER_HOST, port=conf.DEBUG_SERVER_PORT, stdoutToServer=True, stderrToServer=True, suspend=False)
+    except ImportError:
+        print 'ERROR: Unable to import pydevd for remote debugging!'
+    except:
+        print 'ERROR: Could not connect to remote debugging server'
 
 class DbListener(JsonStreamListener):
 
@@ -26,7 +34,7 @@ class DbListener(JsonStreamListener):
         # add the status to the queue on the checker
         if not self.checker.lock.acquire(False):
             self.backlog.append(status)
-            print "putting status %s in backlog" % (status['id'])
+            tlog("putting status %s in backlog" % (status['id']))
         else:
             # we have a lock so clear the backlog now
             self.checker.tweets.extend(self.backlog)
@@ -39,45 +47,13 @@ class DbListener(JsonStreamListener):
         
         return True
 
-    def on_delete(self, status_id, user_id):
-        """Called when a delete notice arrives for a status"""
-        print "delete received"
-        return True
-        
-    def on_scrub_geo(self, user_id, up_to_status_id):
-        """Called when geolocated data must be stripped for user_id for statuses before up_to_status_id"""
-        print "scrub_geo received"
-        return True
-        
-    def on_limit(self, track):
-        """Called when a limitation notice arrvies"""
-        print 'limit received'
-        return True
-        
-    def on_status_withheld(self, status_id, user_id, countries):
-        """Called when a status is withheld"""
-        print 'status withheld'
-        return True
-        
-    def on_user_withheld(self, user_id, countries):
-        """Called when a user is withheld"""
-        print 'user withheld'
-        return True
-        
-    def on_disconnect(self, code, stream_name, reason):
-        """Called when a disconnect is received"""
-        print 'disconnect'
-        return True
-
     def on_error(self, status_code):
         """Called when a non-200 status code is returned"""
-        print 'Twitter returned error code %s' %(status_code)
-        return False
-        
-    def on_unknown(self, entity):
-        """Called when an unrecognized object arrives"""
-        print 'unknown'
-        return True
+        tlog('Twitter returned error code %s' %(status_code))
+        if status_code in [400, 401, 403]:
+            return False
+        else:
+            return True
 
 class PollTermChecker(TermChecker):
     
@@ -93,7 +69,7 @@ class PollTermChecker(TermChecker):
         self.orm = dbsession
         
     def get_terms_to_polls(self):
-        return self.termsToPolls;
+        return self.termsToPolls
         
         
     def _normalize_entities(self, status):
@@ -143,9 +119,9 @@ class PollTermChecker(TermChecker):
                 matches += 1
                 
         if matches == 0:
-            print "No matches for: %s" %(tweet.text.encode('ascii', 'replace'))
+            tlog("No matches for: %s" %(tweet.text.encode('ascii', 'replace')))
             if rt_status is not None:
-                print "with RT: %s" %(retweet.text.encode('ascii', 'replace'))
+                tlog("with RT: %s" %(retweet.text.encode('ascii', 'replace')))
         else:
             # uniquify poll list so we don't try to insert duplicates
             uniquePolls = set(tweet.polls)
@@ -215,7 +191,7 @@ class PollTermChecker(TermChecker):
                 if not self._process_tweet(status):
                     unmapped += 1
         
-        print "Inserted %s tweets, %s unmapped, at %s tps" %(len(tweets), unmapped, len(tweets) / diff)
+        tlog("Inserted %s tweets, %s unmapped, at %s tps" %(len(tweets), unmapped, len(tweets) / diff))
         
         self.orm.commit()
         
@@ -256,19 +232,35 @@ class PollTermChecker(TermChecker):
         self.termsToPolls = newTermsToPolls
         
         return newTrackingTerms
-        
-        
+
 if __name__ == '__main__':
+    import traceback
+
     dbsession = db.db_session()
-    
+
     checker = PollTermChecker(dbsession)
-    
+
     listener = DbListener(checker)
-    
-    
+
+
     auth = OAuthHandler(conf.TWITTER_STREAM_CONSUMER_KEY, conf.TWITTER_STREAM_CONSUMER_SECRET)
     auth.set_access_token(conf.TWITTER_STREAM_ACCESS_KEY, conf.TWITTER_STREAM_ACCESS_SECRET)
 
     tracker = DynamicTwitterStream(auth, listener, checker)
-    tracker.start(conf.STREAM_TERM_POLLING_INTERVAL)
-    
+
+    errorCount = 0
+
+    while errorCount < 5:
+        # a short delay so nobody gets upset
+        time.sleep(1)
+
+        try:
+            tracker.start(conf.STREAM_TERM_POLLING_INTERVAL)
+            tlog('Poll thread returned.')
+        except Exception, e:
+            errorCount += 1
+            tlog('Exception #%d in poll thread.' %(errorCount))
+            traceback.print_exc()
+
+    tlog('Terminating stream - %d errors.' %(errorCount))
+

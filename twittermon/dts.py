@@ -1,6 +1,7 @@
 import threading
 from tweepy import Stream
-        
+from . import tlog
+
 class DynamicTwitterStream(object):
         
     def __init__(self, auth, listener, termChecker):
@@ -15,27 +16,31 @@ class DynamicTwitterStream(object):
     
     def start(self, interval):
         self.polling = True
-        
+        self.streamException = None
+        self.termChecker.reset() # clear the stored list of terms - we aren't tracking any
+        self.stream = None # there is no stream running
+        tlog("Starting term poll")
         while self.polling:
             if self.termChecker.check():
                 self.trackingTerms = self.termChecker.tracking_terms()
                 self._update_stream()
-                
-            # wait for the interval unless interrupted
-            
-            try:
-                self.pollingInterrupt.wait(interval)
-            except KeyboardInterrupt:
-                print "Polling canceled by user"
-                return
-            
+
             # check to see if an exception was raised
             if self.streamException is not None:
                 raise self.streamException
-        
+
+            # wait for the interval unless interrupted
+            try:
+                self.pollingInterrupt.wait(interval)
+            except KeyboardInterrupt:
+                tlog("Polling canceled by user")
+                return
+
+        tlog("Term poll ceased")
+
     def _stop_stream(self):
         if self.stream is not None:
-            print "Stopping twitter stream..."
+            tlog("Stopping twitter stream...")
             self.stream.disconnect()
             self.stream = None
             
@@ -43,7 +48,7 @@ class DynamicTwitterStream(object):
             try:
                 self.streamInterrupt.wait(60)
             except KeyboardInterrupt:
-                print "Polling cancelled by user."
+                tlog("Polling cancelled by user.")
         
     def _update_stream(self):
         
@@ -53,7 +58,7 @@ class DynamicTwitterStream(object):
         if len(self.trackingTerms) > 0:
         
             # build a new stream
-            self.stream = Stream(self.auth, self.listener, stall_warnings=True)
+            self.stream = Stream(self.auth, self.listener, stall_warnings=True, timeout=20)
             
             self.streamingThread = threading.Thread(target=self._launch_stream)
             self.streamingThread.start()
@@ -64,15 +69,15 @@ class DynamicTwitterStream(object):
         self.streamException = None
     
         # get updated terms
-        print "Starting new twitter stream with %s terms" %(len(self.trackingTerms))
-        print self.trackingTerms
+        tlog("Starting new twitter stream with %s terms" %(len(self.trackingTerms)))
+        tlog(self.trackingTerms)
         
         # run the stream
         try:
             self.stream.filter(track=self.trackingTerms, async=False)
-            
+            raise Exception("Twitter stream filter returned")
         except Exception, exception:
-            print "Forwarding exception from streaming thread."
+            tlog("Forwarding exception from streaming thread.")
             self.streamException = exception
             
             # interrupt the main polling thread
@@ -83,5 +88,4 @@ class DynamicTwitterStream(object):
             if self.streamInterrupt is not None:
                 self.streamInterrupt.set()
                 self.streamInterrupt.clear()
-            print "Twitter stream stopped."
-            
+            tlog("Twitter stream stopped.")
