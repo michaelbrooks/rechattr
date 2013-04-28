@@ -8,22 +8,30 @@ html, body {
 
 .navbar-fixed-top {
     margin: 0;
-    position:fixed;
+    position: fixed;
 }
 
 .navbar-inner {
     min-height: 30px;
 }
 
+.navbar .container {
+    width: 100%;
+}
+
 .navbar .brand {
-    margin: 0;
-    padding: 5px 5px 5px 3px;
-    margin-right: 10px;
+    margin: 0 10px 0 0;
 }
 
 .navbar .user-panel {
-    padding: 0;
+    padding: 1px 0 1px 0;
     margin-right: 3px;
+}
+
+@media (min-width: 979px) {
+    .navbar .user-panel {
+        padding: 5px 0 5px 0;
+    }
 }
 
 .navbar .user-panel .screen-name {
@@ -32,14 +40,18 @@ html, body {
     font-size: 12px;
 }
 
-.navbar .user-panel .new-tweet-button {
+.navbar .user-panel .new-tweet-button,
+.navbar .user-panel .sign-in-button {
     position: static;
-    padding: 1px 8px;
+    padding: 5px 10px;
     margin: 0;
 }
 
-.navbar .user-panel .sign-in-button {
-    padding: 1px 8px;
+@media (min-width: 979px) {
+    .navbar .user-panel .new-tweet-button,
+    .navbar .user-panel .sign-in-button {
+        padding: 1px 10px;
+    }
 }
 
 .container, .row-fluid {
@@ -67,7 +79,13 @@ html, body {
 .panel-content {
     width: 100%;
     position: relative;
-    padding-top: 42px;
+    padding-top: 51px;
+}
+
+@media (min-width: 979px) {
+    .panel-content {
+        padding-top: 42px;
+    }
 }
 
 .glow-notify {
@@ -108,6 +126,23 @@ html, body {
 .panel .stream-list .tweet .avatar {
     width: 32px;
     height: 32px;
-    top: 9px;
+    top: 12px;
     left: 9px;
+}
+
+@media (min-width: 480px) {
+    .panel .stream-list .tweet {
+        min-height: 51px;
+        padding: 9px 12px;
+    }
+
+    .panel .stream-list .tweet .tweet-content {
+        margin-left: 58px;
+    }
+
+    .panel .stream-list .tweet .avatar {
+        width: 48px;
+        height: 48px;
+        left: 12px;
+    }
 }
