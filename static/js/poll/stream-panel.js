@@ -41,7 +41,12 @@ define(function (require) {
     }
 
     var newItems = function (itemCount, html) {
-        pendingItems = $(html);
+        if (pendingItems) {
+            pendingItems = $(html).add(pendingItems);
+        } else {
+            pendingItems = $(html);
+        }
+
         notifyNewItems.call(this, pendingItems);
     }
 
