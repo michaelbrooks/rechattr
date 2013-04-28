@@ -20,18 +20,12 @@ html, body {
 }
 
 .navbar .brand {
-    margin: 0 10px 0 0;
+    margin: 0;
 }
 
 .navbar .user-panel {
     padding: 1px 0 1px 0;
     margin-right: 3px;
-}
-
-@media (min-width: 979px) {
-    .navbar .user-panel {
-        padding: 5px 0 5px 0;
-    }
 }
 
 .navbar .user-panel .screen-name {
@@ -47,18 +41,47 @@ html, body {
     margin: 0;
 }
 
-@media (min-width: 979px) {
-    .navbar .user-panel .new-tweet-button,
-    .navbar .user-panel .sign-in-button {
-        padding: 1px 10px;
-    }
-}
-
 .container, .row-fluid {
     margin: 0;
     padding: 0;
     width: 100%;
     max-width: none;
+}
+
+#wrap > .container {
+    width: 100%;
+    position: relative;
+    padding-top: 51px;
+}
+
+/* This triggers when a 480px tall screen goes to landscape */
+@media (min-width: 450px) {
+
+    .navbar .brand {
+        padding-left: 12px;
+    }
+
+    .navbar-fixed-top .navbar-inner {
+        padding: 0;
+    }
+
+    .navbar .container {
+
+    }
+
+    .navbar .user-panel {
+        padding: 5px 0 5px 0;
+        margin-right: 12px;
+    }
+
+    .navbar .user-panel .new-tweet-button,
+    .navbar .user-panel .sign-in-button {
+        padding: 1px 10px;
+    }
+
+    #wrap > .container {
+        padding-top: 42px;
+    }
 }
 
 .panel {
@@ -74,18 +97,6 @@ html, body {
 
 .welcome .poll-title {
     color: #006217;
-}
-
-.panel-content {
-    width: 100%;
-    position: relative;
-    padding-top: 51px;
-}
-
-@media (min-width: 979px) {
-    .panel-content {
-        padding-top: 42px;
-    }
 }
 
 .glow-notify {
