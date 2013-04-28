@@ -74,6 +74,7 @@ $def with (content)
             </p>
           </div>
         </div>
-
+        $if ga['id'] is not None:
+            $:elements.analytics(ga['id'], ga['domain'])
     </body>
 </html>

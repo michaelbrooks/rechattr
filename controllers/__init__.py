@@ -17,7 +17,11 @@ helpers = {
     'dtutils': utils.dtutils,
     'csrf_token_input': utils.csrf_token_input,
     'app_context': 'development' if appconfig.DEVELOPMENT_ASSETS else 'production',
-    'static_file': static_file
+    'static_file': static_file,
+    'ga': {
+        'id': appconfig.GOOGLE_ANALYTICS_ID,
+        'domain': appconfig.GOOGLE_ANALYTICS_DOMAIN
+    }
 }
 
 render = web.template.render('templates/', globals=helpers)

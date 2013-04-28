@@ -29,6 +29,9 @@ ALEMBIC_VERSION = os.environ.get('ALEMBIC_VERSION', 'head')
 _default_key = hashlib.sha1("%s%s" %(random.random(), time.time())).hexdigest()
 SESSION_ENCRYPTION_KEY = os.environ.get('SESSION_ENCRYPTION_KEY', _default_key)
 
+GOOGLE_ANALYTICS_ID = os.environ.get('GOOGLE_ANALYTICS_ID', None)
+GOOGLE_ANALYTICS_DOMAIN = os.environ.get('GOOGLE_ANALYTICS_DOMAIN', None)
+
 def static_file_versions():
     """
     Load a map from static file names (relative to static_root)
