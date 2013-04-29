@@ -37,7 +37,9 @@ $:csrf_token_input()
     <div class="span12">
         <p class="lead">
         $if poll.is_active():
-            This event has already started! It will end in 
+            This event started
+            <span class="time-since-start time-interval">$dtutils.full_delta(poll.event_start, long=True)</span> ago.<br/>
+            It will end in
             <span class="time-before-end time-interval">$dtutils.time_to(poll.event_stop, long=True, showDays=True)</span>.
         $elif poll.has_started():
             This event ended 
