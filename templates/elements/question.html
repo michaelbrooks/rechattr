@@ -1,25 +1,28 @@
-$def with (question,newItem=False, highlight=False)
+$def with (question,newItem=False, highlight=False, mode="default")
 $ newItemClass = 'new-item' if newItem else ''
 $ highlightClass = 'highlight' if highlight else ''
 $ user = web.ctx.auth.current_user()
 $ response = user.first_response(question) if user is not None else None
 $ currentAnswer = response.answer if response is not None else None
 $ answeredClass = 'answered' if currentAnswer is not None else ''
-<div class="question collapse in stream-item clearfix $newItemClass $highlightClass $answeredClass"
+$ triggeredClass = 'triggered' if question.triggered() else ''
+<div class="question collapse in stream-item clearfix $newItemClass $highlightClass $answeredClass $triggeredClass"
      data-type="question"
      data-id="${question.id}"
      data-trigger-manual="${'true' if question.trigger_manual else ''}"
      data-trigger-seconds="${question.trigger_seconds}">
     <i class="icon-white icon-ok check-mark hide" title="You answered this."></i>
-    <i class="loading hide" title="Saving...">Saving...</i>
+    <span class="loading hide" title="Saving...">Saving...</span>
     $ imgClass = 'has-image' if question.image_src is not None else ''
     <div class="question-content $imgClass">
         <div class="question-header">
             <img class="question-image" src="$question.image_src" />
             <strong class="question-subject">${question.subject}</strong>
-
+            $if mode == 'edit' and triggeredClass != '':
+                <span class="label label-success trigger-label">Active</span>
             <div title="Delete this question" class="close question-delete">&times;</div>
-            <span class="question-offset">@ ${question.nice_offset()}</span>
+            $if mode == 'edit':
+                <span class="question-offset">@ ${question.nice_offset()}</span>
         </div>
         <div class="question-body">
         <div class="question-text">${question.question_text}</div>
