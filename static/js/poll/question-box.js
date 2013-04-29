@@ -49,15 +49,16 @@ define(function (require) {
             var top = question.offset().top - $(window).scrollTop()
             var bottom = top + height;
 
-            var viewTop = $('.navbar').height();
-            var viewBottom = $(window).height();
+            //Buffers of 10px
+            var viewTop = $('.navbar').height() + 10;
+            var viewBottom = $(window).height() - 10;
 
             var newTop = top;
             if (top < viewTop) {
-                newTop = viewTop + 10;
+                newTop = viewTop;
             } else if (bottom > viewBottom) {
                 //Slide up so the bottom is on screen, but don't push the top out
-                newTop = Math.max(viewTop, viewBottom - height - 10);
+                newTop = Math.max(viewTop, viewBottom - height);
             }
 
             if (newTop != top) {
