@@ -71,8 +71,8 @@ class Tweet(Base):
         
         self.entities = json.dumps(tweepyStatus.entities)
         
-        if hasattr(tweepyStatus, 'retweet_of_status_id'):
-            self.retweet_of_status_id = tweepyStatus.retweet_of_status_id
+        if hasattr(tweepyStatus, 'retweeted_status'):
+            self.retweet_of_status_id = tweepyStatus.retweeted_status.id
         
     
     @classmethod
