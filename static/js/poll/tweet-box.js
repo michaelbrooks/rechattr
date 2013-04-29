@@ -1,7 +1,9 @@
-(function() {
-    TWEET_LENGTH = 140;
-    TWEET_LENGTH_WARNING_CLASS = 'length-warning';
-    TWEET_LENGTH_INVALID_CLASS = 'length-invalid';
+define(function(require) {
+    var twitter = require('util/twitter');
+
+    var TWEET_LENGTH = 140;
+    var TWEET_LENGTH_WARNING_CLASS = 'length-warning';
+    var TWEET_LENGTH_INVALID_CLASS = 'length-invalid';
     
     var hashtag = null;
     var hashtagContains = null;
@@ -33,10 +35,13 @@
         }
     }
     
-    var activateTweetBox = function(e) {
+    var activateTweetBox = function() {
+        this.ui.tweetBox.collapse('show');
         this.ui.tweetInput.focus();
-        
-        updateTweetLengthMessage.call(this);
+    }
+
+    var deactivateTweetBox = function() {
+        this.ui.tweetBox.collapse('hide');
     }
     
     var attachInteractions = function() {
@@ -56,33 +61,32 @@
         });
         
         this.ui.newTweetButton.on('click', function(e) {
-            self.ui.tweetBox.modal('show');
+            activateTweetBox.call(self);
         });
         
         this.ui.tweetBox.on('shown', function(e) {
-            activateTweetBox.call(self, e);
+            activateTweetBox.call(self);
         });
 
         this.ui.tweetCancelButton.on('click', function(e) {
-            self.ui.tweetBox.modal('hide');
+            deactivateTweetBox.call(self);
         });
         
         //If there is already input, it must be a failed POST so bring it back up
         if (this.ui.tweetInput.val()) {
-            this.ui.tweetBox.modal('show');
             activateTweetBox.call(this);
+            updateTweetLengthMessage.call(this);
         }
     }
     
     var TweetBox = function() {
         hashtag = this.ui.hashtagBox.data('hashtag');
         hashtagLength = hashtag.length;
-        hashtagContains = rechattr.util.twitter.hashtag_contains(hashtag);
+        hashtagContains = twitter.hashtag_contains(hashtag);
         
         attachInteractions.call(this);
         // catchSubmit.call(this);
     }
-    
-    rechattr.extension.TweetBox = TweetBox;
+
     return TweetBox;
-})();
+});

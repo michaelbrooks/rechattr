@@ -1,12 +1,28 @@
 import web, time
 from urllib import urlencode
 import utils
+import appconfig
+
+static_file_versions = appconfig.static_file_versions()
+
+def static_file(path):
+    if path in static_file_versions:
+        path = "%s?v=%s" %(path, static_file_versions[path])
+
+    return appconfig.STATIC_ROOT + path
 
 helpers = {
     'web': web,
     'time': time,
     'dtutils': utils.dtutils,
-    'csrf_token_input': utils.csrf_token_input
+    'csrf_token_input': utils.csrf_token_input,
+    'app_context': 'development' if appconfig.DEVELOPMENT_ASSETS else 'production',
+    'static_file': static_file,
+    'ga': {
+        'id': appconfig.GOOGLE_ANALYTICS_ID,
+        'domain': appconfig.GOOGLE_ANALYTICS_DOMAIN
+    },
+    'campaigns': appconfig.CAMPAIGN_MODES
 }
 
 render = web.template.render('templates/', globals=helpers)
@@ -82,7 +98,7 @@ class AppUrls(object):
     
     def sign_in(self, return_to=None):
         if return_to is None:
-            return_to = self.home()
+            return_to = web.ctx.fullpath
             
         return '/sign_in?%s' %(urlencode({'return_to': return_to}))
 

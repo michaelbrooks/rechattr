@@ -1,0 +1,30 @@
+{
+  "name": "rechattr",
+  "version": "0.1.0",
+  "author": "Michael Brooks",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/michaelbrooks/rechattr.git"
+  },
+  "engines": {
+    "node": "0.8.14",
+    "npm": "1.1.65"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/.bin/grunt dist"
+  },
+  "dependencies": {
+    "grunt-cli": "~0.1.7",
+    "grunt": "~0.4.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-requirejs": "~0.4.0",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-cachebuster": "~0.1.4",
+    "underscore": "~1.4.4"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-csslint": "~0.1.2",
+    "grunt-contrib-watch": "~0.3.1"
+  }
+}

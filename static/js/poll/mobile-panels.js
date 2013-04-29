@@ -1,11 +1,13 @@
-(function() {
+define(function(require) {
+
+    require('vendor/jquery.event.move');
+    require('vendor/jquery.event.swipe');
+
     var IN_CLASS = 'in';
     var OUT_CLASS = 'out';
     var ALMOST_IN_CLASS = 'almost-in';
     var ALMOST_OUT_CLASS = 'almost-out';
-    
-    var util = rechattr.util;
-    
+
     var getWidth = function() {
         return this.ui.container.width();
     }
@@ -191,7 +193,6 @@
         attachInteractions.call(this);
         attachNotificationHandler.call(this);
     }
-    
-    rechattr.extension.MobilePanels = MobilePanels;
+
     return MobilePanels;
-})();
+});

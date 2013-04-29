@@ -1,19 +1,21 @@
-@import url("bootstrap.css");
-@import url("bootstrap-responsive.css");
-@import url("rechattr.css");
+@import url("vendor/bootstrap.css");
+@import url("vendor/bootstrap-responsive.css");
+@import url("modules/rechattr.css");
 @import url("modules/sticky-footer.css");
 @import url("modules/tweetstream.css");
 @import url("modules/tweets.css");
 
 /* Main marketing message and sign up button */
 .jumbotron {
-    margin: 60px 0;
+    margin: 30px 0;
     text-align: center;
 }
+
 .jumbotron h1 {
-    font-size: 72px;
+    font-size: 40px;
     line-height: 1em;
 }
+
 .jumbotron .btn-large {
     font-size: 21px;
     line-height: 32px;
@@ -31,9 +33,37 @@
     vertical-align: bottom;
 }
 
-.marketing {
-    margin: 60px 0 20px 0;
+.container > hr {
+    margin: 20px 0 0 0;
 }
-.marketing p + h4 {
+
+.marketing {
+    margin: 0;
+}
+
+.marketing h4 {
     margin-top: 28px;
+}
+
+/* Increase title font size */
+@media (min-width: 500px) {
+
+    .jumbotron h1 {
+        font-size: 72px;
+    }
+}
+
+/* On tablet or wider we space things out a bit more, vertically */
+@media (min-width: 768px) {
+    .jumbotron {
+        margin: 60px 0;
+    }
+
+    .marketing {
+        margin: 30px 0 20px 0;
+    }
+}
+
+.social-media {
+    margin-top: 10px;
 }

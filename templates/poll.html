@@ -1,98 +1,71 @@
-$def with (user, poll, stream, questions, tweetForm, stats)
+$def with (user, poll, stream, tweetForm, stats, newest_item, oldest_item, lastQuestion=None)
 $var css: poll.css
-$var js_app: PollApp
+$var js_app: poll
 $var poll: $poll.poll_url_code
-$var current_time: ${stream[0].created_timestamp() if len(stream) > 0 else time.time()}
+$var current_time: ${ dtutils.dt_timestamp(newest_item.get_time()) if newest_item else time.time()}
+$var end_of_stream: ${ dtutils.dt_timestamp(oldest_item.get_time()) if oldest_item > 0 else time.time()}
 $ sign_in_url = urls.sign_in(urls.poll(poll))
-<div class="row-fluid">
-    <div class="feedback panel in">
-        <div class="segment-title rotate panel-title">
-            <span class="brand">re:chattr</span>
-            <span class="poll-title">$poll.title</span>
-            <span class="twitter-info">$poll.twitter_hashtag</span>
-        </div>
-        <div class="feedback-content panel-content">
-            <div class="user-panel">
+$def poll_nav():
+    <div class="navbar navbar-fixed-top navbar-inverse">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="${urls.home()}">re:chattr</a>
+                <span class="pull-right user-panel">
                 $if user is None:
-                    <a class="sign-in-button" href="${sign_in_url}">
+                    <a class="sign-in-button btn btn-info" href="${sign_in_url}">
                         <span class="twitter-icon light"></span> Sign in with Twitter
                     </a>
                 $else:
-                    <div class="user-info">
-                        <div class="user-wrapper">
-                            <div class="twitter-author">
-                                <img class="avatar" src="${user.profile_image_url}" alt="${user.username}" />
-                                <strong class="full-name">@${user.username}</strong>
-                                <span class="screen-name">${user.full_name}</span>
-                            </div>
-                            $:elements.user_stats(stats)
-                            <button class="btn btn-small btn-info new-tweet-button tooltip-below"
-                                    title="Compose new tweet">
-                                <span class="twitter-icon light"></span>
-                            </button>
-                        </div>
-                    </div>
-            </div>
-            <div class="feedback-instructions">share your feedback</div>
-            <div class="stream">
-                <div class="stream-list">
-                    $ highlight = True
-                    $for item in questions:
-                        $:render_stream_item(item, highlight=highlight)
-                        $ highlight = False
-                </div>
+                    <span class="screen-name">@${user.username}</span>
+                    <button class="btn btn-small btn-info new-tweet-button tooltip-below"
+                            title="Compose new tweet">
+                        <span class="twitter-icon light"></span>
+                    </button>
+                </span>
             </div>
         </div>
     </div>
-    
-    <div class="feedback-notify glow-notify"></div>
-    
-    <div class="chatter panel out">
-        <div class="segment-title rotate panel-title">
-                <span class="brand">re:chattr</span>
-                <span class="poll-title">$poll.title</span>
-                <span class="twitter-info">$poll.twitter_hashtag</span>
-        </div>
-        <div class="chatter-content panel-content">            
+$var nav=poll_nav()
+<div class="row-fluid">
+    <div class="panel in">
+        <div class="panel-content">
+            <h4 class="welcome">Let's chat with <span class="poll-title">$poll.title</span>!</h4>
+
+            $ tweetModalVisibility = 'in' if tweetForm.tweet.value else ''
+            <div class="tweet-modal collapse $tweetModalVisibility">
+                <div class="modal-body">
+                    $ tweet_url = urls.poll(poll) + '/tweet'
+                    <form method="POST" action="${tweet_url}" class="tweet-form">
+                        <div class="tweet-input-wrapper">
+                            $:tweetForm.tweet.render()
+                            <div class="hashtag-box fade in" data-hashtag="${poll.twitter_hashtag}">
+                                <span>${poll.twitter_hashtag}</span>
+                            </div>
+                        </div>
+                        $:tweetForm.form_submit.render()
+                        $:tweetForm.submit.render()
+                        <div class="tweet-message-box"><span class="tweet-length-message"></span></div>
+                        <button type="button" class="tweet-cancel btn">Cancel</button>
+                    </form>
+                </div>
+            </div>
+
             <div class="stream-header">
             </div>
             <div class="stream">
                 <div class="stream-list">
+                $if lastQuestion:
+                    $:render_stream_item(lastQuestion)
                 $for item in stream:
                     $:render_stream_item(item)
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <div class="chatter-notify glow-notify"></div>
-    
-    $ tweetModalVisibility = 'in' if tweetForm.tweet.value else "hide"
-    <div class="modal tweet-modal fade $tweetModalVisibility">
-        <div class="modal-body">
-            $ tweet_url = urls.poll(poll) + '/tweet'
-            <form method="POST" action="${tweet_url}" class="tweet-form">
-                <div class="tweet-input-wrapper">
-                    $:tweetForm.tweet.render()
-                    <div class="hashtag-box fade in" data-hashtag="${poll.twitter_hashtag}">
-                        <span>${poll.twitter_hashtag}</span>
-                    </div>
-                </div>
-                $:tweetForm.form_submit.render()
-                $:tweetForm.submit.render()
-                <div class="tweet-message-box"><span class="tweet-length-message"></span></div>
-                <button type="button" class="tweet-cancel btn">Cancel</button>
-            </form>
+            <div class="stream-footer muted clickable">
+                <span class="static-spinner hide"></span>Load more
+            </div>
         </div>
     </div>
 
-    <div class="modal question-modal fade hide">
-        <div class="modal-body">
-            <form method="POST" class="question-form">
-                <div class="question-wrapper">
-                </div>
-            </form>
-        </div>
-    </div>
+    <div class="chatter-notify glow-notify"></div>
 </div>
 

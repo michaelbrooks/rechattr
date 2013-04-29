@@ -1,6 +1,6 @@
-@import url("bootstrap.css");
-@import url("bootstrap-responsive.css");
-@import url("rechattr.css");
+@import url("vendor/bootstrap.css");
+@import url("vendor/bootstrap-responsive.css");
+@import url("modules/rechattr.css");
 @import url("modules/sticky-footer.css");
 @import url("modules/questions.css");
 @import url("edit/timeline.css");
@@ -138,13 +138,44 @@ html {
     line-height: 20px;
 }
 
+.question-editor .trigger-controls {
+    padding-top: 10px;
+}
+.question-editor .trigger-controls > span {
+    padding: 0 10px;
+    min-height: 20px;
+}
+.question-editor .trigger-controls > span,
+.question-editor .trigger-controls label {
+    font-size: 16px;
+}
+
+.question-editor .question-trigger-time {
+    width: 200px;
+    margin-bottom: 0;
+}
+
+.question-editor input[type="text"].question-trigger-time[disabled] {
+    background-color: rgba(100, 100, 100, 0.5);
+}
+
+.question-editor input[type="checkbox"].question-trigger-manual {
+    margin-right: 6px;
+}
+
+.popover {
+    /* restore the color on popover, which has a white background */
+    color: #333;
+}
+
+.question-editor .question-save,
+.question-editor .question-cancel {
+    margin-top: 20px;
+}
+
 .question-editor .form-controls {
-    padding: 0 0 10px 0;
     margin: 0;
     text-align: right;
-}
-.question-editor .form-controls .btn {
-    margin-top: 10px;
 }
 
 .question-editor .answer-palette-instructions {

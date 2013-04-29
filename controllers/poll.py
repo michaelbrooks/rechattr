@@ -9,6 +9,7 @@ from utils import twttr
 from . import pagerender as render
 from model import Poll, Response, Tweet, Question
 
+DEFAULT_STREAM_LIMIT = 20
 
 tweet_form = form.Form(
     form.Textarea('tweet', form.notnull, 
@@ -56,8 +57,20 @@ class poll:
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
         user = web.ctx.auth.current_user()
-        stream = poll.tweet_stream(web.ctx.orm)
-        questions = reversed(poll.questions_by_offset())
+
+        stream = poll.get_stream(limit=DEFAULT_STREAM_LIMIT)
+
+        if len(stream):
+            oldest_item = stream[-1]
+            newest_item = stream[0]
+
+        lastQuestion = poll.triggered_questions(limit=1)
+        if len(lastQuestion):
+            lastQuestion = lastQuestion[0]
+            if lastQuestion in stream:
+                stream.remove(lastQuestion)
+        else:
+            lastQuestion = None
 
         tweetForm = tweet_form()
         if user is not None:
@@ -66,11 +79,16 @@ class poll:
             stats = None
         # display the poll
         return render.poll(user=user, poll=poll,
-                           stream=stream, questions=questions,
+                           stream=stream, lastQuestion=lastQuestion,
+                           newest_item=newest_item, oldest_item=oldest_item,
                            tweetForm=tweetForm, stats=stats)
 
     def _process_answer(self, poll):
         input = web.input();
+
+        user = web.ctx.auth.current_user()
+        if user is None:
+            raise web.badrequest("You are not signed in :(")
 
         questionId = input.get('id', None)
         if questionId is None:
@@ -92,17 +110,20 @@ class poll:
         if answer not in answerChoices:
             raise web.badrequest('Not a valid answer to this question')
 
+        # maybe they already answered it
+        response = user.first_response(question)
+        if response is None:
+            response = Response()
+            response.poll = poll
+            response.question = question
+            response.user = user
+            web.ctx.orm.add(response)
+
         # save the response
-        response = Response()
-        response.poll = poll
-        response.question = question
-        response.user = web.ctx.auth.current_user() # might be None
         response.visit = None;
         response.answer = answer
 
-        web.ctx.orm.add(response)
-
-        return 'Response recorded';
+        return "Yay! Thank you!";
 
     def _process_tweet_input(self, poll):
         input = web.input()
@@ -169,8 +190,7 @@ class poll:
             if invalidInput:
                 # we have to re-render the whole page
                 web.ctx.flash.set(response)
-                questions = reversed(poll.questions_by_offset())
-                stream = poll.tweet_stream(web.ctx.orm)
+                stream = poll.get_stream(limit=DEFAULT_STREAM_LIMIT)
                 user = web.ctx.auth.current_user()
                 
                 if user is not None:
@@ -179,7 +199,7 @@ class poll:
                     stats = None
                     
                 return render.poll(user=user, poll=poll,
-                                   stream=stream, questions=questions,
+                                   stream=stream,
                                    tweetForm=tweetForm, stats=stats)
             else:
                 # redirect to avoid double submit

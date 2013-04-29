@@ -1,167 +1,117 @@
 html, body {
     width: 100%;
-    height: 100%;
-    overflow: hidden;
     position: relative;
     margin: 0;
     padding: 0;
+    background: #efefef;
 }
 
-.panel .panel-content, .panel .panel-title {
-    -webkit-transition: visibility 0s linear 0.4s, opacity 0.4s linear;
-     -moz-transition: visibility 0s linear 0.4s, opacity 0.4s linear;
-       -o-transition: visibility 0s linear 0.4s, opacity 0.4s linear;
-          transition: visibility 0s linear 0.4s, opacity 0.4s linear;
-          
-    opacity: 0;
-    visibility: hidden;
+.navbar-fixed-top {
+    margin: 0;
+    position: fixed;
 }
 
-.panel.in .panel-title, .panel.almost-in .panel-title {
-    opacity: 0;
-    visibility: hidden;
+.navbar-inner {
+    min-height: 30px;
 }
 
-.panel.out .panel-title, .panel.almost-out .panel-title {
-    visibility:visible;
-    opacity:1;
-    transition-delay:0s;
+.navbar .container {
+    width: 100%;
 }
 
-.panel.in .panel-content, .panel.almost-in .panel-content {
-    visibility:visible;
-    opacity:1;
-    transition-delay:0s;
+.navbar .brand {
+    margin: 0;
 }
 
-#wrap {
-    height: 100%;
+.navbar .user-panel {
+    padding: 1px 0 1px 0;
+    margin-right: 3px;
+}
+
+.navbar .user-panel .screen-name {
+    padding: 5px;
+    color: #ccc;
+    font-size: 12px;
+}
+
+.navbar .user-panel .new-tweet-button,
+.navbar .user-panel .sign-in-button {
+    position: static;
+    padding: 5px 10px;
+    margin: 0;
 }
 
 .container, .row-fluid {
     margin: 0;
     padding: 0;
-    height: 100%;
     width: 100%;
     max-width: none;
 }
 
-.feedback {
-    background-color: #404040;
+#wrap > .container {
     width: 100%;
-    height: 100%;
-}
-
-.feedback-content {
-    /* Padding for the chatter tab on the right so content doesn't go behind */
-    padding-right: 32px;
-    
-    height: 100%;
     position: relative;
+    padding-top: 51px;
 }
 
+/* This triggers when a 480px tall screen goes to landscape */
+@media (min-width: 450px) {
 
+    .navbar .brand {
+        padding-left: 12px;
+    }
 
+    .navbar-fixed-top .navbar-inner {
+        padding: 0;
+    }
 
-.chatter {
-    background-color: #EFEFEF;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 100%;
+    .navbar .container {
+
+    }
+
+    .navbar .user-panel {
+        padding: 5px 0 5px 0;
+        margin-right: 12px;
+    }
+
+    .navbar .user-panel .new-tweet-button,
+    .navbar .user-panel .sign-in-button {
+        padding: 1px 10px;
+    }
+
+    #wrap > .container {
+        padding-top: 42px;
+    }
+}
+
+.panel {
+    /*background-color: #EFEFEF;*/
     width: 100%;
-    
-    /* Pull it over so it hangs in the side */
-    margin-left: -32px;
-    
-    -webkit-transition: left 300ms ease-in-out;
-    -moz-transition: left 300ms ease-in-out;
-    -ms-transition: left 300ms ease-in-out;
-    -o-transition: left 300ms ease-in-out;
-    transition: left 300ms ease-in-out;
-    
-    -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
 }
 
-.chatter.in {
-    /* 64px because of the -32 left margin */
-    left: 64px;
+.welcome {
+    padding-left: 8px;
+    margin-top: 15px;
+    text-align: center;
 }
 
-.chatter-content {
-    height: 100%;
-    position: relative;
-    
-    overflow-x: hidden;
-    overflow-y: auto;
-    
-    /* Padding for the title on the left so content doesn't hang out */
-    margin-right: 32px;
-}
-
-.segment-title {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: default;
-    
-    height: 32px;
-    white-space: nowrap;
-	overflow: hidden;
-    line-height: 32px;
-    font-size: 14px;
-    
-    position: absolute;
-    bottom: -18px;
-    left: 0;
-
-    -webkit-transform-origin: left top;
-    -moz-transform-origin: left top;
-    -ms-transform-origin: left top;
-    -o-transform-origin: left top;
-    transform-origin: left top;
-}
-
-.feedback .segment-title {
-    color: #eee;
-}
-
-.chatter .segment-title {
-    color: #333;
-}
-
-.segment-title .poll-title {
-    font-weight: bold;
-}
-
-.rotate {
-    -webkit-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -ms-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-    
-    /* Should be unset in IE9+ I think. */
-    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+.welcome .poll-title {
+    color: #006217;
 }
 
 .glow-notify {
     position: absolute;
     top: 50%;
     height: 0;
-    
+
     width: 200px;
     border-radius: 100px;
-    
+
     -webkit-transition: all 1s ease-in-out;
-     -moz-transition: all 1s ease-in-out;
-       -o-transition: all 1s ease-in-out;
-          transition: all 1s ease-in-out;
-          
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+
     -webkit-box-shadow: none;
     box-shadow: none;
 }
@@ -169,22 +119,41 @@ html, body {
 .glow-notify.in {
     height: 100%;
     top: 0;
-    
+
     -webkit-box-shadow: 0px 0px 10px 10px rgba(255, 248, 46, 1);
     box-shadow: 0px 0px 10px 10px rgba(255, 248, 46, 1);
 }
 
-.chatter-notify {
-    left: 100%;
+/* Compress things up a bit */
+.panel .stream-list .tweet {
+    min-height: auto;
+    padding: 9px 9px;
 }
 
-.feedback-notify {
-    right: 100%;    
+.panel .stream-list .tweet .tweet-content {
+    margin-left: 42px;
 }
 
-.no-transition {
-    -webkit-transition: none;
-     -moz-transition: none;
-       -o-transition: none;
-          transition: none;
+.panel .stream-list .tweet .avatar {
+    width: 32px;
+    height: 32px;
+    top: 12px;
+    left: 9px;
+}
+
+@media (min-width: 480px) {
+    .panel .stream-list .tweet {
+        min-height: 51px;
+        padding: 9px 12px;
+    }
+
+    .panel .stream-list .tweet .tweet-content {
+        margin-left: 58px;
+    }
+
+    .panel .stream-list .tweet .avatar {
+        width: 48px;
+        height: 48px;
+        left: 12px;
+    }
 }

@@ -1,3 +1,4 @@
+from . import tlog
 
 class TermChecker(object):
 
@@ -7,7 +8,10 @@ class TermChecker(object):
     # Override this
     def _get_tracking_terms(self):
         return set(['#afakehashtag'])
-    
+
+    def reset(self):
+        self.trackingTerms = set()
+
     def check(self):
         newTrackingTerms = self._get_tracking_terms()
         
@@ -38,7 +42,7 @@ class FileTermChecker(TermChecker):
         with open(self.filename) as input:
             # read all the lines
             lines = input.readlines()
-            print "Read %s lines from %s" % (len(lines), self.filename)
+            tlog("Read %s lines from %s" % (len(lines), self.filename))
             # build a set of terms
             newTerms = {line.strip() for line in lines}
             return newTerms

@@ -6,15 +6,32 @@ $ sign_out_url = urls.sign_out()
 $ polls_url = urls.polls_list()
 <div class="jumbotron">
     <h1>Welcome to re:chattr!</h1>
-    <p class="lead"><strong>re:chattr</strong> helps you collect feedback
+    <p class="lead"><strong>re:chattr</strong> helps you manage feedback
         and discussion about your presentations, talks, and other events.</p>
-        
-    $if user is None:
+
+    $if 'demo' in campaigns:
+        $if user is None:
+            <a class="btn btn-large btn-info sign-in-button" href="$sign_in_url">
+                <span class="twitter-icon light"></span>
+                    Sign me up!
+            </a>
+        $else:
+            <p class="user-welcome lead" style="margin-bottom: 0; font-size: 18px;">Thank you for your interest in <strong>re:chattr</strong>!</p>
+            <p style="font-size: 16px; margin-top: 5px;">We'll be in touch when we're ready for testing.</p>
+        <p class="social-media">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rechattr.com" data-text="Check out re:chattr - feedback and discussion for your event!" data-via="rechattr" data-size="large">Tweet</a>
+            <a href="https://twitter.com/rechattr" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @rechattr</a>
+        </p>
+    $elif user is None:
         <a class="btn btn-large btn-info sign-in-button" href="$sign_in_url">
             <span class="twitter-icon light"></span>
-            Sign in with Twitter</a>
+            $if 'demo' in campaigns:
+                Sign me up!
+            $else:
+                Sign in with Twitter
+        </a>
     $else:
-        <p class="user-welcome lead">Hello, <strong>@$user.username<span class="twitter-icon"></span></strong><p>
+        <p class="user-welcome lead">Hello, <strong>@$user.username<span class="twitter-icon"></span></strong></p>
         <p>
             $:elements.create_button(class_="btn btn-success setup-new-button")
             <a class="btn my-polls" href="$polls_url">
@@ -22,13 +39,11 @@ $ polls_url = urls.polls_list()
             <a class="btn sign-out" href="$sign_out_url">
                 Sign out</a>
         </p>
-    
 </div>
 <hr>
 <div class="row-fluid marketing">
     <div class="span6">
         <h4>Manage your backchannel</h4>
-        
         <p>People may already be talking about your event on Twitter.
            <strong>re:chattr</strong> collects that discussion and saves it in one place.</p>
            
@@ -40,10 +55,13 @@ $ polls_url = urls.polls_list()
         <h4>Here's how it works:</h4>
         <p>
         <ol>
-            <li><a href="$sign_in_url">Sign in using Twitter</a> to set up a new event.</li>
-            <li>Create a special #hashtag just for your event and write a few questions for your audience.</li>
-            <li>Give your presentation! (remember to tell your audience your #hashtag)</li>
-            <li>Visit <strong>re:chattr</strong> after the event and review the results.</li>
+            $if user is None:
+                <li><a href="$sign_in_url">Sign in using Twitter</a> to set up a new event.</li>
+            $else:
+                <li>Sign in using Twitter to set up a new event.</li>
+            <li>Come up with a special #hashtag for your event and set up a few questions for your audience.</li>
+            <li>Give your presentation! (remember to tell your audience to tweet using your #hashtag)</li>
+            <li>Visit <strong>re:chattr</strong> for the results.</li>
         </ol>
         
         </p>

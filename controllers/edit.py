@@ -66,10 +66,10 @@ class edit:
         input = web.input(answer_choices=[])
         
         if 'subject' not in input or len(input.subject.strip()) == 0:
-            raise web.badrequest('Question subject is required');
+            raise web.badrequest('Question subject is required')
         
         if 'answer_choices' not in input or len(input.answer_choices) == 0:
-            raise web.badrequest('You must have some answer choices');
+            raise web.badrequest('You must have some answer choices')
         
         if question is None:
             question = model.Question()
@@ -79,8 +79,24 @@ class edit:
         question.subject = input.subject
         question.question_text = input.question_text
         question.set_answer_choices(input['answer_choices'])
-        question.trigger_type = input.trigger_type
-        question.trigger_info = input.trigger_info
+
+        # Normalize the manual trigger
+        if input.trigger_manual == 'true':
+            input.trigger_manual = True
+        else:
+            input.trigger_manual = False
+
+        # Normalize the seconds trigger
+        if input.trigger_seconds:
+            try:
+                input.trigger_seconds = round(float(input.trigger_seconds))
+            except:
+                raise web.badrequest('Invalid trigger time for this question')
+        else:
+            input.trigger_seconds = None
+
+        question.update_trigger(input.trigger_manual, input.trigger_seconds)
+
         web.ctx.orm.flush()
         
         return render_stream_item(question)
@@ -101,7 +117,7 @@ class edit:
         # make sure it belongs to the current user
         if poll.user != user:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden('You do not own that poll')
+            raise web.forbidden()
         
         form = edit_form()
         self._populate_form(form, poll)
@@ -121,7 +137,7 @@ class edit:
         # make sure it belongs to the current user
         if poll.user != user:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden('You do not own that poll')
+            raise web.forbidden()
         
         # Check if it is a poll update or a question update
         if type == 'question':
@@ -152,7 +168,7 @@ class edit:
         # make sure it belongs to the current user
         if poll.user != user:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden('You do not own that poll')
+            raise web.forbidden()
             
         if type == 'question':
             question = web.ctx.orm.query(model.Question).get(delete_id)

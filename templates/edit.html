@@ -1,6 +1,6 @@
 ﻿$def with (user, poll, form)
 $var css: edit.css
-$var js_app: EditApp
+$var js_app: edit
 $var nav: $:elements.nav('edit', user)
 <form method="POST" class="poll-banner light-on-dark">
 <div class="row-fluid">
@@ -37,18 +37,20 @@ $:csrf_token_input()
     <div class="span12">
         <p class="lead">
         $if poll.is_active():
-            This event has already started! It will end in 
+            This event started
+            <span class="time-since-start time-interval">$dtutils.full_delta(poll.event_start, long=True)</span> ago.<br/>
+            It will end in
             <span class="time-before-end time-interval">$dtutils.time_to(poll.event_stop, long=True, showDays=True)</span>.
         $elif poll.has_started():
             This event ended 
             <span class="time-since-end time-interval">$dtutils.time_ago(poll.event_stop, long=True, showDays=True)</span>
             ago and lasted for 
-            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration())</span>.
+            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration(), long=True, showDays=True)</span>.
         $else:
             This event begins in 
             <span class="time-before-start time-interval">$dtutils.time_to(poll.event_start, long=True, showDays=True)</span>
             and lasts for
-            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration())</span>.
+            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration(), long=True, showDays=True)</span>.
         </p>
         <div class="timeline-wrapper hide">
             <div class="timeline">
@@ -57,8 +59,11 @@ $:csrf_token_input()
                 <div class="timeline-tick timeline-stop"></div>
                 <div class="timeline-focus fade"></div>
                 $for question in poll.questions:
-                    $ percent = 100 * question.percent_through_poll()
-                    <div class="timeline-bead" data-id="${question.id}" style="left: ${percent}%"></div>
+                    $ percent = question.percent_through_event()
+                    $if percent is not None:
+                        <div class="timeline-bead" data-id="${question.id}" style="left: ${100 * percent}%"></div>
+                    $else:
+                        <div class="timeline-bead" data-id="${question.id}"></div>
             </div>
         </div>
         <div class="new-question-button btn btn-success">New Question</div>
@@ -67,8 +72,8 @@ $:csrf_token_input()
 <div class="row-fluid">
     <div class="span12">
         <div class="question-list">
-        $for question in poll.questions_by_offset():
-            $:elements.question(question)
+        $for question in poll.questions:
+            $:elements.question(question, mode="edit")
         </div>
     </div>
 </div>
@@ -78,6 +83,12 @@ $:csrf_token_input()
             <div class="image-box">
                 <img src="" class="question-image hide"/>
             </div>
+
+            <div class="old-uploader">
+                <label for="old-file-upload">Upload an image</label>
+                <input type="file" name="image" class="question-image-input" id="old-file-upload"/>
+            </div>
+
         </div>
         <div class="text-fields clearfix">
             <label class="question-label" for="question-subject">Q:</label>
@@ -117,14 +128,15 @@ $:csrf_token_input()
             </div>
         </div>
         <div class="form-controls">
-
-            <div class="old-uploader">
-                <label for="old-file-upload">Upload an image</label>
-                <input type="file" name="image" class="question-image-input" id="old-file-upload"/>
+            <div class="trigger-controls form-inline">
+                <input type="text" name="trigger_time" class="question-trigger-time editable" autocomplete="off" value="" placeholder="Launch offset"/>
+                <span>or</span>
+                <label class="checkbox">
+                    <input type="checkbox" class="question-trigger-manual" />Ask it now
+                </label>
             </div>
-
-            <button class="question-save btn btn-primary">Save</button>
-            <button class="question-cancel btn">Cancel</button>
+            <button class="question-save btn btn-large btn-primary">Save</button>
+            <button class="question-cancel btn-large btn">Cancel</button>
         </div>
     </div>
 </div>

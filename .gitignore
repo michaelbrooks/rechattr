@@ -41,3 +41,8 @@ nosetests.xml
 
 
 .idea
+
+# node
+node_modules
+
+static_map.py

@@ -69,6 +69,11 @@
     margin-left: 48px;
 }
 
+.question-content .trigger-label {
+    position: relative;
+    top: -4px;
+}
+
 .question-header {
 
 }

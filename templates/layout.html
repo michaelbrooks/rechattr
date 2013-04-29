@@ -7,53 +7,17 @@ $def with (content)
         <link rel='shortcut icon' href="/static/favicon.png"/>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="re:chattr - feedback + conversation for your event" />
+        <meta property="og:type" content="company" />
+        <meta property="og:site_name" content="re:chattr - feedback + conversation for your event" />
+        <meta property="og:description" content="<p>get real-time feedback via blissfully lightweight polls* and&nbsp;reflect on results + twitter backchannel discussions in one persistent&nbsp;location</p>
+        <p><span style='font-size:.8em'>* kitties optional :)</span></p>" />
+        <meta property="og:url" content="rechattr.com" />
 
         $ css = content.get('css', 'main.css')
-        <link rel="stylesheet" href="/static/css/${css}">
-		
-		<script src="/static/js/vendor/modernizr.js"></script>
-        <script type="text/javascript">
-            window.rechattr = {
-                config: {
-                    app_name: "$content.get('js_app', 'undefined')",
-                    poll: "$content.get('poll', 'undefined')",
-                    time: $content.get('current_time', time.time())
-                },
-                classes: {},
-                extension: {}
-            };
-        </script>
-        
-        <script src="/static/js/vendor/jquery.js"></script>
-        <script src="/static/js/vendor/jquery.event.move.js"></script>
-        <script src="/static/js/vendor/jquery.event.swipe.js"></script>
-        <script src="/static/js/vendor/jquery.dragsort.js"></script>
-        <script src="/static/js/vendor/spin.js"></script>
-        <script src="/static/js/vendor/jquery.spin.js"></script>
-        <script src="/static/js/vendor/bootstrap.js"></script>
-        <script src="/static/js/vendor/bootstrap-datepicker.js"></script>
-        <script src="/static/js/vendor/underscore.js"></script>
-        <script src="/static/js/vendor/moment.js"></script>
-        
-        <script src="/static/js/util.js"></script>
-        <script src="/static/js/modules/bootstrap-dropdownmenu.js"></script>
-        <script src="/static/js/modules/interval-selection.js"></script>
-        
-        <script src="/static/js/create.js"></script>
-        <script src="/static/js/edit.js"></script>
-        
-        <script src="/static/js/edit/timeline.js"></script>
-        <script src="/static/js/edit/question-data.js"></script>
-        <script src="/static/js/edit/editor.js"></script>
-        
-        <script src="/static/js/poll/stream-panel.js"></script>
-        <script src="/static/js/poll/poll.js"></script>
-        <script src="/static/js/poll/mobile-panels.js"></script>
-        <script src="/static/js/poll/feedback-request.js"></script>
-        <script src="/static/js/poll/tweet-box.js"></script>
-        <script src="/static/js/poll/question-box.js"></script>
-        
-        <script src="/static/js/main.js"></script>
+        $ js_app = content.get('js_app', 'default')
+
+        <link rel="stylesheet" href="${static_file('css/' + css)}">
     </head>
     <body>
         <div id="wrap">
@@ -65,7 +29,7 @@ $def with (content)
                     $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'}
                     $ cls = type_map[flash['type']]
                     <div class="alert $cls fade in">
-                        <div class="close" data-dismiss="alert" >&times;</div>  
+                        <div class="close" data-dismiss="alert" >&times;</div>
                         $flash['message']
                     </div>
                 </div>
@@ -77,13 +41,46 @@ $def with (content)
         </div>
         <div id="footer">
           <div class="container">
-            <p class="muted credit"><strong>re:chattr</strong> brought to you by 
+            <p class="muted credit"><strong>re:chattr</strong> brought to you by
                 <a href="http://twitter.com/anachrobot">@anachrobot</a>/<a href="http://anachrobot.us">katie</a>
-                + 
-                <a href="http://twitter.com/mjbrks">@mjbrks</a>/<a href="http://students.washignton.edu/mjbrooks">michael</a>
+                +
+                <a href="http://twitter.com/mjbrks">@mjbrks</a>/<a href="http://students.washington.edu/mjbrooks">michael</a>
             </p>
           </div>
         </div>
-        
+        $if js_app is not None:
+            $if app_context == 'development':
+                <script src="$static_file('js/vendor/require.js')"></script>
+                <script src="$static_file('js/require-config.js')"></script>
+                <script type="text/javascript">
+                    //Have to make sure that we override the common config's base url with the real one
+                    require.config({
+                        'baseUrl': "${static_file('js')}"
+                    });
+                </script>
+            $else:
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+                <script src="${static_file('js/' + js_app + '.js')}"></script>
+                <script type="text/javascript">
+                    //A shim since jQuery didn't know about define when it initialized
+                    define('jquery', function() {
+                        return jQuery;
+                    });
+                </script>
+            <!--<script src="/static/js/vendor/modernizr.js"></script>-->
+
+            <script type="text/javascript">
+                define('config', {
+                    poll: "$content.get('poll', 'undefined')",
+                    time: $content.get('current_time', time.time()),
+                    end_of_stream: $content.get('end_of_stream', time.time())
+                });
+
+                //Start the app
+                require(["${js_app}"]);
+            </script>
+        <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+        $if ga['id'] is not None:
+            $:elements.analytics(ga['id'], ga['domain'])
     </body>
 </html>

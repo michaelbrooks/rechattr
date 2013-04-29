@@ -90,4 +90,11 @@ class User(model.Base):
                        filter(model.Poll.user == self).\
                        order_by(model.Poll.event_start.desc()).\
                        all()
-    
+
+    def first_response(self, question):
+        session = Session.object_session(self)
+
+        return session.query(model.Response).\
+                       filter(model.Response.user == self).\
+                       filter(model.Response.question == question).\
+                       first()

@@ -1,4 +1,6 @@
-(function() {
+define(function(require) {
+
+    var url = require('util/url');
 
     var SUBJECT_INPUT_SELECTOR = '.question-subject';
     var TEXT_INPUT_SELECTOR = '.question-text';
@@ -11,8 +13,8 @@
             subject: "",
             question_text: "",
             image_src: "",
-            trigger_type: 'time_offset',
-            trigger_info: 0,
+            trigger_manual: false,
+            trigger_seconds: null,
             answer_choices: []
         }
         this.dirty = false;
@@ -20,8 +22,14 @@
         if (question) {
             this.question = question;
             this.data.id = question.data('id');
-            this.data.trigger_type = question.data('trigger-type');
-            this.data.trigger_info = question.data('trigger-info');
+            this.data.trigger_manual = question.data('trigger-manual');
+
+            var seconds = question.data('trigger-seconds');
+            if (seconds) {
+                this.data.trigger_seconds = Number(seconds);
+            } else {
+                this.data.trigger_seconds = null
+            }
 
             this.data.subject = question.find(SUBJECT_INPUT_SELECTOR).text();
             this.data.question_text = question.find(TEXT_INPUT_SELECTOR).text();
@@ -85,8 +93,8 @@
     QuestionData.prototype.submit = function() {
         var self = this;
 
-        var url = rechattr.util.url.extend('question', this.data.id);
-        return $.post(url, this.data)
+        var urlStr = url.extend('question', this.data.id);
+        return $.post(urlStr, this.data)
             .done(function (response) {
                 self.dirty = false;
             })
@@ -111,7 +119,5 @@
         return listItem;
     };
 
-
-    rechattr.util.QuestionData = QuestionData;
     return QuestionData;
-})();
+});

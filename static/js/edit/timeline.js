@@ -1,4 +1,6 @@
-(function() {
+define(function(require) {
+    var $ = require('jquery');
+    var events = require('util/events');
 
     var TIME_FORMAT = 'h:mma';
     var DATE_FORMAT = 'M/DD/YYYY';
@@ -138,9 +140,7 @@
         
     }
 
-    Timeline.prototype.on = rechattr.util.events.on;
-    Timeline.prototype.trigger = rechattr.util.events.trigger;
+    events(Timeline)
 
-    rechattr.util.Timeline = Timeline;
     return Timeline;
-})()
+});

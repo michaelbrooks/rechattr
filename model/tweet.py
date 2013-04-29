@@ -71,8 +71,8 @@ class Tweet(Base):
         
         self.entities = json.dumps(tweepyStatus.entities)
         
-        if hasattr(tweepyStatus, 'retweet_of_status_id'):
-            self.retweet_of_status_id = tweepyStatus.retweet_of_status_id
+        if hasattr(tweepyStatus, 'retweeted_status'):
+            self.retweet_of_status_id = tweepyStatus.retweeted_status.id
         
     
     @classmethod
@@ -147,6 +147,6 @@ class Tweet(Base):
             offset += len(replacement) - (end - start)
             
         return text
-            
-    def created_timestamp(self):
-        return dtutils.dt_timestamp(self.created)
+
+    def get_time(self):
+        return self.created

@@ -1,13 +1,27 @@
-(function() {
-    var CHATTER_SELECTOR = '.chatter';
-    var FEEDBACK_SELECTOR = '.feedback';
+define(function(require) {
+
+    var $ = require('jquery');
+    require('vendor/bootstrap');
+    var flash = require('util/flash');
+    var StreamPanel = require('poll/stream-panel');
+    var QuestionBox = require('poll/question-box');
+    var TweetBox = require('poll/tweet-box');
+    var events = require('util/events');
+    //var MobilePanels = require('poll/mobile-panels');
+
+    //Turn off []-appending to posted arrays
+    //More: http://forum.jquery.com/topic/jquery-post-1-4-1-is-appending-to-vars-when-posting-from-array-within-array
+    $.ajaxSettings.traditional = true;
+
     var CONTAINER_SELECTOR = '.container';
-    var CHATTER_POLL_TITLE_SELECTOR = '.chatter .segment-title';
-    var FEEDBACK_POLL_TITLE_SELECTOR = '.feedback .segment-title';
+    var PANEL_SELECTOR = '.panel';
+    var PANEL_SCROLL_BOX_SELECTOR = '.panel-content';
+    var POLL_TITLE_SELECTOR = '.segment-title';
     var CHATTER_NOTIFY_SELECTOR = '.chatter-notify';
     var FEEDBACK_NOTIFY_SELECTOR = '.feedback-notify';
     var STREAM_LIST_ITEMS_SELECTOR = '.stream-list';
     var STREAM_HEADER_SELECTOR = '.stream-header';
+    var STREAM_FOOTER_SELECTOR = '.stream-footer';
     
     var MODAL_BACKDROP_SELECTOR = '.modal-backdrop';
     
@@ -43,12 +57,12 @@
         
         this.$ = $(this);
         
-        rechattr.util.initFlash();
+        flash.initFlash();
         
-        rechattr.extension.StreamPanel.call(this);
-        rechattr.extension.MobilePanels.call(this);
-        rechattr.extension.TweetBox.call(this);
-        rechattr.extension.QuestionBox.call(this);
+        StreamPanel.call(this);
+        //MobilePanels.call(this);
+        TweetBox.call(this);
+        QuestionBox.call(this);
         
         this.attachInteractions();
     };
@@ -57,14 +71,14 @@
         this.ui = {};
         
         this.ui.container = $(CONTAINER_SELECTOR);
-        this.ui.feedback = $(FEEDBACK_SELECTOR);
-        this.ui.chatter = $(CHATTER_SELECTOR);
-        this.ui.chatterPollTitle = $(CHATTER_POLL_TITLE_SELECTOR);
-        this.ui.feedbackPollTitle = $(FEEDBACK_POLL_TITLE_SELECTOR);
+        this.ui.panel = $(PANEL_SELECTOR);
+        this.ui.panelScroll = this.ui.panel.find(PANEL_SCROLL_BOX_SELECTOR);
+        this.ui.pollTitle = $(POLL_TITLE_SELECTOR);
         this.ui.chatterNotify = $(CHATTER_NOTIFY_SELECTOR);
         this.ui.feedbackNotify = $(FEEDBACK_NOTIFY_SELECTOR);
-        this.ui.streamList = this.ui.chatter.find(STREAM_LIST_ITEMS_SELECTOR);
-        this.ui.streamHeader = this.ui.chatter.find(STREAM_HEADER_SELECTOR);
+        this.ui.streamList = this.ui.panel.find(STREAM_LIST_ITEMS_SELECTOR);
+        this.ui.streamHeader = this.ui.panel.find(STREAM_HEADER_SELECTOR);
+        this.ui.streamFooter = this.ui.panel.find(STREAM_FOOTER_SELECTOR);
 
         //Not used??
         //this.ui.modalBackdrop = $(MODAL_BACKDROP_SELECTOR);
@@ -82,30 +96,17 @@
 
         this.ui.questionBox = $(QUESTION_MODAL_SELECTOR);
         this.ui.questionWrapper = this.ui.questionBox.find(QUESTION_WRAPPER_SELECTOR);
+    }
 
-        this.ui.questionList = this.ui.feedback.find(STREAM_LIST_ITEMS_SELECTOR);
-    }
-    
-    PollApp.prototype.on = function(event, fun, context) {
-        if (context) {
-            return this.$.on(event, function() {
-                fun.apply(context, arguments);
-            });
-        } else {
-            return this.$.on.apply(this.$, arguments);
-        }
-    }
-    
-    PollApp.prototype.trigger = function() {
-        return this.$.trigger.apply(this.$, arguments);
-    }
-    
     PollApp.prototype.attachInteractions = function() {
-        $('.tooltip-below').tooltip({
-            placement: 'bottom'
-        });
+//        $('.tooltip-below').tooltip({
+//            placement: 'bottom'
+//        });
+        //removed tooltip because it doesn't work on phones
     }
-    
-    rechattr.classes.PollApp = PollApp;
-    return PollApp;
-})();
+
+    events(PollApp);
+
+    window.app = new PollApp();
+    return window.app;
+});
