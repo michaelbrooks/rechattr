@@ -61,7 +61,85 @@ define(function () {
         } else {
             return date.getDate().toString() + " " + monthMap[date.getMonth()];
         }
-    }
+    };
+
+    //Just putting all of these in a function so they don't interfere with anybody else
+    (function () {
+        /*
+         * Builds a regex like this, for days: /(^|,|\s)(\d+)\s*(d|days?)($|,|\s)/
+         * (^|,|\s)     -- start of string, a comma separator, or space
+         * (\d+)        -- digits
+         * \s*          -- optional whitespace
+         * (d|days?)    -- single 'd' or 'day' or 'days'
+         * ($|,|\s)     -- end of string, comma separator, or space
+         */
+        function buildRegex(unit) {
+            return new RegExp("(^|,|\\s)(\\d+)\\s*(" + unit[0] + "|" + unit + "s?)($|,|\\s)");
+        }
+        var matchIndex = 2; //the 3rd part of the match (whole, group1, group2...)
+
+        var units = [
+            ['day', 60 * 60 * 24],
+            ['hour', 60 * 60],
+            ['minute', 60],
+            ['second', 1]
+        ];
+
+        var rexes = units.map(function (unit) {
+            return buildRegex(unit[0]);
+        });
+
+        //Export this value
+        dtutils.offset = {
+            parse: function (timeStr) {
+                return units.reduce(function (prev, unit, index) {
+                    var match = rexes[index].exec(timeStr);
+
+                    if (match) {
+                        match = Number(match[matchIndex]);
+                        if (!isNaN(match)) {
+                            return prev + match * unit[1] // multiply by the seconds conversion factor
+                        }
+                    }
+
+                    return prev;
+                }, null);
+            },
+            format: function (seconds) {
+                if (seconds === null) {
+                    return '';
+                }
+
+                var segments = [];
+
+                units.forEach(function (unit, index) {
+                    //convert the remaining seconds into this unit
+                    var inUnit = Math.floor(seconds / unit[1]);
+
+                    if (inUnit > 0) {
+
+                        //Generate the label
+                        var label = unit[0];
+                        if (inUnit > 1) {
+                            label += 's';
+                        }
+
+                        segments.push(inUnit + " " + label);
+
+                        //these seconds are now taken
+                        seconds -= inUnit * unit[1];
+                    }
+                });
+
+                //And a nice little hack to wrap things up
+                if (segments.length == 0) {
+                    segments.push('0 seconds');
+                }
+
+                return segments.join(', ');
+            }
+        }
+    })();
 
     return dtutils;
 });

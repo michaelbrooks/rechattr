@@ -81,6 +81,12 @@ $:csrf_token_input()
             <div class="image-box">
                 <img src="" class="question-image hide"/>
             </div>
+
+            <div class="old-uploader">
+                <label for="old-file-upload">Upload an image</label>
+                <input type="file" name="image" class="question-image-input" id="old-file-upload"/>
+            </div>
+
         </div>
         <div class="text-fields clearfix">
             <label class="question-label" for="question-subject">Q:</label>
@@ -120,14 +126,15 @@ $:csrf_token_input()
             </div>
         </div>
         <div class="form-controls">
-
-            <div class="old-uploader">
-                <label for="old-file-upload">Upload an image</label>
-                <input type="file" name="image" class="question-image-input" id="old-file-upload"/>
+            <div class="trigger-controls form-inline">
+                <input type="text" name="trigger_time" class="question-trigger-time editable" autocomplete="off" value="" placeholder="Launch offset"/>
+                <span>or</span>
+                <label class="checkbox">
+                    <input type="checkbox" class="question-trigger-manual" />Ask it now
+                </label>
             </div>
-
-            <button class="question-save btn btn-primary">Save</button>
-            <button class="question-cancel btn">Cancel</button>
+            <button class="question-save btn btn-large btn-primary">Save</button>
+            <button class="question-cancel btn-large btn">Cancel</button>
         </div>
     </div>
 </div>

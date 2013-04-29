@@ -80,11 +80,22 @@ class edit:
         question.question_text = input.question_text
         question.set_answer_choices(input['answer_choices'])
 
+        # Normalize the manual trigger
+        if input.trigger_manual == 'true':
+            input.trigger_manual = True
+        else:
+            input.trigger_manual = False
+
+        # Normalize the seconds trigger
         if input.trigger_seconds:
             try:
-                question.trigger_seconds = float(input.trigger_seconds)
+                input.trigger_seconds = float(input.trigger_seconds)
             except:
                 raise web.badrequest('Invalid trigger time for this question')
+        else:
+            input.trigger_seconds = None
+
+        question.update_trigger(input.trigger_manual, input.trigger_seconds)
 
         web.ctx.orm.flush()
         

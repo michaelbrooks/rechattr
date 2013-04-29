@@ -23,7 +23,13 @@ define(function(require) {
             this.question = question;
             this.data.id = question.data('id');
             this.data.trigger_manual = question.data('trigger-manual');
-            this.data.trigger_seconds = question.data('trigger-seconds');
+
+            var seconds = question.data('trigger-seconds');
+            if (seconds) {
+                this.data.trigger_seconds = Number(seconds);
+            } else {
+                this.data.trigger_seconds = null
+            }
 
             this.data.subject = question.find(SUBJECT_INPUT_SELECTOR).text();
             this.data.question_text = question.find(TEXT_INPUT_SELECTOR).text();

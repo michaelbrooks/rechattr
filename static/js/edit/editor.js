@@ -1,10 +1,12 @@
-define(function(require) {
+define(function (require) {
     var $ = require('jquery');
     require('vendor/jquery.dragsort');
+    require('vendor/bootstrap');
     var QuestionData = require('edit/question-data');
     var overlay = require('util/overlay');
     var flash = require('util/flash');
     var events = require('util/events');
+    var dtutils = require('util/dtutils');
 
     var QUESTION_EDITOR_SELECTOR = '.question-editor';
     var PREV_BUTTON_SELECTOR = '.prev-button';
@@ -26,16 +28,19 @@ define(function(require) {
     var EDITABLE_VALUE_SELECTOR = '.editable';
     var TRASH_SELECTOR = '.trash-bin';
 
+    var TRIGGER_TIME_INPUT_SELECTOR = '.question-trigger-time';
+    var TRIGGER_BUTTON_SELECTOR = '.question-trigger-manual';
+
     var ANSWER_EDITOR_SELECTOR = '.answer-editor';
     var SAVE_BUTTON_SELECTOR = '.question-save';
     var CANCEL_BUTTON_SELECTOR = '.question-cancel';
 
-    var Editor = function() {
+    var Editor = function () {
         this.initUI();
         this.attachEvents();
     }
 
-    Editor.prototype.initUI = function() {
+    Editor.prototype.initUI = function () {
         this.ui = {};
 
         var editor = this.ui.el = $(QUESTION_EDITOR_SELECTOR);
@@ -51,36 +56,59 @@ define(function(require) {
         this.ui.answersList = editor.find(ANSWER_LIST_SELECTOR);
         this.ui.answerTrash = editor.find(TRASH_SELECTOR);
 
+        this.ui.triggerTimeInput = editor.find(TRIGGER_TIME_INPUT_SELECTOR);
+        this.ui.triggerButton = editor.find(TRIGGER_BUTTON_SELECTOR);
+
         this.ui.saveButton = editor.find(SAVE_BUTTON_SELECTOR);
         this.ui.cancelButton = editor.find(CANCEL_BUTTON_SELECTOR);
 
     }
 
-    Editor.prototype.attachEvents = function() {
+    Editor.prototype.attachEvents = function () {
         var self = this;
 
-        this.ui.saveButton.on('click', function(e) {
+
+        this.ui.triggerTimeInput.popover({
+            placement: 'left',
+            html: true,
+            content: 'How long after the event starts should the question go out?<br/>' +
+                'Examples:<ul>' +
+                '<li><b>25 minutes</b></li>' +
+                '<li><b>3 hours</b></li>' +
+                '<li><b>2 days, 3 hours, 2 minutes</b></li>',
+            trigger: 'focus'
+        });
+
+        this.ui.triggerTimeInput.on('change', function () {
+            self.triggerTimeChanged();
+        });
+
+        this.ui.triggerButton.on('change', function() {
+            self.triggerManualChanged();
+        });
+
+        this.ui.saveButton.on('click', function (e) {
             self.saveAndClose();
             e.preventDefault();
             return false;
         });
 
-        this.ui.cancelButton.on('click', function(e) {
+        this.ui.cancelButton.on('click', function (e) {
             self.trigger('cancel');
             self.hide();
             e.preventDefault();
             return false;
         });
 
-        this.ui.paletteNextButton.on('click', function(e) {
+        this.ui.paletteNextButton.on('click', function (e) {
             self.shiftPalette(1);
         });
 
-        this.ui.palettePrevButton.on('click', function(e) {
+        this.ui.palettePrevButton.on('click', function (e) {
             self.shiftPalette(-1);
         });
 
-        this.ui.answersList.on('click', ANSWER_CHOICE_SELECTOR, function(e) {
+        this.ui.answersList.on('click', ANSWER_CHOICE_SELECTOR, function (e) {
             if (self.engageAnswerEditor($(this))) {
                 e.preventDefault();
                 return false;
@@ -88,10 +116,10 @@ define(function(require) {
                 //The answer editor was not engaged. Uneditable.
             }
         });
-        this.ui.answersList.on('blur', ANSWER_EDITOR_SELECTOR, function(e) {
+        this.ui.answersList.on('blur', ANSWER_EDITOR_SELECTOR, function (e) {
             self.disengageAnswerEditor($(this));
         });
-        $(document).on('click', function(e) {
+        $(document).on('click', function (e) {
             //Watch global clicks to disengage the editor also
             if ($(e.target).parents(ANSWER_EDITOR_SELECTOR).size() == 0) {
                 self.disengageAnswerEditor($(this));
@@ -99,15 +127,15 @@ define(function(require) {
         });
 
 
-        this.ui.palette.on('click', ANSWER_CHOICE_SELECTOR, function(e) {
+        this.ui.palette.on('click', ANSWER_CHOICE_SELECTOR, function (e) {
             self.addAnswerChoice($(this).html())
         });
 
-        this.ui.answersList.on('keyup', ANSWER_EDITOR_SELECTOR, function(e) {
+        this.ui.answersList.on('keyup', ANSWER_EDITOR_SELECTOR, function (e) {
             self.captureEditorValue($(this));
         });
 
-        this.ui.answersList.on('keydown', ANSWER_EDITOR_SELECTOR, function(e) {
+        this.ui.answersList.on('keydown', ANSWER_EDITOR_SELECTOR, function (e) {
             //Catch enter presses
             if (e.which == 13) {
                 e.preventDefault();
@@ -120,7 +148,7 @@ define(function(require) {
 
         //Adapted from:
         //http://dragsort.codeplex.com/discussions/257578
-        this.ui.el.on('mousemove', ANSWER_LIST_SELECTOR + ' ' + ANSWER_CHOICE_SELECTOR, function(e) {
+        this.ui.el.on('mousemove', ANSWER_LIST_SELECTOR + ' ' + ANSWER_CHOICE_SELECTOR, function (e) {
             var listItem = $(this);
             var isOverTrash = self.isOverTrash(e, listItem);
 
@@ -130,7 +158,7 @@ define(function(require) {
 
         //Adapted from:
         //http://dragsort.codeplex.com/discussions/257578
-        this.ui.el.on('mouseup', ANSWER_LIST_SELECTOR + ' ' + ANSWER_CHOICE_SELECTOR, function(e) {
+        this.ui.el.on('mouseup', ANSWER_LIST_SELECTOR + ' ' + ANSWER_CHOICE_SELECTOR, function (e) {
             var listItem = $(this);
             var isOverTrash = self.isOverTrash(e, listItem);
             if (isOverTrash) {
@@ -145,11 +173,11 @@ define(function(require) {
 
         this.ui.answersList.dragsort({
             dragSelector: 'li',
-            dragEnd: function() {
+            dragEnd: function () {
 
             },
             dragBetween: true,
-            dragStop: function() {
+            dragStop: function () {
                 //Remove the cursor setting manually, since dragsort is buggy
                 $(this).css('cursor', '');
             },
@@ -186,7 +214,7 @@ define(function(require) {
 
     };
 
-    Editor.prototype.shiftPalette = function(by) {
+    Editor.prototype.shiftPalette = function (by) {
         //Get the palette container width
         var width = this.ui.palette.width();
 
@@ -213,7 +241,7 @@ define(function(require) {
         }
     }
 
-    Editor.prototype.engageAnswerEditor = function(answer) {
+    Editor.prototype.engageAnswerEditor = function (answer) {
         if (answer.is('.editing')) {
             return;
         }
@@ -242,14 +270,14 @@ define(function(require) {
         }
     }
 
-    Editor.prototype.captureEditorValue = function(editor) {
+    Editor.prototype.captureEditorValue = function (editor) {
         //Update the answer value from the input element
         var value = editor.val();
         var valueBox = editor.parent().find(TEXT_VALUE_SELECTOR);
         valueBox.text(value);
     }
 
-    Editor.prototype.disengageAnswerEditor = function(editor) {
+    Editor.prototype.disengageAnswerEditor = function (editor) {
         if (!editor.attr('disabled')) {
             editor.parent().removeClass('editing');
 
@@ -265,11 +293,11 @@ define(function(require) {
         }
     }
 
-    Editor.prototype.isShowing = function() {
+    Editor.prototype.isShowing = function () {
         return this.ui.el.is('.in');
     }
 
-    Editor.prototype.isEditing = function(question) {
+    Editor.prototype.isEditing = function (question) {
         if (!this.isShowing()) {
             return false;
         }
@@ -281,8 +309,32 @@ define(function(require) {
         }
     }
 
+    Editor.prototype.triggerManualChanged = function() {
+        var checked = this.ui.triggerButton.is(':checked');
 
-    Editor.prototype.blank = function() {
+        //Clear the time input
+        this.ui.triggerTimeInput.val('');
+        this.ui.triggerTimeInput.data('seconds', null);
+
+        //Disable if checked
+        this.ui.triggerTimeInput.prop('disabled', checked);
+    }
+
+    Editor.prototype.triggerTimeChanged = function () {
+        var value = this.ui.triggerTimeInput.val();
+        var seconds = dtutils.offset.parse(value);
+        if (value.length > 0 && seconds === null) {
+            alert('Value ' + value + ' could not be parsed!');
+        } else {
+            console.log('Calculated offset of ' + seconds + ' seconds.');
+            //Save it for later so we don't have to reparse
+            this.ui.triggerTimeInput.data('seconds', seconds);
+            this.ui.triggerTimeInput.val(dtutils.offset.format(seconds));
+        }
+    }
+
+
+    Editor.prototype.blank = function () {
         //Blank the form
         this.ui.subject.val('');
         this.ui.questionText.val('');
@@ -293,7 +345,7 @@ define(function(require) {
         this.data = new QuestionData();
     }
 
-    Editor.prototype.fill = function(questionItem) {
+    Editor.prototype.fill = function (questionItem) {
         var self = this;
 
         //Populate the editor
@@ -302,20 +354,30 @@ define(function(require) {
         this.ui.questionText.val(this.data.get('question_text'));
         this.ui.image.attr('src', this.data.get('image_src'));
 
-        $.each(this.data.get('answer_choices'), function(index, html) {
+        var manual = this.data.get('trigger_manual');
+        this.ui.triggerButton.prop('checked', manual);
+        var seconds = this.data.get('trigger_seconds');
+        this.ui.triggerTimeInput.data('seconds', seconds);
+        if (!manual) {
+            this.ui.triggerTimeInput.val(dtutils.offset.format(seconds));
+        } else {
+            this.ui.triggerTimeInput.prop('disabled', true);
+        }
+
+        $.each(this.data.get('answer_choices'), function (index, html) {
             var answer = self.data.choice(html);
             self.ui.answersList.append(answer);
         });
     }
 
-    Editor.prototype.saveAndClose = function() {
+    Editor.prototype.saveAndClose = function () {
         var self = this;
         this.saveAnswers();
         if (this.data.dirty) {
             overlay.showLoading(this.ui.el);
 
             this.data.submit()
-                .done(function(questionHtml) {
+                .done(function (questionHtml) {
                     flash.success('Question saved');
                     overlay.hide(self.ui.el)
 
@@ -327,7 +389,7 @@ define(function(require) {
 
                     self.hide();
                 })
-                .error(function(response) {
+                .error(function (response) {
                     flash.error(response.responseText);
                     overlay.hide(self.ui.el);
                 });
@@ -336,16 +398,16 @@ define(function(require) {
         }
     }
 
-    Editor.prototype.hide = function() {
+    Editor.prototype.hide = function () {
         this.ui.el.collapse('hide');
     }
 
-    Editor.prototype.show = function(question) {
+    Editor.prototype.show = function (question) {
         this.currentQuestion = question;
 
         //Make sure the button scroller is the right size
         var paletteWidth = 0;
-        $.each(this.ui.paletteList.children(), function(i, listItem) {
+        $.each(this.ui.paletteList.children(), function (i, listItem) {
             //true to include margin
             paletteWidth += $(this).outerWidth(true);
         });
@@ -355,7 +417,7 @@ define(function(require) {
         this.ui.el.collapse('show');
     }
 
-    Editor.prototype.addAnswerChoice = function(answerHtml, index) {
+    Editor.prototype.addAnswerChoice = function (answerHtml, index) {
         var answer = this.data.choice(answerHtml);
 
         if (typeof(index) == 'undefined') {
@@ -366,13 +428,18 @@ define(function(require) {
         }
     }
 
-    Editor.prototype.saveAnswers = function() {
+    Editor.prototype.saveAnswers = function () {
         this.data.set('subject', this.ui.subject.val());
         this.data.set('question_text', this.ui.questionText.val());
         this.data.set('image_src', this.ui.image.attr('src'));
 
+        var manual = this.ui.triggerButton.is(':checked');
+        this.data.set('trigger_manual', manual);
+        if (!manual)
+            this.data.set('trigger_seconds', this.ui.triggerTimeInput.data('seconds'));
+
         var answerList = [];
-        this.ui.answersList.children().each(function(i, listElement) {
+        this.ui.answersList.children().each(function (i, listElement) {
             var answerText = $(listElement).html();
             answerList.push($.trim(answerText));
         });
