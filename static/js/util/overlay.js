@@ -10,7 +10,11 @@ define(function (require) {
         return prefix ? prefix + id : id;
     };
 
-    var makeOverlay = function (loading) {
+    var makeGifSpinner = function() {
+        return $('<div class="static-spinner">');
+    }
+
+    var makeOverlay = function (loading, lowBudget) {
         var $this = $(this);
 
         if ($this.data('overlayId')) {
@@ -32,14 +36,18 @@ define(function (require) {
 
             if (loading) {
                 overlayEl.addClass('.loading')
-                    .spin({
-                        color: '#333',
-                        hwaccel: true,
-                        position: 'absolute',
-                        radius: 8,
-                        width: 4,
-                        length: 13
-                    });
+                if (lowBudget) {
+                    overlayEl.append(makeGifSpinner());
+                } else {
+                    overlayEl.spin({
+                            color: '#333',
+                            hwaccel: true,
+                            position: 'absolute',
+                            radius: 8,
+                            width: 4,
+                            length: 13
+                        });
+                }
             }
         }, 1);
     };
@@ -71,9 +79,9 @@ define(function (require) {
         show: function (selection) {
             selection.each(makeOverlay);
         },
-        showLoading: function (selection) {
+        showLoading: function (selection, lowBudget) {
             selection.each(function () {
-                makeOverlay.call(this, true);
+                makeOverlay.call(this, true, lowBudget);
             });
         },
         hide: function (selection) {

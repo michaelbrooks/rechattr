@@ -28,6 +28,10 @@ define(function (require) {
     }
 
     var toggleQuestion = function (question, toggle) {
+        if (question.is('.disabled')) {
+            return;
+        }
+
         if (typeof toggle === 'undefined') {
             question.find(ANSWER_LIST_SELECTOR).collapse('toggle');
         } else if (toggle) {
@@ -91,6 +95,15 @@ define(function (require) {
         var self = this;
         var question = answer.parents('.question');
 
+        if (question.is('.disabled')) {
+            return;
+        }
+
+        question.addClass('disabled');
+
+        var oldAnswer = question.find('.selected');
+        setSelectedAnswer(question, answer);
+
         var requestUrl = url.extend('answer');
         var data = {
             id: question.data('id'),
@@ -100,11 +113,21 @@ define(function (require) {
         var request = $.post(requestUrl, data);
         request.done(function (response) {
             flash.success(response);
+            question.addClass('answered');
+            question.removeClass('disabled');
             toggleQuestion.call(self, question, false);
         });
         request.error(function (xhr) {
             flash.error(xhr.responseText);
+            setSelectedAnswer(question, oldAnswer);
+            question.data('mid-answer', false);
+            question.removeClass('disabled');
         });
+    }
+
+    var setSelectedAnswer = function(question, answer) {
+        question.find('.selected').removeClass('selected');
+        answer.addClass('selected');
     }
 
     var QuestionBox = function () {

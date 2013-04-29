@@ -1,11 +1,17 @@
 $def with (question,newItem=False, highlight=False)
 $ newItemClass = 'new-item' if newItem else ''
 $ highlightClass = 'highlight' if highlight else ''
-<div class="question collapse in stream-item clearfix $newItemClass $highlightClass"
+$ user = web.ctx.auth.current_user()
+$ response = user.first_response(question)
+$ currentAnswer = response.answer if response is not None else None
+$ answeredClass = 'answered' if currentAnswer is not None else ''
+<div class="question collapse in stream-item clearfix $newItemClass $highlightClass $answeredClass"
      data-type="question"
      data-id="${question.id}"
      data-trigger-manual="${'true' if question.trigger_manual else ''}"
      data-trigger-seconds="${question.trigger_seconds}">
+    <i class="icon-white icon-ok check-mark hide" title="You answered this."></i>
+    <i class="loading hide" title="Saving...">Saving...</i>
     $ imgClass = 'has-image' if question.image_src is not None else ''
     <div class="question-content $imgClass">
         <div class="question-header">
@@ -19,8 +25,11 @@ $ highlightClass = 'highlight' if highlight else ''
         <div class="question-text">${question.question_text}</div>
         <ul class="answer-list">
         $for choice in question.get_answer_choices():
-            <li class="answer-choice">
-                $:choice
+            $if currentAnswer == choice:
+                <li class="answer-choice selected">
+            $else:
+                <li class="answer-choice">
+            $:choice
             </li>
         </ul>
         </div>
