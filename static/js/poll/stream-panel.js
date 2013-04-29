@@ -8,6 +8,7 @@ define(function (require) {
     var STREAM_INTERVAL_SECONDS = 20;
     var TIME_UPDATE_INTERVAL_SECONDS = 60;
     var ITEM_CREATED_AT_SELECTOR = '.created-at';
+    var NEW_ITEM_TIMEOUT = 3000; //3 seconds
 
     var pollId = config.poll;
     var mostRecentItemTime = config.time;
@@ -114,10 +115,10 @@ define(function (require) {
             processItems.call(this, pending);
 
 
-            //Remove the new marking after initial render
+            //Remove the new marking after a while
             setTimeout(function () {
                 pending.removeClass('new-item');
-            }, 1);
+            }, NEW_ITEM_TIMEOUT);
         }
     }
 
@@ -216,7 +217,7 @@ define(function (require) {
         //Remove the new marking after initial render
         setTimeout(function () {
             items.removeClass('new-item');
-        }, 1);
+        }, NEW_ITEM_TIMEOUT);
     }
 
     var updateStreamTimes = function () {
