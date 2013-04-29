@@ -76,8 +76,10 @@ class Poll(model.Base):
             session = Session.object_session(self)
 
         query = session.query(model.Tweet).\
-                        filter(model.Tweet.polls.contains(self))
-
+                        filter(model.Tweet.polls.contains(self)).\
+                        filter(model.Tweet.retweet_of_status_id == None)
+                        # return no retweets
+        
         if older_than:
             query = query.filter(model.Tweet.created < older_than)
         if newer_than:
