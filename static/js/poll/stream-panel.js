@@ -218,6 +218,13 @@ define(function (require) {
         setTimeout(function () {
             items.removeClass('new-item');
         }, NEW_ITEM_TIMEOUT);
+
+        //Scroll to the new stuff
+        var viewTop = $('.navbar').height() + 10;
+        var offset = items.first().offset().top
+        $('html, body').animate({
+            scrollTop: offset - viewTop
+        }, 400);
     }
 
     var updateStreamTimes = function () {
