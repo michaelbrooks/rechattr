@@ -99,12 +99,17 @@ class Poll(model.Base):
         query = session.query(model.Question).\
                         filter(model.Question.poll == self)
 
+        # make sure it is an active question
+        current_offset = (utc_aware() - self.event_start).total_seconds()
+        current_offset = model.Question.trigger_seconds < current_offset
         manuallyTriggered = model.Question.trigger_manual == True
+        query = query.filter(manuallyTriggered | current_offset)
 
-        # convert the older_than into an offset against the event start
-        older_than_offset = (older_than - self.event_start).total_seconds()
-        older_than_offset = model.Question.trigger_seconds < older_than_offset
-        query = query.filter(older_than_offset | manuallyTriggered)
+        if older_than:
+            # convert the older_than into an offset against the event start
+            older_than_offset = (older_than - self.event_start).total_seconds()
+            older_than_offset = model.Question.trigger_seconds < older_than_offset
+            query = query.filter(older_than_offset)
 
         if newer_than:
             # convert the newer_than into an offset against the event start
