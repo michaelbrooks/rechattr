@@ -2,7 +2,7 @@ $def with (question,newItem=False, highlight=False)
 $ newItemClass = 'new-item' if newItem else ''
 $ highlightClass = 'highlight' if highlight else ''
 $ user = web.ctx.auth.current_user()
-$ response = user.first_response(question)
+$ response = user.first_response(question) if user is not None else None
 $ currentAnswer = response.answer if response is not None else None
 $ answeredClass = 'answered' if currentAnswer is not None else ''
 <div class="question collapse in stream-item clearfix $newItemClass $highlightClass $answeredClass"
