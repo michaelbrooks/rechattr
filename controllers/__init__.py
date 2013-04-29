@@ -98,7 +98,7 @@ class AppUrls(object):
     
     def sign_in(self, return_to=None):
         if return_to is None:
-            return_to = self.home()
+            return_to = web.ctx.fullpath
             
         return '/sign_in?%s' %(urlencode({'return_to': return_to}))
 
