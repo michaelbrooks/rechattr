@@ -119,6 +119,15 @@ define(function (require) {
             setTimeout(function () {
                 pending.removeClass('new-item');
             }, NEW_ITEM_TIMEOUT);
+
+
+
+            //Scroll to the new stuff
+            var viewTop = $('.navbar').height() + 10;
+            var offset = pending.first().offset().top
+            $('html, body').animate({
+                scrollTop: offset - viewTop
+            }, 400);
         }
     }
 
