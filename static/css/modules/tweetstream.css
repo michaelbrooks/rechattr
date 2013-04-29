@@ -44,7 +44,7 @@
     background-color: #70BFE4;
 }
 .stream-header div:active {
-    color: red;
+    color: #222;
 }
 
 .stream-list {
