@@ -67,7 +67,8 @@ class poll:
         lastQuestion = poll.triggered_questions(limit=1)
         if len(lastQuestion):
             lastQuestion = lastQuestion[0]
-            stream.remove(lastQuestion)
+            if lastQuestion in stream:
+                stream.remove(lastQuestion)
         else:
             lastQuestion = None
 
