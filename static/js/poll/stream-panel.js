@@ -5,7 +5,7 @@ define(function (require) {
     var dtutils = require('util/dtutils');
 
     var STREAM_NOTIFY_SELECTOR = '.stream-notify';
-    var STREAM_INTERVAL_SECONDS = 4;
+    var STREAM_INTERVAL_SECONDS = 20;
     var TIME_UPDATE_INTERVAL_SECONDS = 60;
     var ITEM_CREATED_AT_SELECTOR = '.created-at';
 
@@ -268,6 +268,8 @@ define(function (require) {
                     break;
             }
         });
+
+        updateStreamTimes.call(this);
     }
 
     var attachEventHandlers = function () {
