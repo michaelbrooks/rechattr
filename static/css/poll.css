@@ -97,6 +97,7 @@
     position: relative;
     height: 0;
     overflow: hidden;
+    cursor: default;
 }
 
 .stream-footer {

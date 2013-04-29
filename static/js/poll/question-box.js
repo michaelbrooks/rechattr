@@ -13,7 +13,14 @@ define(function (require) {
 
         //We have to do this first so that it overrides the general question-box click below
         this.ui.streamList.on('click', ANSWER_SELECTOR, function (e) {
-            answerQuestion.call(self, $(this));
+            var $this = $(this);
+            if ($this.is('.disabled')) {
+                e.preventDefault();
+                return false;
+                return;
+            }
+
+            answerQuestion.call(self, $this);
 
             //Prevent propagation to the background
             e.preventDefault();

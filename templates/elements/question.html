@@ -24,11 +24,16 @@ $ answeredClass = 'answered' if currentAnswer is not None else ''
         <div class="question-body">
         <div class="question-text">${question.question_text}</div>
         <ul class="answer-list">
+        $ notSignedInClass = ''
+        $if user is None:
+            $ sign_in_url = urls.sign_in(urls.poll(question.poll))
+            <li class="sign-in-button"><a href="${sign_in_url}" class="btn btn-small">Sign in with Twitter to respond.</a></li>
+            $ notSignedInClass='disabled'
+
         $for choice in question.get_answer_choices():
-            $if currentAnswer == choice:
-                <li class="answer-choice selected">
-            $else:
-                <li class="answer-choice">
+            $ selectedClass = 'selected' if currentAnswer == choice else ''
+
+            <li class="answer-choice $selectedClass $notSignedInClass">
             $:choice
             </li>
         </ul>
