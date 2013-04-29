@@ -87,9 +87,21 @@ class Question(Base):
         return self.poll.event_start + offset_delta
 
     def set_trigger_now(self):
+        """
+        Set the trigger time to now.
+
+        # Should not set decimal-valued times
+        >>> q = Question()
+        >>> from model import Poll
+        >>> q.poll = Poll()
+        >>> q.poll.event_start = utc_aware() - timedelta(seconds=500.245)
+        >>> q.set_trigger_now()
+        >>> q.trigger_seconds == round(q.trigger_seconds)
+        True
+        """
         # Record the time offset against the poll start, in seconds
         offset_delta = (utc_aware() - self.poll.event_start)
-        self.trigger_seconds = offset_delta.total_seconds()
+        self.trigger_seconds = round(offset_delta.total_seconds())
 
     def update_trigger(self, new_manual, new_seconds):
         """

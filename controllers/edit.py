@@ -89,7 +89,7 @@ class edit:
         # Normalize the seconds trigger
         if input.trigger_seconds:
             try:
-                input.trigger_seconds = float(input.trigger_seconds)
+                input.trigger_seconds = round(float(input.trigger_seconds))
             except:
                 raise web.badrequest('Invalid trigger time for this question')
         else:
