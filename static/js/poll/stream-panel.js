@@ -64,7 +64,18 @@ define(function (require) {
     }
 
     var notifyNewItems = function (items) {
-        var notify = getNotify(items.size() + " new tweets");
+        var questions = items.filter('.question').size();
+        var tweets = items.filter('.tweet').size();
+        var message = '';
+        if (tweets > 0) message = tweets + " new tweets"
+        if (questions > 0) {
+            if (tweets > 0) {
+                message += " & "
+            }
+            message += questions + " new questions"
+        }
+
+        var notify = getNotify(message);
         this.ui.streamHeader.html(notify);
         this.ui.streamHeader.addClass('in');
 
