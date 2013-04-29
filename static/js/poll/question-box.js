@@ -20,10 +20,6 @@ define(function (require) {
             return false;
         });
 
-        this.ui.streamList.find(ANSWER_LIST_SELECTOR)
-            //We already have css to hide the box, but this will let the collapse plugin function later
-            .addClass('collapse');
-
         this.ui.streamList.on('click', QUESTION_SELECTOR, function (e) {
             //Expand the answer list
             toggleQuestion.call(self, $(this));

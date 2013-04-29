@@ -5,7 +5,7 @@ define(function (require) {
     var dtutils = require('util/dtutils');
 
     var STREAM_NOTIFY_SELECTOR = '.stream-notify';
-    var STREAM_INTERVAL_SECONDS = 20;
+    var STREAM_INTERVAL_SECONDS = 4;
     var TIME_UPDATE_INTERVAL_SECONDS = 60;
     var ITEM_CREATED_AT_SELECTOR = '.created-at';
 
@@ -17,6 +17,7 @@ define(function (require) {
     var timeUpdateInterval = null;
     var pendingItems = null;
     var noMoreItems = null;
+    var itemHash = {}; //for storing maps from ids to elements
     var loadingMoreItems = null;
     var streamUrl = config.poll + "/stream";
 
@@ -90,6 +91,15 @@ define(function (require) {
             //Grab pending items for local use
             var pending = pendingItems;
             pendingItems = null;
+
+            // Remove any duplicates
+            var self = this;
+            pending.each(function(i, el) {
+                var id = $(el).data('id');
+                if (id in itemHash) {
+                    itemHash[id].remove();
+                }
+            });
 
             // Add the items to the stream list
             this.ui.streamList.prepend(pending);
@@ -233,6 +243,13 @@ define(function (require) {
     var processItems = function (selection) {
         selection.each(function (index, element) {
             var $this = $(this);
+
+            $this.find('.answer-list')
+                //We already have css to hide the box, but this will let the collapse plugin function later
+                .addClass('collapse');
+
+            //Store a map from the id to the element
+            itemHash[$this.data('id')] = $this;
 
             //Process the created date if it exists
             var timeElement = $this.find(ITEM_CREATED_AT_SELECTOR)
