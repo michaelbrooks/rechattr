@@ -50,21 +50,80 @@ def time_to(dt, dateFallback=False, long=False, showDays=False):
         return nice_delta(delta, dateFallback=dt, long=long, showDays=showDays)
     else:
         return nice_delta(delta, long=long, showDays=showDays)
-    
+
 def nice_delta(delta, dateFallback=None, long=False, showDays=False, sub=False):
     if delta < zeroTime:
         return format_time('seconds', 0, long)
     elif delta < oneMinute:
         return format_time('seconds', delta.seconds, long)
     elif delta < oneHour:
-        return format_time('minutes', round(delta.seconds / 60.0), long)
+        return format_time('minutes', round(delta.seconds / minute_seconds), long)
     elif delta < oneDay:
-        return format_time('hours', round(delta.seconds / (60.0*60)), long)
+        return format_time('hours', round(delta.seconds / (hour_seconds)), long)
     elif showDays:
-        return format_time('days', delta.total_seconds() / (60.0*60*24), long)
+        return format_time('days', delta.total_seconds() / (day_seconds), long)
     elif dateFallback:
         return format_time('date', dateFallback, long)
-        
+
+day_seconds = 60*60*24
+hour_seconds = 60*60
+minute_seconds = 60
+def full_delta(delta, long=True):
+    """
+    Generate a string representing a time delta with all components included, down to seconds.
+    If a datetime is provided instead of a timedelta, it will be subtracted from now.
+
+    :param delta: A timedelta object, or a datetime object
+    :param long: whether to use long formats (seconds vs. s)
+    :return:
+
+    >>> full_delta(timedelta(seconds=0))
+    '0 seconds'
+    >>> full_delta(timedelta(seconds=0), long=False)
+    '0s'
+    >>> full_delta(timedelta(seconds=1))
+    '1 second'
+    >>> full_delta(timedelta(seconds=20))
+    '20 seconds'
+    >>> full_delta(timedelta(minutes=1))
+    '1 minute'
+    >>> full_delta(timedelta(minutes=1, seconds=4))
+    '1 minute, 4 seconds'
+    >>> full_delta(timedelta(hours=2, minutes=5, seconds=1))
+    '2 hours, 5 minutes, 1 second'
+    >>> full_delta(timedelta(days=1, minutes=25))
+    '1 day, 25 minutes'
+    >>> full_delta(timedelta(days=26, seconds=4))
+    '26 days, 4 seconds'
+    """
+    if type(delta) == datetime:
+        delta = utc_aware() - delta
+
+    seconds = delta.total_seconds()
+
+    result = []
+
+    days = math.floor(seconds / day_seconds)
+    if days > 0:
+        result.append(format_time('days', days, long))
+        seconds -= days * day_seconds
+
+    hours = math.floor(seconds / hour_seconds)
+    if hours > 0:
+        result.append(format_time('hours', hours, long))
+        seconds -= hours * hour_seconds
+
+    minutes = math.floor(seconds / minute_seconds)
+    if minutes > 0:
+        result.append(format_time('minutes', minutes, long))
+        seconds -= minutes * minute_seconds
+
+    if seconds > 0 or len(result) == 0:
+        result.append(format_time('seconds', seconds, long))
+
+    return ", ".join(result)
+
+
 def time_ago(dt, dateFallback=False, long=False, showDays=False):
     now = utc_aware()
     delta = now - dt
