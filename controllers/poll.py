@@ -72,6 +72,10 @@ class poll:
     def _process_answer(self, poll):
         input = web.input();
 
+        user = web.ctx.auth.current_user()
+        if user is None:
+            raise web.badrequest("You are not signed in :(")
+
         questionId = input.get('id', None)
         if questionId is None:
             raise web.badrequest("Question id not provided")
@@ -92,17 +96,20 @@ class poll:
         if answer not in answerChoices:
             raise web.badrequest('Not a valid answer to this question')
 
+        # maybe they already answered it
+        response = user.first_response(question)
+        if response is None:
+            response = Response()
+            response.poll = poll
+            response.question = question
+            response.user = user
+            web.ctx.orm.add(response)
+
         # save the response
-        response = Response()
-        response.poll = poll
-        response.question = question
-        response.user = web.ctx.auth.current_user() # might be None
         response.visit = None;
         response.answer = answer
 
-        web.ctx.orm.add(response)
-
-        return 'Response recorded';
+        return "Yay! Thank you!";
 
     def _process_tweet_input(self, poll):
         input = web.input()
