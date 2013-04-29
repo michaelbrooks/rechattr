@@ -92,7 +92,7 @@ define(function (require) {
             var pending = pendingItems;
             pendingItems = null;
 
-            // Remove any duplicates
+            // Remove any items we already have
             var self = this;
             pending.each(function(i, el) {
                 var id = $(el).data('id');
@@ -104,11 +104,11 @@ define(function (require) {
             // Add the items to the stream list
             this.ui.streamList.prepend(pending);
 
-//            //Find the first question and pull it to the top
-//            var question = this.ui.streamList.find('.question').first();
-//            if (question.length) {
-//                this.ui.streamList.prepend(question);
-//            }
+            //Find the first question and pull it to the top
+            var question = this.ui.streamList.find('.question').first();
+            if (question.length) {
+                this.ui.streamList.prepend(question);
+            }
 
             // Do any remaining processing on the items
             processItems.call(this, pending);
@@ -290,11 +290,6 @@ define(function (require) {
         attachEventHandlers.call(this);
         startPoll.call(this);
 
-        //move the most recent question to the top
-//        var question = this.ui.streamList.find('.question').first()
-//        if (question.length) {
-//            this.ui.streamList.prepend(question);
-//        }
         //Process initial stream items
         processItems.call(this, this.ui.streamList.children());
     };

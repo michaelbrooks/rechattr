@@ -57,7 +57,19 @@ class poll:
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
         user = web.ctx.auth.current_user()
+
         stream = poll.get_stream(limit=DEFAULT_STREAM_LIMIT)
+
+        if len(stream):
+            oldest_item = stream[-1]
+            newest_item = stream[0]
+
+        lastQuestion = poll.triggered_questions(limit=1)
+        if len(lastQuestion):
+            lastQuestion = lastQuestion[0]
+            stream.remove(lastQuestion)
+        else:
+            lastQuestion = None
 
         tweetForm = tweet_form()
         if user is not None:
@@ -66,7 +78,8 @@ class poll:
             stats = None
         # display the poll
         return render.poll(user=user, poll=poll,
-                           stream=stream,
+                           stream=stream, lastQuestion=lastQuestion,
+                           newest_item=newest_item, oldest_item=oldest_item,
                            tweetForm=tweetForm, stats=stats)
 
     def _process_answer(self, poll):

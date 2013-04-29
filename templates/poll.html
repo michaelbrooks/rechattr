@@ -1,9 +1,9 @@
-$def with (user, poll, stream, tweetForm, stats)
+$def with (user, poll, stream, tweetForm, stats, newest_item, oldest_item, lastQuestion=None)
 $var css: poll.css
 $var js_app: poll
 $var poll: $poll.poll_url_code
-$var current_time: ${ dtutils.dt_timestamp(stream[0].get_time()) if len(stream) > 0 else time.time()}
-$var end_of_stream: ${ dtutils.dt_timestamp(stream[-1].get_time()) if len(stream) > 0 else time.time()}
+$var current_time: ${ dtutils.dt_timestamp(newest_item.get_time()) if newest_item else time.time()}
+$var end_of_stream: ${ dtutils.dt_timestamp(oldest_item.get_time()) if oldest_item > 0 else time.time()}
 $ sign_in_url = urls.sign_in(urls.poll(poll))
 $def poll_nav():
     <div class="navbar navbar-fixed-top navbar-inverse">
@@ -54,6 +54,8 @@ $var nav=poll_nav()
             </div>
             <div class="stream">
                 <div class="stream-list">
+                $if lastQuestion:
+                    $:render_stream_item(lastQuestion)
                 $for item in stream:
                     $:render_stream_item(item)
                 </div>
