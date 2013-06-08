@@ -63,7 +63,10 @@ class poll:
         if len(stream):
             oldest_item = stream[-1]
             newest_item = stream[0]
-
+        else:
+            newest_item = None
+            oldest_item = None
+            
         lastQuestion = poll.triggered_questions(limit=1)
         if len(lastQuestion):
             lastQuestion = lastQuestion[0]
