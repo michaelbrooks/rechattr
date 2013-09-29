@@ -35,7 +35,7 @@ define(function(require) {
         // this.attachTimelineEvents();
         
         // this.initQuestionList(); 
-    }
+    };
     
     EditApp.prototype.initUI = function() {
         this.ui = {};
@@ -47,14 +47,14 @@ define(function(require) {
 
         //Build the editor
         this.editor = new Editor();
-    }
+    };
 
 
     EditApp.prototype.attachEvents = function() {
         var self = this;
 
         this.ui.newQuestionButton.on('click', function(e) {
-            self.showEditor(null)
+            self.showEditor(null);
         });
 
         this.ui.questionList.on('click', QUESTION_DELETE_SELECTOR, function(e) {
@@ -94,10 +94,9 @@ define(function(require) {
                 question.collapse('hide');
             })
             .error(function(xhr) {
-                console.log('Error deleting question', xhr);
                 flash(xhr.responseText);
             });
-    }
+    };
 
     EditApp.prototype.showEditor = function(question) {
 

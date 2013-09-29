@@ -13,9 +13,8 @@ DEBUG_SERVER_HOST = os.environ.get('DEBUG_SERVER_HOST', 'localhost')
 DB_DEBUG = bool(os.environ.get('DB_DEBUG', False))
 LOG_LEVEL = bool(os.environ.get('LOG_LEVEL', 'INFO' if DEBUG else 'ERROR'))
 
-DEVELOPMENT_ASSETS = bool(os.environ.get('DEVELOPMENT_ASSETS', False))
-STATIC_ROOT = os.environ.get('STATIC_ROOT', '/static/' if DEVELOPMENT_ASSETS else '/dist/');
-
+APP_ENVIRONMENT = os.environ.get('APP_ENVIRONMENT', 'production')
+STATIC_ROOT = os.environ.get('STATIC_ROOT', '/dist/')
 
 TWITTER_STREAM_CONSUMER_KEY = os.environ.get('TWITTER_STREAM_CONSUMER_KEY', None)
 TWITTER_STREAM_CONSUMER_SECRET = os.environ.get('TWITTER_STREAM_CONSUMER_SECRET', None)

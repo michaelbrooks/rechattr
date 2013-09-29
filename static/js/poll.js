@@ -96,14 +96,14 @@ define(function(require) {
 
         this.ui.questionBox = $(QUESTION_MODAL_SELECTOR);
         this.ui.questionWrapper = this.ui.questionBox.find(QUESTION_WRAPPER_SELECTOR);
-    }
+    };
 
     PollApp.prototype.attachInteractions = function() {
 //        $('.tooltip-below').tooltip({
 //            placement: 'bottom'
 //        });
         //removed tooltip because it doesn't work on phones
-    }
+    };
 
     events(PollApp);
 

@@ -1,3 +1,4 @@
+/* jshint node: true */
 require.config({
     baseUrl: "js",
     paths: {
@@ -12,4 +13,4 @@ require.config({
         "vendor/jquery.event.move": ["jquery"],
         "vendor/jquery.event.swipe": ["vendor.event.move"]
     }
-})
+});

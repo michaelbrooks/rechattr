@@ -17,13 +17,23 @@ module.exports = function (grunt) {
 
         // Configure the copy task to move files from the development to production folders
         copy: {
-            dist: {
+            images: {
                 files: [
                     {
                         expand: true,
                         cwd: '<%=dirs.src%>',
                         src: ['favicon.png', 'img/**'],
                         dest: '<%=dirs.dist%>/'
+                    }
+                ]
+            },
+            js: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: '<%=dirs.src_js%>',
+                        src: ['**/*.js'],
+                        dest: '<%=dirs.dist_js%>/'
                     }
                 ]
             }
@@ -59,9 +69,7 @@ module.exports = function (grunt) {
 
             gruntfile: {
                 options: {
-                    globals: {
-                        'module': true
-                    }
+                    'node': true
                 },
                 src: 'gruntfile.js'
             },
@@ -107,6 +115,19 @@ module.exports = function (grunt) {
             }
         },
 
+        less: {
+            options: {
+                relativeUrls: true
+            },
+            files: {
+                expand: true,
+                cwd: '<%=dirs.src_css%>',
+                src: ['create.less', 'edit.less', 'main.less', 'myevents.less', 'poll.less', 'welcome.less'],
+                dest: '<%=dirs.dist_css%>/',
+                ext: '.css'
+            }
+        },
+
         cachebuster: {
             options: {
                 format: 'json',
@@ -118,7 +139,7 @@ module.exports = function (grunt) {
                 complete: function (hashes) {
                     //Unixize the paths
                     var result = {};
-                    for (path in hashes) {
+                    for (var path in hashes) {
                         result[path.replace(/\\/g, '/')] = hashes[path];
                     }
                     return result;
@@ -170,7 +191,7 @@ module.exports = function (grunt) {
                     include: [name],
                     out: '<%= dirs.dist_js %>/' + name + '.js'
                 }, from.js.options)
-            }
+            };
         });
 
         //Go through the CSS modules
@@ -196,6 +217,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
+    grunt.loadNpmTasks('grunt-contrib-less');
+
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-csslint');
 
@@ -204,6 +227,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-cachebuster');
 
     // Define your tasks here
-    grunt.registerTask('dist', ['clean', 'buildjs', 'buildcss', 'copy', 'cachebuster']);
-    grunt.registerTask('default', ['clean', 'jshint', 'csslint', 'buildjs', 'buildcss', 'copy', 'cachebuster']);
+    grunt.registerTask('dist', ['clean', 'buildjs', 'less', 'copy:images', 'cachebuster']);
+    grunt.registerTask('default', ['clean', 'jshint', 'copy:js', 'csslint', 'less', 'copy:images', 'cachebuster']);
 };
