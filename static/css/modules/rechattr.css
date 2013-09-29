@@ -13,34 +13,10 @@
 
 .credit {
     margin: 0;
-
-    display: block;
-    height: 40px;
-    overflow: hidden;
-
-    text-align: center;
     padding: 10px;
 
     font-size: 12px;
     line-height: 18px;
-}
-
-/* Approximately the width we need for the current footer content */
-@media (min-width: 480px) {
-    .credit {
-        display: inline;
-        height: auto;
-        line-height: 60px;
-
-        text-align: left;
-        padding: 0;
-
-        /* This ensures it doesn't mess up the layout if something goes wrong */
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        font-size: 14px;
-    }
 }
 
 /* Custom container */

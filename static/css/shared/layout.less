@@ -1,0 +1,31 @@
+@import 'mixins';
+
+.sidebar-layout {
+    height: 100%;
+
+    .column {
+        height: 100%;
+        float: left;
+        position: relative;
+    }
+
+    .left-column {
+        width: percentage(1 / (@phi * @phi));
+
+        .left-content {
+            height: 100%;
+            float: right;
+            text-align: right;
+
+            width: percentage(1 / @phi);
+        }
+    }
+    .right-column {
+        width: percentage(1 / @phi);
+
+        .right-content {
+            height: 100%;
+            width: percentage(1 / @phi);
+        }
+    }
+}
