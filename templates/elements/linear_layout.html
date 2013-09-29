@@ -1,0 +1,16 @@
+$def with(content)
+<div id="wrap">
+    $:content.get('nav', '')
+    <div class="container">
+        $:elements.flash()
+
+        $:content
+
+    </div>
+    <div id="push"></div>
+</div>
+<div id="footer">
+    <div class="container">
+        $:elements.footer()
+    </div>
+</div>

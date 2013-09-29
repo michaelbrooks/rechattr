@@ -14,6 +14,7 @@ def static_file(path):
 helpers = {
     'web': web,
     'time': time,
+    'getattr': getattr,
     'dtutils': utils.dtutils,
     'csrf_token_input': utils.csrf_token_input,
     'app_context': appconfig.APP_ENVIRONMENT,

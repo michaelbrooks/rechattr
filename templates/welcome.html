@@ -1,6 +1,7 @@
 $def with (user=None)
 $var css: welcome.css
 $var nav: $:elements.nav('welcome', user)
+$var layout: linear_layout
 $ sign_in_url = urls.sign_in(urls.home())
 $ sign_out_url = urls.sign_out()
 $ polls_url = urls.polls_list()

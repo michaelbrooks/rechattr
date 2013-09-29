@@ -1,0 +1,13 @@
+$def with (content)
+<div class="left-column">
+    <div class="logo"></div>
+
+    $:content.get('nav', '')
+
+    $:elements.footer()
+</div>
+<div class="content-column">
+    $:elements.flash()
+
+    $:content
+</div>

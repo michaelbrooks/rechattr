@@ -20,34 +20,9 @@ $def with (content)
         <link rel="stylesheet" href="${static_file('css/' + css)}">
     </head>
     <body>
-        <div id="wrap">
-            $:content.get('nav', '')
-            <div class="container">
-                $ flash = web.ctx.flash.get(clear=True)
-                <div class="flash">
-                $if flash is not None:
-                    $ type_map = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'}
-                    $ cls = type_map[flash['type']]
-                    <div class="alert $cls fade in">
-                        <div class="close" data-dismiss="alert" >&times;</div>
-                        $flash['message']
-                    </div>
-                </div>
+        $ layout = getattr(elements, content.get('layout', 'main_layout'))
+        $:layout(content)
 
-                $:content
-
-            </div>
-            <div id="push"></div>
-        </div>
-        <div id="footer">
-          <div class="container">
-            <p class="muted credit"><strong>re:chattr</strong> brought to you by
-                <a href="http://twitter.com/anachrobot">@anachrobot</a>/<a href="http://anachrobot.us">katie</a>
-                +
-                <a href="http://twitter.com/mjbrks">@mjbrks</a>/<a href="http://students.washington.edu/mjbrooks">michael</a>
-            </p>
-          </div>
-        </div>
         $if js_app is not None:
             $if app_context == 'development':
                 <script src="$static_file('js/vendor/require.js')"></script>
