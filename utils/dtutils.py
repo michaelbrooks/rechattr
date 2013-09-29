@@ -340,4 +340,22 @@ def nice_tz_name(shortName, offset, humanTimezone=None):
     
 def local_time(datetime_utc, local_tz):
     return local_tz.normalize(datetime_utc.astimezone(local_tz))
-    
+
+def nice_date(dt):
+    return dt.strftime("%m/%d/%Y").lstrip('0')
+
+def nice_interval(start, stop):
+    start_hour = start.strftime("%I").lstrip('0')
+    start_minute = start.minute
+
+    stop_hour = stop.strftime("%I").lstrip('0')
+    stop_minute = stop.minute
+    stop_ampm = stop.strftime("%p")
+
+    if int(start_minute) > 0:
+        start_hour = "%s:%s" %(start_hour, start_minute)
+
+    if int(stop_minute) > 0:
+        stop_hour = "%s:%s" %(stop_hour, stop_minute)
+
+    return "%s-%s%s" %(start_hour, stop_hour, stop_ampm)

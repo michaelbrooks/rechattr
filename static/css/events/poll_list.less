@@ -1,0 +1,127 @@
+.poll-list {
+
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        margin-bottom: 8px;
+
+        a {
+            display: block;
+            color: #333;
+            text-decoration: none;
+
+            &:hover {
+                background: #eee;
+            }
+        }
+
+        .poll-list-item {
+            padding-right: 15px;
+            
+            .twitter-icon {
+                width: 20px;
+                height: 20px;
+                position: relative;
+                top: -1px;
+                right: -4px;
+            }
+
+            .poll-timing {
+                .golden(12px);
+            }
+
+            .tweet-count,
+            .response-count {
+                display: inline;
+                .golden(12px);
+            }
+
+            .poll-title {
+                font-weight: bold;
+                .golden(14px);
+            }
+        }
+    }
+}
+
+.poll-status {
+    @status-size: 8px;
+    width: @status-size;
+    height: @status-size;
+    .border-radius(@status-size / 2);
+
+    display: inline-block;
+    vertical-align: middle;
+
+    &.poll-status-active {
+        background: red
+    }
+
+    &.poll-status-ended {
+        background: blue;
+    }
+
+    &.poll-status-pending {
+        background: gray;
+    }
+}
+/*
+.poll-list {
+    width: 100%;
+}
+
+.poll-list tr th:first-child, tr td:first-child {
+    padding-left: 0;
+}
+
+.poll-list tr th:last-child, tr td:last-child {
+    padding-right: 0;
+}
+
+.poll-list th {
+    font-weight: normal;
+    text-align: center;
+}
+
+.poll-list .title-header {
+    text-align: left;
+}
+
+.poll-list td {
+    text-align: center;
+    padding: 16px 8px;
+}
+
+.poll-list tr td {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.poll-list tr td.poll-title {
+    font-weight: bold;
+    text-align: left;
+}
+.poll-list tr td.poll-title .poll-hashtag {
+    font-weight: normal;
+}
+
+.poll-list tr td.poll-title .poll-timing-info {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: normal;
+    display: block;
+}
+
+.poll-list tr td.poll-status .label {
+    padding: 3px 6px;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: normal;
+}
+
+.poll-list td.poll-controls .btn {
+    margin-left: 10px;
+}
+*/

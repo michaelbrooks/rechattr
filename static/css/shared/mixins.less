@@ -4,3 +4,8 @@
 @import '../vendor/mixins';
 
 @phi: 1.618;
+
+.golden(@fontSize) {
+    font-size: @fontSize;
+    line-height: @phi * @fontSize;
+}

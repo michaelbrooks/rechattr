@@ -1,0 +1,11 @@
+$def with(poll)
+$if poll.is_active():
+    $ poll_status = 'poll-status-active'
+    $ status_message = 'Live!'
+$elif poll.has_started():
+    $ poll_status = 'poll-status-ended'
+    $ status_message = 'Ended'
+$else:
+    $ poll_status = 'poll-status-pending'
+    $ status_message = 'Not started'
+<span class="poll-status ${poll_status}" title="${status_message}"></span>
