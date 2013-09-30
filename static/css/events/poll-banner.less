@@ -1,0 +1,110 @@
+@import '../shared/mixins.less';
+
+.light-on-dark {
+    background: #18182E;
+    color: #D6D7F7;
+}
+
+.poll-banner {
+    padding: 25px 20px 25px 20px;
+}
+
+.poll-banner .muted {
+    color: #858599
+}
+
+.light-on-dark input[type="text"].editable,
+.light-on-dark .editable input[type="text"]
+ {
+    background-color: transparent;
+
+    .border-radius(0);
+    .box-shadow(none);
+    .transition(~"border linear 0.1s, box-shadow linear 0.1s, background linear 0.1s");
+
+    border: 1px dashed #453E96;
+    
+    color: #D6D7F7;
+}
+
+.light-on-dark input[type="text"].editable:focus,
+.light-on-dark .editable input[type="text"]:focus {
+    background-color: #272155;
+    border-color: #39337A;
+    
+    .box-shadow(1px 1px 3px rgba(0, 0, 0, 0.8))
+}
+
+.light-on-dark .input-prepend.editable .add-on {
+    border-color: transparent;
+    background: transparent;
+
+    .border-radius(0);
+}
+
+.poll-banner {
+    .event-hashtag {
+        position: relative;
+    }
+
+    .event-hashtag,
+    .event-hashtag input {
+        font-size: 45px;
+        line-height: 50px;
+    }
+    .event-hashtag {
+        input {
+            height: 60px;
+            padding-left: 35px;
+            margin-left: 0;
+            min-width: 200px;
+        }
+        .hashtag-hash {
+            position: absolute;
+            left: 8px;
+            line-height: 70px;
+
+            -webkit-touch-callout: none;
+            .user-select(none);
+        }
+    }
+
+    .interval-field {
+        text-align: right;
+
+        .start-time,
+        .stop-time {
+            width: 60px;
+        }
+
+        .start-date,
+        .stop-date {
+            margin-left: 8px;
+            width: 70px;
+        }
+    }
+
+    .event-title {
+        position: relative;
+        padding-right: 14px;
+
+        input {
+            width: 100%;
+            margin-right: -14px;
+            font-size: 18px;
+            line-height: 25px;
+            height: 25px;
+        }
+    }
+
+    .event-email {
+        text-align: right;
+
+        input {
+            width: 152px;
+            font-size: 18px;
+            line-height: 25px;
+            height: 25px;
+        }
+    }
+}

@@ -64,13 +64,13 @@ class AppUrls(object):
     urls = (
         '/',                    'welcome',
         '/events',              'myevents',
+        '/events/([\w-]+)',     'myevents',
         '/new',                 'create',
         '/sign_in',             'sign_in',
         '/sign_out',            'sign_in',
         '/([\w-]+)',            'poll',
         '/([\w-]+)/(tweet)',      'poll', # for posting new tweets
         '/([\w-]+)/(answer)',     'poll', # for answering questions
-        '/([\w-]+)/edit',       'edit',
         '/([\w-]+)/edit/(\w+)/(\d*)',   'edit', # this is for REST only
         '/([\w-]+)/stream',     'stream',
         '/([\w-]+)/results',    'results'
@@ -110,10 +110,10 @@ class AppUrls(object):
         return '/%s' % (poll.poll_url_human)
         
     def poll_edit(self, poll):
-        return '/%s/edit' % (poll.poll_url_human)
+        return '/events/%s' % (poll.poll_url_human)
     
     def poll_delete(self, poll):
-        return '/%s/delete' % (poll.poll_url_human)
+        return '/events/%s/delete' % (poll.poll_url_human)
         
     def polls_list(self):
         return '/events'

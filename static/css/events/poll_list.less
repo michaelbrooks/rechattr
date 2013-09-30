@@ -1,7 +1,7 @@
 .poll-list {
 
     list-style-type: none;
-    padding: 0;
+    padding: 0 10px;
     margin: 0;
 
     li {
@@ -12,14 +12,14 @@
             color: #333;
             text-decoration: none;
 
-            &:hover {
+            &:hover, &.active {
                 background: #eee;
             }
         }
 
         .poll-list-item {
-            padding-right: 15px;
-            
+            padding-right: 5px;
+
             .twitter-icon {
                 width: 20px;
                 height: 20px;
@@ -32,6 +32,7 @@
                 .golden(12px);
             }
 
+            .poll-hashtag,
             .tweet-count,
             .response-count {
                 display: inline;
@@ -41,6 +42,10 @@
             .poll-title {
                 font-weight: bold;
                 .golden(14px);
+            }
+
+            .icon-comment {
+                .opacity(70);
             }
         }
     }

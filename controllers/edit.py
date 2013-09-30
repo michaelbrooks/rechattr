@@ -23,11 +23,11 @@ edit_form = form.Form(
                  class_="stop-time",
                  placeholder="hh:mm",
                  autocomplete="off"),
-    form.Textbox('start_date', form.notnull, inputs.valid_date, 
+    form.Textbox('start_date', form.notnull, inputs.valid_date,
                  class_="start-date",
                  placeholder="mm/dd/yyyy",
                  autocomplete="off"),
-    form.Textbox('stop_date', form.notnull, inputs.valid_date, 
+    form.Textbox('stop_date', form.notnull, inputs.valid_date,
                  class_="stop-date",
                  placeholder="mm/dd/yyyy",
                  autocomplete="off"),
@@ -41,25 +41,6 @@ class edit:
         if poll is None:
             raise web.ctx.notfound()
         return poll
-
-    def _populate_form(self, form, poll):
-        form.title.value = poll.title
-        form.email.value = poll.email
-        # slice off the hash
-        form.twitter_hashtag.value = poll.twitter_hashtag[1:]
-        
-        user = web.ctx.auth.current_user()
-        
-        tzone = dtutils.tz(poll.olson_timezone)
-        local_event_start = dtutils.local_time(poll.event_start, tzone)
-        local_event_stop = dtutils.local_time(poll.event_stop, tzone)
-        start_date, start_time = dtutils.datetime_to_user(local_event_start)
-        stop_date, stop_time = dtutils.datetime_to_user(local_event_stop)
-        
-        form.start_date.value = start_date
-        form.start_time.value = start_time
-        form.stop_date.value = stop_date
-        form.stop_time.value = stop_time
     
     def _post_question(self, poll, question=None):
         # validate the input
@@ -104,7 +85,30 @@ class edit:
         
     def _post_poll(self, user, poll, input):
         pass
-    
+
+    @staticmethod
+    def populate_form(poll):
+        form = edit_form()
+        form.title.value = poll.title
+        form.email.value = poll.email
+        # slice off the hash
+        form.twitter_hashtag.value = poll.twitter_hashtag[1:]
+
+        user = web.ctx.auth.current_user()
+
+        tzone = dtutils.tz(poll.olson_timezone)
+        local_event_start = dtutils.local_time(poll.event_start, tzone)
+        local_event_stop = dtutils.local_time(poll.event_stop, tzone)
+        start_date, start_time = dtutils.datetime_to_user(local_event_start)
+        stop_date, stop_time = dtutils.datetime_to_user(local_event_stop)
+
+        form.start_date.value = start_date
+        form.start_time.value = start_time
+        form.stop_date.value = stop_date
+        form.stop_time.value = stop_time
+
+        return form;
+
     def GET(self, poll_url):
         # look up the poll based on the url
         poll = self._get_poll(poll_url)
@@ -118,9 +122,8 @@ class edit:
         if poll.user != user:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
             raise web.forbidden()
-        
-        form = edit_form()
-        self._populate_form(form, poll)
+
+        edit.populate_form(poll)
         
         # generate an edit form
         return render.edit(user, poll, form)

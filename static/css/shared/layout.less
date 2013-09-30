@@ -9,8 +9,10 @@
         position: relative;
     }
 
+    @contentWidth: percentage(1 / @phi);
+
     .left-column {
-        width: percentage(1 / (@phi * @phi));
+        width: 100 - @contentWidth;
 
         .left-content {
             height: 100%;
@@ -21,7 +23,7 @@
         }
     }
     .right-column {
-        width: percentage(1 / @phi);
+        width: @contentWidth;
 
         .right-content {
             height: 100%;
