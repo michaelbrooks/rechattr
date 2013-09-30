@@ -5,7 +5,7 @@
     margin: 0;
 
     li {
-        margin-bottom: 8px;
+        margin-bottom: @layoutMargins;
 
         a {
             display: block;
@@ -17,36 +17,68 @@
             }
         }
 
-        .poll-list-item {
-            padding-right: 5px;
+        .left-content {
+            margin-right: @layoutMargins;
+        }
+        .right-content {
+            margin-left: @layoutMargins;
+        }
+
+        .poll-timing,
+        .poll-hashtag {
+            .golden(12px);
+        }
+
+        .poll-title {
+            font-weight: bold;
+            .golden(16px);
+        }
+
+        .status-thumb {
+            float: left;
+            width: 100px;
+            padding: 10px;
+            margin-right: @layoutMargins;
+            background: #ddd;
+
+            &.time-until {
+                background: teal;
+                color: white;
+                .golden(12px);
+                text-align: center;
+
+                .delta {
+                    .golden(18px);
+                    font-weight: bold;
+                }
+            }
 
             .twitter-icon {
                 width: 20px;
                 height: 20px;
                 position: relative;
                 top: -1px;
-                right: -4px;
-            }
-
-            .poll-timing {
-                .golden(12px);
-            }
-
-            .poll-hashtag,
-            .tweet-count,
-            .response-count {
-                display: inline;
-                .golden(12px);
-            }
-
-            .poll-title {
-                font-weight: bold;
-                .golden(14px);
+                right: -1px;
             }
 
             .icon-comment {
                 .opacity(70);
+                margin: 0 3px;
             }
+
+            .tweet-count,
+            .response-count {
+                display: block;
+                .golden(12px);
+
+                color: #666;
+                b {
+                    color: #333;
+                }
+            }
+        }
+
+        .poll-sample {
         }
     }
 }
@@ -56,7 +88,7 @@
     width: @status-size;
     height: @status-size;
     .border-radius(@status-size / 2);
-
+    margin-top: -2px;
     display: inline-block;
     vertical-align: middle;
 

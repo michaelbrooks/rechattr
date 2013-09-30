@@ -367,4 +367,4 @@ def nice_interval(start, stop):
     if int(stop_minute) > 0:
         stop_hour = "%s:%s" %(stop_hour, stop_minute)
 
-    return "%s-%s%s" %(start_hour, stop_hour, stop_ampm)
+    return "%s - %s%s" %(start_hour, stop_hour, stop_ampm)

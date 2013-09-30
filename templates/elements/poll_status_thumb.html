@@ -1,0 +1,19 @@
+$def with (poll)
+$if not poll.has_started():
+    <div class="status-thumb time-until">
+        <div class="delta">$dtutils.time_to(poll.event_start, long=True, showDays=True)</div>
+        until showtime
+    </div>
+$else:
+    <div class="status-thumb">
+        $ tweet_count = poll.count_tweets()
+        $ response_count = poll.count_responses()
+        <div class="tweet-count" title="# tweets">
+            <i class="twitter-icon"></i>
+            <b>$tweet_count </b> tweets
+        </div>
+        <div class="response-count" title="# responses">
+            <i class="icon-comment"></i>
+            <b>$response_count </b> responses
+        </div>
+    </div>

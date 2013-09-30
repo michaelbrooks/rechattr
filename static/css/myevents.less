@@ -6,18 +6,19 @@
 @import 'events/poll_list';
 @import 'shared/mixins';
 
-.lead-center {
-    margin-top: 150px;
-    text-align: center;
-    .golden(21px);
+.event-list-controls {
+    margin-bottom: @layoutMargins;
 
-    .icon-arrow-left {
-        .golden(21px);
-        vertical-align: baseline;
+    .left-column {
+        .create-event-button {
+            margin-right: @layoutMargins;
+        }
     }
-
-    .btn-large {
-        font-size: 21px;
+    .right-column {
+        .lead {
+            margin-left: @layoutMargins;
+            margin-bottom: 0;
+        }
     }
 }
 
