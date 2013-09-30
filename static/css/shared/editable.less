@@ -1,9 +1,6 @@
 @import 'mixins';
 
-//Editable stuff
-input[type="text"].editable,
-.editable input[type="text"]
-{
+.editable_macro() {
     background-color: transparent;
 
     .border-radius(0);
@@ -21,5 +18,18 @@ input[type="text"].editable,
         .border-radius(3px);
 
         .box-shadow(inset 1px 1px 4px rgba(0, 0, 0, 0.1))
+    }
+}
+
+//Editable stuff
+input[type="text"],
+textarea
+{
+    &.editable {
+        .editable_macro();
+    }
+
+    .editable & {
+        .editable_macro();
     }
 }

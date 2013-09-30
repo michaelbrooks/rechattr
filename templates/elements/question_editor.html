@@ -1,0 +1,33 @@
+$def with (question)
+$ triggeredClass = 'triggered' if question.triggered() else ''
+<div class="question-editor $triggeredClass"
+     data-id="${question.id}"
+     data-trigger-seconds="${question.trigger_seconds}">
+    <div class="left-column">
+        <div class="left-content muted">
+            <div class="input-prepend input-append editable">
+                <span class="add-on muted">posts at</span>
+                <input type="text" class="trigger-time editable" value="${question.nice_time()}" title="Click to edit"/>
+                <span class="add-on muted">or</span>
+            </div>
+            <br/>
+            <div class="input-prepend input-append editable">
+                <input type="text" class="question-offset" value="${question.nice_offset()}" title="Click to edit"/>
+                <span class="add-on muted">after start</span>
+            </div>
+        </div>
+    </div>
+    <div class="right-column">
+        <div class="right-content">
+            <input type="text" class="question-text editable"
+                   value="${question.question_text}"
+                   title="Click to edit"
+                   placeholder="Type your question here"/>
+            $ answers = "\n".join(question.get_answer_choices())
+            <textarea class="question-answers editable"
+                      title="Click to edit"
+                      placeholder="(optional) Type multiple choice answers on separate lines">${answers}</textarea>
+            <div title="Delete this question" class="close question-delete">&times;</div>
+        </div>
+    </div>
+</div>

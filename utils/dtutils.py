@@ -68,7 +68,7 @@ def nice_delta(delta, dateFallback=None, long=False, showDays=False, sub=False):
 day_seconds = 60*60*24
 hour_seconds = 60*60
 minute_seconds = 60
-def full_delta(delta, long=True):
+def full_delta(delta, long=True, smallest="seconds"):
     """
     Generate a string representing a time delta with all components included, down to seconds.
     If a datetime is provided instead of a timedelta, it will be subtracted from now.
@@ -108,15 +108,24 @@ def full_delta(delta, long=True):
         result.append(format_time('days', days, long))
         seconds -= days * day_seconds
 
+    if smallest == 'days':
+        seconds = 0
+
     hours = math.floor(seconds / hour_seconds)
     if hours > 0:
         result.append(format_time('hours', hours, long))
         seconds -= hours * hour_seconds
 
+    if smallest == 'hours':
+        seconds = 0
+
     minutes = math.floor(seconds / minute_seconds)
     if minutes > 0:
         result.append(format_time('minutes', minutes, long))
         seconds -= minutes * minute_seconds
+
+    if smallest == 'minutes':
+        seconds = 0
 
     if seconds > 0 or len(result) == 0:
         result.append(format_time('seconds', seconds, long))

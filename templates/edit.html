@@ -3,35 +3,38 @@ $var css: edit.css
 $var js_app: edit
 $var nav: $:elements.nav('edit', user)
 $var header: $:elements.poll_editor(poll, form)
-<div class="row-fluid">
-    <div class="span12">
-        <div class="new-question-button btn btn-success">New Question</div>
+<div class="question-controls clearfix">
+    <div class="left-column">
+        <div class="new-question-button btn btn-success">
+            <i class="icon-plus icon-white"></i>
+            Add New Question
+        </div>
+    </div>
+    <div class="right-column">
+        <p class="lead">
+            This event
+            $if poll.is_active():
+                went live
+                <span class="time-since-start time-interval">
+                    $dtutils.full_delta(poll.event_start, long=True)
+                </span> ago. Ending in
+                <span class="time-before-end time-interval">
+                    $dtutils.time_to(poll.event_stop, long=True, showDays=True)</span>.
+            $elif poll.has_started():
+                ended
+                <span class="time-since-end time-interval">
+                    $dtutils.time_ago(poll.event_stop, long=True, showDays=True)
+                </span> ago.
+            $else:
+                goes live in
+                <span class="time-before-start time-interval">
+                    $dtutils.time_to(poll.event_start, long=True, showDays=True)</span>.
+        </p>
     </div>
 </div>
-<p class="lead">
-    $if poll.is_active():
-        Went live
-        <span class="time-since-start time-interval">
-            $dtutils.full_delta(poll.event_start, long=True)
-        </span> ago. Ending in
-        <span class="time-before-end time-interval">
-            $dtutils.time_to(poll.event_stop, long=True, showDays=True)
-        </span>.
-    $elif poll.has_started():
-        Ended
-        <span class="time-since-end time-interval">
-            $dtutils.time_ago(poll.event_stop, long=True, showDays=True)
-        </span> ago.
-    $else:
-        Goes live in
-        <span class="time-before-start time-interval">
-            $dtutils.time_to(poll.event_start, long=True, showDays=True)
-        </span>.
-</p>
-
 <div class="question-list">
     $for question in poll.questions:
-    $:elements.question_editor(question, mode="edit")
+        $:elements.question_editor(question)
 </div>
 <!--
 <div class="question-editor light-on-dark collapse">

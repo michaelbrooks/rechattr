@@ -1,5 +1,4 @@
 import web
-import simplejson as json
 
 from web import form
 from model import Poll

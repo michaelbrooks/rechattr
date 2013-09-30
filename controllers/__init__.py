@@ -49,6 +49,7 @@ from edit import edit
 from poll import poll
 from results import results
 from myevents import myevents
+from question import question
 from welcome import welcome
 from clear_db import clear_db
 from sign_in import sign_in
@@ -73,7 +74,8 @@ class AppUrls(object):
         '/([\w-]+)/(tweet)',      'poll', # for posting new tweets
         '/([\w-]+)/(answer)',     'poll', # for answering questions
         '/([\w-]+)/edit',   'edit',
-        '/([\w-]+)/edit/(\w+)/(\d*)',   'edit', # this is for REST only
+        '/([\w-]+)/edit/(\w+)/(\d*)',   'edit', #REST
+        '/([\w-]+)/questions',  'question', #REST
         '/([\w-]+)/stream',     'stream',
         '/([\w-]+)/results',    'results'
     )
@@ -87,6 +89,7 @@ class AppUrls(object):
         'poll': poll,
         'edit': edit,
         'stream': stream,
+        'question': question,
         'results': results
     }
     

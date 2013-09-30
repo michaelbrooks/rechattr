@@ -6,7 +6,7 @@
 @import (less) "edit/timeline.css";
 @import "edit/question_list";
 @import "edit/poll_editor";
-@import "edit/question_edit";
+@import "edit/question_editor";
 @import 'shared/layout';
 @import 'shared/mixins';
 @import 'shared/inputs';
@@ -16,3 +16,16 @@
     color: #333;
 }
 
+.question-controls {
+    margin-bottom: @layoutMargins;
+
+    .left-column {
+        .new-question-button {
+            margin-right: @layoutMargins;
+        }
+    }
+    .lead {
+        margin-left: @layoutMargins;
+        margin-bottom: 0;
+    }
+}

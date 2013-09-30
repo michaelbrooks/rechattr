@@ -59,7 +59,19 @@ class Question(Base):
             return 'manual'
 
         delta = timedelta(seconds=self.trigger_seconds)
-        return dtutils.nice_delta(delta, sub=True)
+        return dtutils.full_delta(delta, long=True, smallest="minutes")
+
+    def nice_time(self):
+        if self.trigger_seconds is None or self.trigger_manual:
+            return 'manual'
+
+        delta = timedelta(seconds=self.trigger_seconds)
+        trigger = self.poll.event_start + delta
+
+        tzone = dtutils.tz(self.poll.olson_timezone)
+        local_trigger = dtutils.local_time(trigger, tzone)
+
+        return local_trigger.strftime("%I:%M%p").lstrip('0')
 
     def triggered(self):
         # see if manually triggered first
