@@ -3,7 +3,7 @@
 .main-layout {
     height: 100%;
 
-    .column {
+    .left-column,.right-column {
         height: 100%;
         float: left;
         position: relative;
@@ -29,5 +29,40 @@
             height: 100%;
             width: percentage(1 / @phi);
         }
+    }
+
+    .navigation {
+        position: relative;
+        .clearfix();
+
+        .brand {
+            float: right;
+            margin: @layoutMargins;
+
+            .logo {
+                background: #800000;//url("../../img/rechattr.png");
+                background-repeat: no-repeat;
+
+                width: @headerHeight;
+                height: @headerHeight;
+            }
+        }
+
+        .nav {
+            text-align: right;
+            margin: @layoutMargins 0 @layoutMargins;
+            right: @headerHeight + 2 * @layoutMargins;
+        }
+    }
+
+    .header-row {
+        height: @headerHeight;
+        margin: @layoutMargins;
+        position: relative;
+    }
+
+    .bottom {
+        position: absolute;
+        bottom: 0;
     }
 }

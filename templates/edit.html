@@ -2,34 +2,38 @@
 $var css: edit.css
 $var js_app: edit
 $var nav: $:elements.nav('edit', user)
+$var header: $:elements.poll_editor(poll, form)
 <div class="row-fluid">
     <div class="span12">
-
-        <div class="timeline-wrapper hide">
-            <div class="timeline">
-                <div class="timeline-line"></div>
-                <div class="timeline-tick timeline-start"></div>
-                <div class="timeline-tick timeline-stop"></div>
-                <div class="timeline-focus fade"></div>
-                $for question in poll.questions:
-                    $ percent = question.percent_through_event()
-                    $if percent is not None:
-                        <div class="timeline-bead" data-id="${question.id}" style="left: ${100 * percent}%"></div>
-                    $else:
-                        <div class="timeline-bead" data-id="${question.id}"></div>
-            </div>
-        </div>
         <div class="new-question-button btn btn-success">New Question</div>
     </div>
 </div>
-<div class="row-fluid">
-    <div class="span12">
-        <div class="question-list">
-        $for question in poll.questions:
-            $:elements.question(question, mode="edit")
-        </div>
-    </div>
+<p class="lead">
+    $if poll.is_active():
+        Went live
+        <span class="time-since-start time-interval">
+            $dtutils.full_delta(poll.event_start, long=True)
+        </span> ago. Ending in
+        <span class="time-before-end time-interval">
+            $dtutils.time_to(poll.event_stop, long=True, showDays=True)
+        </span>.
+    $elif poll.has_started():
+        Ended
+        <span class="time-since-end time-interval">
+            $dtutils.time_ago(poll.event_stop, long=True, showDays=True)
+        </span> ago.
+    $else:
+        Goes live in
+        <span class="time-before-start time-interval">
+            $dtutils.time_to(poll.event_start, long=True, showDays=True)
+        </span>.
+</p>
+
+<div class="question-list">
+    $for question in poll.questions:
+    $:elements.question_editor(question, mode="edit")
 </div>
+<!--
 <div class="question-editor light-on-dark collapse">
     <div class="main-fields">
         <div class="image-panel">
@@ -54,7 +58,6 @@ $var nav: $:elements.nav('edit', user)
                 <div class="trash-bin" title="drag here to delete"><i class="icon-trash icon-white"></i></div>
                 <ul class="answer-list noselect"></ul>
             </div>
-            <!--<div class="answer-palette-instructions">Select some answer choices</div>-->
             <div class="palette-wrapper">
                 <div class="prev-button btn noselect" disabled="disabled">
                     <i class="icon-white icon-chevron-left"></i>
@@ -93,3 +96,4 @@ $var nav: $:elements.nav('edit', user)
         </div>
     </div>
 </div>
+-->

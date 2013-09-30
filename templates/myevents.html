@@ -1,16 +1,46 @@
-$def with (user, polls, poll=None, form=None)
+$def with (user, polls)
 $var css: myevents.css
 $var nav: $:elements.nav('myevents', user)
-$var sidebar: $:elements.event_list(polls, poll)
+$var header: $:elements.account_summary(user, polls)
 <div class="row-fluid">
     <div class="span12">
-        $if form:
-            $:elements.poll_editor(poll, form)
+        $if len(polls):
+            <ul class="poll-list">
+                $for poll in polls:
+                $ poll_url = urls.poll(poll)
+                $ poll_edit_url = urls.poll_edit(poll)
+                $ poll_results_url = urls.poll_results(poll)
+                $ tweet_count = poll.count_tweets()
+                $ response_count = poll.count_responses()
+                <li class="clearfix">
+                    <a href="${poll_edit_url}" class="poll-list-item">
+                        <div class="poll-title">
+                            $:elements.poll_status(poll)
+                            $poll.title
+                        </div>
+                        <div class="poll-timing muted">
+                            $dtutils.nice_date(poll.event_start)
+                            $dtutils.nice_interval(poll.event_start, poll.event_stop)
+                        </div>
+
+                        <span class="poll-hashtag muted">
+                            $poll.twitter_hashtag
+                        </span>
+                        $if tweet_count:
+                            <div class="tweet-count muted" title="# tweets">
+                                <i class="twitter-icon"></i>
+                                $tweet_count
+                            </div>
+                        $if response_count:
+                            <div class="response-count muted" title="# responses">
+                                <i class="icon-comment"></i>
+                                $response_count
+                            </div>
+                    </a>
+                </li>
+            </ul>
         $else:
             <p class="lead lead-center">
-                $if len(polls):
-                    <i class="icon-arrow-left"></i>
-                    Select one of your existing events, or<br/>
                 $:elements.create_button(class_="btn btn-success btn-large create-event-button")
             </p>
     </div>

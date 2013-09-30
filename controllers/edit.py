@@ -11,28 +11,35 @@ from . import render_stream_item
 
 edit_form = form.Form(
     form.Textbox('email', inputs.nullable(inputs.valid_email),
-                 class_="editable", placeholder="Email"),
+                 class_="editable event-email", placeholder="Email",
+                 title="Click to edit"),
     form.Textbox('title', form.notnull,
-                 class_='editable', autocomplete="off",
-                 placeholder="My Awesome Event"),
+                 class_='editable event-title', autocomplete="off",
+                 placeholder="My Awesome Event",
+                 title="Click to edit"),
     form.Textbox('start_time', form.notnull, inputs.valid_time,
                  class_="start-time",
                  placeholder="hh:mm",
-                 autocomplete="off"),
+                 autocomplete="off",
+                 title="Click to edit"),
     form.Textbox('stop_time', form.notnull, inputs.valid_time,
                  class_="stop-time",
                  placeholder="hh:mm",
-                 autocomplete="off"),
+                 autocomplete="off",
+                 title="Click to edit"),
     form.Textbox('start_date', form.notnull, inputs.valid_date,
                  class_="start-date",
                  placeholder="mm/dd/yyyy",
-                 autocomplete="off"),
+                 autocomplete="off",
+                 title="Click to edit"),
     form.Textbox('stop_date', form.notnull, inputs.valid_date,
                  class_="stop-date",
                  placeholder="mm/dd/yyyy",
-                 autocomplete="off"),
+                 autocomplete="off",
+                 title="Click to edit"),
     form.Textbox('twitter_hashtag', form.notnull, inputs.valid_hashtag, inputs.legal_url_validator,
-                 class_='editable')
+                 class_='editable event-hashtag',
+                 title="Click to edit")
 )
 
 class edit:
@@ -123,7 +130,7 @@ class edit:
             web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
             raise web.forbidden()
 
-        edit.populate_form(poll)
+        form = edit.populate_form(poll)
         
         # generate an edit form
         return render.edit(user, poll, form)

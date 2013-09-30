@@ -1,0 +1,27 @@
+$def with(user, polls)
+<div class="account-summary header-row">
+    <div class="bottom">
+        <h1>My Events</h1>
+        <ul class="stats-list">
+            <li>
+                $len(polls)
+                events
+            </li>
+            <li>
+                $ hours = round(sum(p.duration().total_seconds() for p in polls) / (60*60))
+                $int(hours)
+                hours
+            </li>
+            <li>
+                $ questions = sum(len(p.questions) for p in polls)
+                $questions
+                questions
+            </li>
+            <li>
+                $ responses = sum(len(p.responses) + len(p.tweets) for p in polls)
+                $responses
+                responses
+            </li>
+        </ul>
+    </div>
+</div>

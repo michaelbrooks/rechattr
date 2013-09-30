@@ -3,10 +3,7 @@
 @import (less) "modules/rechattr.css";
 @import (less) "modules/sticky-footer.css";
 @import 'shared/layout';
-@import 'shared/nav';
 @import 'events/poll_list';
-@import 'events/poll-banner';
-@import 'events/question-list';
 @import 'shared/mixins';
 
 .lead-center {
@@ -21,5 +18,27 @@
 
     .btn-large {
         font-size: 21px;
+    }
+}
+
+.account-summary {
+
+    .bottom{
+        bottom: @layoutMargins;
+    }
+
+    .stats-list {
+        list-style-type: none;
+        margin:0;
+        padding:0;
+
+        li {
+            float: left;
+            margin-right: 20px;
+
+            border: 1px solid rgb(238, 223, 225);
+
+            padding: 3px 6px;
+        }
     }
 }

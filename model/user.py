@@ -81,7 +81,7 @@ class User(model.Base):
             'tweets': tweetCount,
             'feedbacks': 0
         }
-        
+
     def polls_by_start(self, session=None):
         if session is None:
             session = Session.object_session(self)

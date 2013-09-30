@@ -1,0 +1,47 @@
+@import '../shared/mixins';
+@import '../shared/editable';
+
+.poll-editor {
+
+
+    .event-title {
+        .golden(20px);
+        height: @phi * 20px;
+
+        padding: 6px 9px;
+        font-weight: bold;
+
+        margin-left: 27px;
+
+        width: 250px;
+    }
+
+
+    .input-prepend .add-on {
+        border-color: transparent;
+        background: transparent;
+
+        .border-radius(0);
+    }
+
+    .interval-field {
+
+        .start-time,
+        .stop-time {
+            width: 60px;
+        }
+
+        .start-date,
+        .stop-date {
+            margin-left: 8px;
+            width: 70px;
+        }
+
+        .interval-start,
+        .interval-stop {
+            margin-bottom: 0;
+        }
+
+        margin-bottom: 10px;
+    }
+}

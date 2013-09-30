@@ -1,21 +1,21 @@
 $def with (content)
 <div class="main-layout">
-    <div class="left-column column">
-        <div class="left-content">
-            <div id="wrap">
+    <div id="wrap">
+        <div class="header">
+            <div class="left-column">
                 $:content.get('nav', '')
-                $:content.get('sidebar', '')
-                <div id="push"></div>
             </div>
-            <div id="footer">
-                $:elements.footer()
+            <div class="right-column">
+                $:content.get('header', '')
             </div>
         </div>
-    </div>
-    <div class="right-column column">
-        <div class="right-content">
+        <div class="body">
             $:elements.flash()
             $:content
         </div>
+        <div id="push"></div>
+    </div>
+    <div id="footer">
+        $:elements.footer()
     </div>
 </div>
