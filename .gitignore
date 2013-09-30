@@ -39,10 +39,10 @@ nosetests.xml
 .project
 .pydevproject
 
-
-.idea
-
 # node
 node_modules
+
+.idea/workspace.xml
+.idea/tasks.xml
 
 static_map.py

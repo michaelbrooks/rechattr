@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="918966338">
+    <data-source source="LOCAL" name="Data Source" product="PostgreSQL" version="9.2.2" jdbc-version="4.0" driver-name="PostgreSQL Native Driver" driver-version="PostgreSQL 9.2 JDBC4 (build 1002)" uuid="d83b8ffe-3a4e-401a-beca-6e4352c52f49">
+      <identifier-quote-string>&quot;</identifier-quote-string>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/rechattr</jdbc-url>
+      <user-name>rechattr_user</user-name>
+      <user-password>dfd8dfcfdfc9dfc2dfcbdfdedfdedfd8dff5dfdadfdd</user-password>
+      <schema-pattern>rechattr.public</schema-pattern>
+      <default-schemas>rechattr.public</default-schemas>
+      <default-dialect>PostgreSQL</default-dialect>
+      <libraries>
+        <library>
+          <url>jar://$USER_HOME$/.PyCharm20/postgresql-9.2-1002.jdbc4.jar!/</url>
+        </library>
+        <library>
+          <url>file://$USER_HOME$/.PyCharm20/postgresql-driver-license.txt</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
+</project>
+
