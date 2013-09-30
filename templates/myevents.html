@@ -5,39 +5,9 @@ $var sidebar: $:elements.event_list(polls, poll)
 <div class="row-fluid">
     <div class="span12">
         $if form:
-            <form method="POST" class="poll-banner light-on-dark">
-                <div class="row-fluid">
-                    <div class="span8">
-                        <div class="event-hashtag">
-                            <span class="hashtag-hash muted">#</span>
-                            $:form.twitter_hashtag.render()
-                        </div>
-                        <div class="event-title">$:form.title.render()</div>
-                    </div>
-                    <div class="span4">
-                        <div class="interval-field">
-                            <div class="interval-start">
-                                <div class="input-prepend editable">
-                                    <span class="add-on"><i class="icon-white icon-time"></i></span>
-                                    $:form.start_time.render()
-                                    $:form.start_date.render()
-                                </div>
-                            </div>
-                            <div class="interval-stop">
-                                <div class="input-prepend editable">
-                                    <span class="add-on"><i class="icon-white icon-time"></i></span>
-                                    $:form.stop_time.render()
-                                    $:form.stop_date.render()
-                                </div>
-                            </div>
-                            <div class="event-email">$:form.email.render()</div>
-                        </div>
-                    </div>
-                </div>
-                $:csrf_token_input()
-            </form>
+            $:elements.poll_editor(poll, form)
         $else:
-            <p class="lead">
+            <p class="lead lead-center">
                 $if len(polls):
                     <i class="icon-arrow-left"></i>
                     Select one of your existing events, or<br/>

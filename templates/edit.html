@@ -2,56 +2,9 @@
 $var css: edit.css
 $var js_app: edit
 $var nav: $:elements.nav('edit', user)
-<form method="POST" class="poll-banner light-on-dark">
-<div class="row-fluid">
-    <div class="span8">
-        <div class="event-hashtag">
-            <span class="hashtag-hash muted">#</span>
-            $:form.twitter_hashtag.render()
-        </div>
-        <div class="event-title">$:form.title.render()</div>
-    </div>
-    <div class="span4">
-        <div class="interval-field">
-            <div class="interval-start">
-                <div class="input-prepend editable">
-                    <span class="add-on"><i class="icon-white icon-time"></i></span>
-                    $:form.start_time.render()
-                    $:form.start_date.render()
-                </div>
-            </div>
-            <div class="interval-stop">
-                <div class="input-prepend editable">
-                    <span class="add-on"><i class="icon-white icon-time"></i></span>
-                    $:form.stop_time.render()
-                    $:form.stop_date.render()
-                </div>
-            </div>
-            <div class="event-email">$:form.email.render()</div>
-        </div>
-    </div>
-</div>
-$:csrf_token_input()
-</form>
 <div class="row-fluid">
     <div class="span12">
-        <p class="lead">
-        $if poll.is_active():
-            This event started
-            <span class="time-since-start time-interval">$dtutils.full_delta(poll.event_start, long=True)</span> ago.<br/>
-            It will end in
-            <span class="time-before-end time-interval">$dtutils.time_to(poll.event_stop, long=True, showDays=True)</span>.
-        $elif poll.has_started():
-            This event ended 
-            <span class="time-since-end time-interval">$dtutils.time_ago(poll.event_stop, long=True, showDays=True)</span>
-            ago and lasted for 
-            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration(), long=True, showDays=True)</span>.
-        $else:
-            This event begins in 
-            <span class="time-before-start time-interval">$dtutils.time_to(poll.event_start, long=True, showDays=True)</span>
-            and lasts for
-            <span class="event-duration time-interval">$dtutils.nice_delta(poll.duration(), long=True, showDays=True)</span>.
-        </p>
+
         <div class="timeline-wrapper hide">
             <div class="timeline">
                 <div class="timeline-line"></div>

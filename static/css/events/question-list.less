@@ -1,0 +1,126 @@
+/* General answer-choice stuff */
+.answer-choice {
+    float: left;
+
+    padding: 0;
+    margin: 0 4px 4px 0;
+    overflow: hidden;
+
+    .border-radius(3px);
+
+    background: #B5D2E9;
+    color: #333;
+
+    font-family: Verdana, Geneva, sans-serif;
+    cursor: default;
+    position: relative;
+
+    line-height: 36px;
+
+    .box-shadow(1px 1px 3px rgba(0, 0, 0, 0.5));
+    .transition(~"background linear 0.2s, color linear 0.2s");
+
+    .value,
+    .icon {
+        padding: 0 12px;
+    }
+
+    .image {
+        height: 100%;
+        img {
+            max-height: 100%;
+            position: relative;
+            top: -1px; /* not sure what this is about */
+        }
+    }
+}
+
+/* question editing stuff */
+
+.question {
+    position: relative;
+
+    border-bottom: 1px solid #eee;
+
+    .question-content {
+        padding: 12px;
+
+        &.has-image {
+            margin-left: 48px;
+        }
+
+        .trigger-label {
+            position: relative;
+            top: -4px;
+        }
+    }
+
+    .question-header {
+
+        .question-subject {
+            font-size: 24px;
+            font-weight: bold;
+            line-height: 30px;
+        }
+
+        .question-offset {
+            font-size: 18px;
+            line-height: 24px;
+            color: #888;
+
+            float: right;
+            margin-right: 10px;
+        }
+
+        .question-delete {
+            float: right;
+            border: 1px solid #999;
+            padding: 1px 5px;
+            .border-radius(3px);
+            .transition(all 100ms linear);
+        }
+
+        .question-delete:hover {
+            background: #FFB5AE;
+            color: #720000;
+            border-color: #AF6666;
+        }
+
+        .question-delete:active {
+            opacity: 0.5;
+            border-color: #720000;
+        }
+    }
+
+    .question-text {
+        color: #666;
+        float: left;
+
+        max-width: 200px;
+        .text-overflow();
+        line-height: 24px;
+
+        position: absolute;
+    }
+
+    .answer-list {
+        margin-left: 210px;
+        height: 26px;
+        overflow: hidden;
+
+        .answer-choice {
+            height: 24px;
+            line-height: 24px;
+            float: right;
+            background: #FFF;
+            border: 1px solid #DDD;
+            .opacity(40);
+            .box-shadow(none);
+
+            .image img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}
