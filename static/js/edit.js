@@ -5,6 +5,7 @@ define(function(require) {
     var flash = require('util/flash');
     var url = require('util/url');
     var Editor = require('edit/editor');
+    var config = require('config');
 
     //Turn off []-appending to posted arrays
     //More: http://forum.jquery.com/topic/jquery-post-1-4-1-is-appending-to-vars-when-posting-from-array-within-array
@@ -44,9 +45,6 @@ define(function(require) {
         this.ui.intervalField = $(INTERVAL_FIELD_SELECTOR);
         this.ui.questionList = $(QUESTION_LIST_SELECTOR);
         this.ui.newQuestionButton = $(NEW_QUESTION_BUTTON_SELECTOR);
-
-        //Build the editor
-        this.editor = new Editor();
     };
 
 
@@ -96,6 +94,22 @@ define(function(require) {
             .error(function(xhr) {
                 flash(xhr.responseText);
             });
+    };
+
+    EditApp.prototype.addQuestion = function() {
+        var self = this;
+
+        $.post(config.poll + '/questions', {})
+            .done(function(response) {
+                self.insertQuestion(response);
+            })
+            .fail(function() {
+                flash.error('Failed to add a question. Please refresh and try again.');
+            });
+    };
+
+    EditApp.prototype.insertQuestion = function(questionHTML) {
+        console.log(questionHTML); 
     };
 
     EditApp.prototype.showEditor = function(question) {
