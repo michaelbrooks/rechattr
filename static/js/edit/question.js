@@ -123,11 +123,16 @@ define(function(require) {
                 self.ui.html(response);
             })
             .fail(function (xhr) {
-                flash.flash(xhr);
+                flash.error(xhr.statusText);
+                if (xhr.responseText) {
+                    self.ui.html(xhr.responseText);
+                }
             })
             .always(function() {
-                overlay.hide(this.ui);
-                self.ui.find('input,textarea').prop('disabled', false);
+                overlay.hide(self.ui);
+                if (!this.ui.find(QUESTION_SELECTOR).is('.triggered')) {
+                    self.ui.find('input,textarea').prop('disabled', false);
+                }
             });
     };
 

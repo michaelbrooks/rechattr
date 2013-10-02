@@ -106,10 +106,13 @@ class question:
 
         question = self._auth_question(question_id, poll)
 
+        if question.triggered():
+            result = elements.question_editor(question)
+            raise web.HTTPError("403 Question was already posted", data=result)
+
         input = web.input()
         if self._update_question(question, input):
-            result = elements.question_editor(question)
-            raise web.accepted(data=result)
+            return elements.question_editor(question)
         else:
             raise web.badrequest("Invalid question data")
 

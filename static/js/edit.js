@@ -113,14 +113,10 @@ define(function(require) {
     EditApp.prototype.insertQuestion = function(questionHtml) {
         var questionElement = $(questionHtml);
         var questionWrapper = $('<div>')
-            .append(questionElement)
+            .html(questionElement)
             .addClass("collapse")
-            .appendTo(this.ui.questionList)
+            .prependTo(this.ui.questionList)
             .collapse('show');
-
-        $('html, body').animate({
-            scrollTop: questionElement.offset().top
-        }, 500);
 
         this.addQuestionEvents(questionWrapper);
     };
