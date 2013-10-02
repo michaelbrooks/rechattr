@@ -155,21 +155,25 @@ define(function () {
 
                 var hour = Number(parts[hourIndex]);
                 var minute = Number(parts[minuteIndex] || 0);
-                var ampm = parts[ampmIndex] || 'am';
+                var ampm = parts[ampmIndex];
 
                 if (minute < 0 || minute > 59) {
                     return false;
                 }
 
-                if (ampm !== 'am' && ampm !== 'pm') {
-                    return false;
+                if (ampm) {
+                    if (ampm !== 'am' && ampm !== 'pm') {
+                        return false;
+                    }
+
+                    if (ampm === 'am' && hour === 12) {
+                        hour = 0;
+                    } else if (ampm === 'pm' && hour < 12) {
+                        hour += 12;
+                    }
                 }
 
-                if (ampm === 'pm') {
-                    hour += 12;
-                }
-
-                if (hour < 1 || hour > 23) {
+                if (hour < 0 || hour > 23) {
                     return false;
                 }
 

@@ -7,14 +7,14 @@ $ triggeredClass = 'triggered' if question.triggered() else ''
      data-trigger-manual="${question.trigger_manual}">
     <div class="left-column">
         <div class="left-content muted">
-            <div class="input-prepend input-append editable">
+            <div class="input-prepend inpuzeroTimet-append editable">
                 <span class="add-on muted">posts at</span>
                 <input type="text" class="trigger-time editable" value="${question.nice_time()}" title="Click to edit"/>
                 <span class="add-on muted">or</span>
             </div>
             <br/>
             <div class="input-prepend input-append editable">
-                <input type="text" class="question-offset" value="${question.nice_offset()}" title="Click to edit"/>
+                <input type="text" class="trigger-offset" value="${question.nice_offset()}" title="Click to edit"/>
                 <span class="add-on muted">after start</span>
             </div>
         </div>
