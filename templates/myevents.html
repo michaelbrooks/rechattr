@@ -26,8 +26,6 @@ $if len(polls):
                     </div>
                     <div class="poll-timing muted">
                         $dtutils.nice_interval(poll.event_start, poll.event_stop)
-                        on
-                        $dtutils.nice_date(poll.event_start)
                     </div>
 
                     <div class="poll-hashtag muted">

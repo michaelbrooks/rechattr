@@ -353,13 +353,17 @@ def local_time(datetime_utc, local_tz):
 def nice_date(dt):
     return dt.strftime("%m/%d/%Y").lstrip('0')
 
-def nice_interval(start, stop):
-    start_hour = start.strftime("%I").lstrip('0')
-    start_minute = start.minute
+def nice_interval(start_dt, stop_dt):
+    start_date = start_dt.date()
+    stop_date = stop_dt.date()
 
-    stop_hour = stop.strftime("%I").lstrip('0')
-    stop_minute = stop.minute
-    stop_ampm = stop.strftime("%p")
+    start_hour = start_dt.strftime("%I").lstrip('0')
+    start_minute = start_dt.minute
+    start_ampm = start_dt.strftime("%p")
+
+    stop_hour = stop_dt.strftime("%I").lstrip('0')
+    stop_minute = stop_dt.minute
+    stop_ampm = stop_dt.strftime("%p")
 
     if int(start_minute) > 0:
         start_hour = "%s:%s" %(start_hour, start_minute)
@@ -367,4 +371,14 @@ def nice_interval(start, stop):
     if int(stop_minute) > 0:
         stop_hour = "%s:%s" %(stop_hour, stop_minute)
 
-    return "%s - %s%s" %(start_hour, stop_hour, stop_ampm)
+    if start_date == stop_date:
+        start_date = start_date.strftime("%m/%d/%Y").lstrip('0')
+        return "%s - %s%s on %s" %(start_hour, stop_hour, stop_ampm, start_date)
+    else:
+        if start_date.year == stop_date.year:
+            start_date = start_date.strftime("%m/%d").lstrip('0')
+        else:
+            start_date = start_date.strftime("%m/%d/%Y").lstrip('0')
+            
+        stop_date = stop_date.strftime("%m/%d/%Y").lstrip('0')
+        return "%s%s %s - %s%s %s" %(start_hour, start_ampm, start_date, stop_hour, stop_ampm, stop_date)
