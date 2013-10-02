@@ -5,7 +5,7 @@ $ stop_date = form.stop_date
 $ stop_time = form.stop_time
 $ tz_timezone = form.tz_timezone
 $ tz_timezone_save = form.tz_timezone_save
-<div class="interval-start control-group clearfix">
+<div class="interval-start clearfix">
     <label class="date-time-label" for="$:start_date.id">From</label>
     $:start_date.render()
     $:start_time.render()
@@ -15,7 +15,7 @@ $ tz_timezone_save = form.tz_timezone_save
         $:start_time.note
     </div>
 </div>
-<div class="interval-stop control-group clearfix">
+<div class="interval-stop clearfix">
     <label class="date-time-label" for="$:stop_date.id">to</label>
     $:stop_time.render()
     $:stop_date.render()
@@ -26,23 +26,31 @@ $ tz_timezone_save = form.tz_timezone_save
     </div>
 </div>
 <div class="timezone-control">
-    <a href="#" class="timezone-short show-timezone-button">
+    <a href="#" class="timezone-short show-timezone-button" title="Set the timezone for this event">
         $if tz_timezone.show:
             $tz_timezone.show
     </a>
 </div>
-$if tz_timezone.value:
-    <div class="timezone-selector collapse">
-$else:
-    <div class="timezone-selector collapse in">
-<div class="interval-timezone form-inline">
-    <label for="tz_timezone">Event timezone:</label>
-    $:tz_timezone.render()
-    <label class="checkbox timezone-save-default" for="tz_timezone_save_yes">
-        $:tz_timezone_save.render()
-        <span title="Use this timezone for future events">Save as my default</span>
-    </label>
-    <div class="field-note text-error">$:tz_timezone.note</div>
-    <div class="field-note text-error">$:tz_timezone_save.note</div>
-</div>
+    $if tz_timezone.value:
+        <div class="timezone-selector modal hide fade">
+    $else:
+        <div class="timezone-selector modal fade in">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Event timezone</h3>
+    </div>
+    <div class="modal-body">
+        $:tz_timezone.render()
+        <br/>
+        <label class="checkbox timezone-save-default" for="tz_timezone_save_yes">
+            $:tz_timezone_save.render()
+            <span title="Use this timezone for future events">Save as my default</span>
+        </label>
+
+        <div class="field-note text-error">$:tz_timezone.note</div>
+        <div class="field-note text-error">$:tz_timezone_save.note</div>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn btn-primary" data-dismiss="modal">Done</a>
+    </div>
 </div>

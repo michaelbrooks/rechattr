@@ -1,19 +1,12 @@
 $def with(poll, form)
+$ tz_timezone = form.tz_timezone
+$ tz_timezone_save = form.tz_timezone_save
 <form method="POST" class="poll-editor header-row">
     <div class="bottom">
         $:form.title.render()
 
-        <div class="interval-field">
-            <div class="interval-start input-prepend editable">
-                <span class="add-on"><i class="icon-time"></i></span>
-                $:form.start_time.render()
-                $:form.start_date.render()
-            </div>
-            <i class="icon-arrow-right"></i>
-            <div class="interval-stop input-prepend editable">
-                $:form.stop_time.render()
-                $:form.stop_date.render()
-            </div>
+        <div class="interval-field clearfix">
+            $:elements.interval_selector(form)
         </div>
 
         <div class="input-prepend">

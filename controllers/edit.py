@@ -16,26 +16,12 @@ edit_form = form.Form(
                  class_='editable event-title', autocomplete="off",
                  placeholder="My Awesome Event",
                  title="Click to edit"),
-    form.Textbox('start_time', form.notnull, inputs.valid_time,
-                 class_="start-time",
-                 placeholder="hh:mm",
-                 autocomplete="off",
-                 title="Click to edit"),
-    form.Textbox('stop_time', form.notnull, inputs.valid_time,
-                 class_="stop-time",
-                 placeholder="hh:mm",
-                 autocomplete="off",
-                 title="Click to edit"),
-    form.Textbox('start_date', form.notnull, inputs.valid_date,
-                 class_="start-date",
-                 placeholder="mm/dd/yyyy",
-                 autocomplete="off",
-                 title="Click to edit"),
-    form.Textbox('stop_date', form.notnull, inputs.valid_date,
-                 class_="stop-date",
-                 placeholder="mm/dd/yyyy",
-                 autocomplete="off",
-                 title="Click to edit"),
+    inputs.Datebox('start_date', 'Event Start', 'start-date editable', "Click to edit"),
+    inputs.Timebox('start_time', '', 'start-time  editable',"Click to edit"),
+    inputs.Datebox('stop_date', 'Event Stop', 'stop-date  editable', "Click to edit"),
+    inputs.Timebox('stop_time', '', 'stop-time  editable', "Click to edit"),
+    inputs.TZTimezone('tz_timezone', form.notnull, inputs.valid_timezone),
+    form.Checkbox('tz_timezone_save', value="yes"),
     form.Textbox('twitter_hashtag', form.notnull, inputs.valid_hashtag, inputs.legal_url_validator,
                  class_='editable event-hashtag',
                  title="Click to edit")
@@ -113,7 +99,9 @@ class edit:
         form.stop_date.value = stop_date
         form.stop_time.value = stop_time
 
-        return form;
+        form.tz_timezone.set_timezone_code(poll.olson_timezone)
+
+        return form
 
     def GET(self, poll_url):
         # look up the poll based on the url

@@ -20,7 +20,7 @@ define(['jquery'], function ($) {
             var self = this;
 
             this.$toggle = this.$element.is('.dropdown-toggle') ? this.$element : this.$element.find('.dropdown-toggle');
-            if (this.$toggle.length === 0) {
+            if (this.$toggle.length) {
                 throw 'Could not find a .dropdown-toggle element';
             }
 

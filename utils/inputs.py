@@ -31,28 +31,30 @@ valid_terms = form.regexp(r'^\s*[#@\w+]+(\s*,\s*[#@\w+]+)*\s*$',
 valid_timezone = form.Validator('Invalid timezone', dtutils.valid_timezone)
                           
 class Datebox(form.Textbox):
-    def __init__(self, name, description="", class_=''):
+    def __init__(self, name, description="", class_='', title=""):
         class_ = 'input-mini date-box %s' % class_
         super(Datebox, self).__init__(
              name, form.notnull, valid_date, 
              placeholder="mm/dd/yyyy",
              autocomplete="off",
              description=description,
-             class_=class_)
+             class_=class_,
+             title=title)
     
     def render(self):
         input = super(Datebox, self).render()
         return '<div class="date-picker">%s</div>' % input
         
 class Timebox(form.Textbox):
-    def __init__(self, name, description="", class_=""):
+    def __init__(self, name, description="", class_="", title=""):
         class_ = 'input-mini time-box %s' % class_
         super(Timebox, self).__init__(
              name, form.notnull, valid_time,
              placeholder="hh:mm",
              autocomplete="off",
              description=description,
-             class_=class_)
+             class_=class_,
+             title=title)
     
     def render(self):
         input = super(Timebox, self).render()

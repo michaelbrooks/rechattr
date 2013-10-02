@@ -6,6 +6,7 @@ define(function(require) {
     var url = require('util/url');
 
     var Question = require('edit/question');
+    var IntervalSelection = require('modules/interval-selection');
 
     //Turn off []-appending to posted arrays
     //More: http://forum.jquery.com/topic/jquery-post-1-4-1-is-appending-to-vars-when-posting-from-array-within-array
@@ -32,6 +33,8 @@ define(function(require) {
         flash.initFlash();
 
         this.initQuestionList();
+
+        this.intervalSelector = new IntervalSelection($(INTERVAL_FIELD_SELECTOR));
     };
     
     EditApp.prototype.initUI = function() {

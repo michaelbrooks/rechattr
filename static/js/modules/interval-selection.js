@@ -424,7 +424,7 @@ define(function(require) {
         });
         
         this.ui.timezoneSetButton.on('click', function(e) {
-            self.ui.timezoneBox.collapse('toggle');
+            self.ui.timezoneBox.modal('show');
             e.preventDefault();
             return false;
         });

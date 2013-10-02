@@ -47,17 +47,9 @@
 
 .interval-field .interval-start,
 .interval-field .interval-stop,
-.interval-field .interval-timezone,
 .interval-field .timezone-control {
     display: inline-block;
     margin-bottom: 0;
-}
-
-.interval-field .interval-timezone a {
-    float: left;
-    margin: 10px 0 10px 10px;
-    line-height: 32px;
-    font-size: 16px;
 }
 
 .date-time-label {
@@ -212,22 +204,17 @@ input.time-box.error:focus {
     margin-bottom: 10px;
 }
 
-.interval-field .timezone-selector {
-    text-align: center;
-}
-
 .interval-field .timezone-save-default {
-    margin-left: 20px;
-}
-.interval-field .interval-timezone {
-    padding: 10px;
-    border: 1px solid #ddd;
-    background: #fbfbfb;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
+    margin-top: 15px;
 }
 
 .interval-field .timezone-selector .field-note {
     margin-top: 5px;
+}
+
+.interval-field {
+    text-align: center;
+}
+.interval-field > * {
+    text-align: initial;
 }
