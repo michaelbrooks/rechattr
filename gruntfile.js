@@ -92,9 +92,9 @@ module.exports = function (grunt) {
                 options: {
                     globals: {
                         browser: true,
-                        define: true,
-                        console: true
+                        define: true
                     },
+                    debug: true,
                     devel: true
                 },
                 src: [

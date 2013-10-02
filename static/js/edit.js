@@ -16,7 +16,7 @@ define(function(require) {
     
     //var TIMELINE_WRAPPER_SELECTOR = '.timeline-wrapper';
     var QUESTION_LIST_SELECTOR = '.question-list';
-    var QUESTION_SELECTOR = '.question';
+    var QUESTION_SELECTOR = '.question-editor';
     
     var NEW_QUESTION_BUTTON_SELECTOR = '.new-question-button';
     var QUESTION_DELETE_SELECTOR = '.question-delete';
@@ -62,22 +62,21 @@ define(function(require) {
         });
     };
 
-    EditApp.prototype.deleteQuestion = function(question) {
-        var id = question.data('id');
+    EditApp.prototype.deleteQuestion = function(questionElement) {
+        var id = questionElement.data('id');
 
         $.ajax({
             url: url.poll('questions', id),
             type: 'DELETE'
         })
             .done(function(response) {
-                flash.success('Question deleted');
-                question.one('hidden', function() {
-                    question.remove();
+                questionElement.one('hidden', function() {
+                    questionElement.remove();
                 });
-                question.collapse('hide');
+                questionElement.collapse('hide');
             })
-            .error(function(xhr) {
-                flash(xhr.responseText);
+            .fail(function(xhr) {
+                flash.error(xhr.responseText);
             });
     };
 
@@ -91,8 +90,8 @@ define(function(require) {
             .done(function(response) {
                 self.insertQuestion(response);
             })
-            .fail(function() {
-                flash.error('Failed to add a question. Please refresh and try again.');
+            .fail(function(xhr) {
+                flash.error(xhr.responseText);
             });
     };
 

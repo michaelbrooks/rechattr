@@ -33,7 +33,7 @@ class question:
         return poll
 
     def _auth_question(self, question_id, poll):
-        question = Question.get(question_id)
+        question = web.ctx.orm.query(Question).get(question_id)
         if not question:
             raise web.ctx.notfound()
 
@@ -89,6 +89,11 @@ class question:
 
         return question
 
+    def _delete_question(self, question):
+        web.ctx.orm.delete(question)
+        web.ctx.orm.flush()
+
+
     #Gets HTML for viewing a question
     def GET(self, poll_url, question_id):
         poll = self._auth_poll(poll_url)
@@ -116,3 +121,10 @@ class question:
 
         result = elements.question_editor(question)
         raise web.created(data=result)
+
+    def DELETE(self, poll_url, question_id):
+        poll = self._auth_poll(poll_url, require_own=True)
+
+        question = self._auth_question(question_id, poll)
+
+        self._delete_question(question)

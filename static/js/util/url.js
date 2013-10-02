@@ -9,7 +9,7 @@ define(function(require) {
             return url.current + '/' + segments;
         },
         poll: function() {
-            var base = config.poll;
+            var base = '/' + config.poll;
 
             var segments = Array.prototype.join.call(arguments, '/');
             return base + '/' + segments;
