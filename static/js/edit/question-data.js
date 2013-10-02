@@ -1,5 +1,6 @@
 define(function(require) {
 
+    var $ = require('jquery');
     var url = require('util/url');
 
     var SUBJECT_INPUT_SELECTOR = '.question-subject';
@@ -16,7 +17,7 @@ define(function(require) {
             trigger_manual: false,
             trigger_seconds: null,
             answer_choices: []
-        }
+        };
         this.dirty = false;
 
         if (question) {
@@ -28,7 +29,7 @@ define(function(require) {
             if (seconds) {
                 this.data.trigger_seconds = Number(seconds);
             } else {
-                this.data.trigger_seconds = null
+                this.data.trigger_seconds = null;
             }
 
             this.data.subject = question.find(SUBJECT_INPUT_SELECTOR).text();
@@ -80,7 +81,7 @@ define(function(require) {
         } else {
             throw 'Data "' + member + '" not defined';
         }
-    }
+    };
 
     QuestionData.prototype.get = function(member) {
         if (member in this.data) {
@@ -88,7 +89,7 @@ define(function(require) {
         } else {
             throw 'Data "' + member + '" not defined';
         }
-    }
+    };
 
     QuestionData.prototype.submit = function() {
         var self = this;
@@ -101,7 +102,7 @@ define(function(require) {
             .error(function (response) {
                 console.log('Error submitting question', response);
             });
-    }
+    };
 
     QuestionData.prototype.choice = function(answerHtml) {
         //Generate an answer icon

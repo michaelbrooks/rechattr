@@ -19,7 +19,7 @@ define(function(require) {
         }
 
         this.attachEvents();
-    }
+    };
 
     Question.prototype.extractData = function(element) {
         this.initUI();
@@ -36,7 +36,7 @@ define(function(require) {
 
         this.data.trigger_type = this.$el.data('trigger_type');
         this.data.trigger_info = this.ui.trigger_info.data('trigger_info');
-    }
+    };
 
     Question.prototype.initDefaultData = function() {
         this.data = {};
@@ -45,27 +45,27 @@ define(function(require) {
         this.data.answer_choices = ['well','badly'];
         this.data.trigger_type = 'time_offset';
         this.data.trigger_info = 0;
-    }
+    };
 
     Question.prototype.updateModel = function(data) {
         this.data.subject = data.subject;
         this.data.question_text = data.question_text;
         // this.data.answer_choices =
-    }
+    };
 
     Question.prototype.offsetSeconds = function(seconds) {
         this.data.trigger_info = seconds;
-    }
+    };
 
     Question.prototype.formError = function(formElement, message) {
         formElement.parents('.control-group').addClass('error');
         formElement.focus();
         flash.error(message);
-    }
+    };
 
     Question.prototype.formSuccess = function(formElement) {
         this.$el.find('.control-group').removeClass('error');
-    }
+    };
 
     Question.prototype.save = function() {
         var self = this;
@@ -84,7 +84,7 @@ define(function(require) {
             console.log(response);
             flash(response);
         });
-    }
+    };
 
     Question.prototype.deleteQuestion = function() {
         var self = this;
@@ -92,7 +92,7 @@ define(function(require) {
         var deleteMe = function() {
             $(self).trigger('delete');
             self.$el.remove();
-        }
+        };
 
         $.ajax({
             url: url.extend('question', this.data.id),
@@ -110,7 +110,7 @@ define(function(require) {
             console.log(response);
             flash(response);
         });
-    }
+    };
 
     Question.prototype.initUI = function() {
         this.ui = {};
@@ -119,17 +119,17 @@ define(function(require) {
         this.ui.answer_choices = this.$el.find(QUESTION_ANSWER_LIST_SELECTOR);
         this.ui.trigger_info = this.$el.find(QUESTION_INFO_SELECTOR);
         this.ui.deleteButton = this.$el.find(QUESTION_DELETE_SELECTOR);
-    }
+    };
 
     Question.prototype.render = function() {
         this.$el.html(this.template(this.data));
 
-        this.initUI()
+        this.initUI();
 
         return this.$el;
-    }
+    };
 
     Question.prototype.attachEvents = function() {
         this.$el.on('click', QUESTION_DELETE_SELECTOR, $.proxy(this.deleteQuestion, this));
-    }
+    };
 });

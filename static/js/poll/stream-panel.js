@@ -31,7 +31,7 @@ define(function (require) {
         timeUpdateInterval = setInterval(function () {
             updateStreamTimes.call(self);
         }, TIME_UPDATE_INTERVAL_SECONDS * 1000);
-    }
+    };
 
     var stopPoll = function () {
         if (streamInterval) {
@@ -40,14 +40,14 @@ define(function (require) {
         if (timeUpdateInterval) {
             clearInterval(timeUpdateInterval);
         }
-    }
+    };
 
     var newItems = function (itemCount, html) {
         console.log("Received", itemCount, "new items");
 
         //Filter out all text nodes
         var newItems = $(html).filter(function(i, el) {
-            return el.nodeType != 3;
+            return el.nodeType !== 3;
         });
 
         if (pendingItems) {
@@ -57,24 +57,26 @@ define(function (require) {
         }
 
         notifyNewItems.call(this, pendingItems);
-    }
+    };
 
     var getNotify = function (message) {
         return $('<div>')
             .addClass('stream-notify')
             .text(message);
-    }
+    };
 
     var notifyNewItems = function (items) {
         var questions = items.filter('.question').size();
         var tweets = items.filter('.tweet').size();
         var message = '';
-        if (tweets > 0) message = tweets + " new tweets"
+        if (tweets > 0) {
+            message = tweets + " new tweets";
+        }
         if (questions > 0) {
             if (tweets > 0) {
-                message += " & "
+                message += " & ";
             }
-            message += questions + " new questions"
+            message += questions + " new questions";
         }
 
         var notify = getNotify(message);
@@ -82,7 +84,7 @@ define(function (require) {
         this.ui.streamHeader.addClass('in');
 
         this.trigger('new-items', [items]);
-    }
+    };
 
     var showPendingItems = function () {
         // Remove any notification
@@ -124,52 +126,52 @@ define(function (require) {
 
             //Scroll to the new stuff
             var viewTop = $('.navbar').height() + 10;
-            var offset = pending.first().offset().top
+            var offset = pending.first().offset().top;
             $('html, body').animate({
                 scrollTop: offset - viewTop
             }, 400);
         }
-    }
+    };
 
     var checkStream = function () {
         var self = this;
 
         var data = {
             since: mostRecentItemTime
-        }
+        };
 
         var request = $.get(streamUrl, data, 'json');
 
         request.done(function (response) {
             if (typeof response === 'string') {
-                response = JSON.parse(response)
+                response = JSON.parse(response);
             }
 
             if (response.items > 0) {
                 //only update the response time if there were items returned because otherwise it is undefined
                 mostRecentItemTime = response.time_to;
-                newItems.call(self, response.items, response.html)
+                newItems.call(self, response.items, response.html);
             }
         });
-    }
+    };
 
     var showLoadingMore = function () {
         console.log("Loading more items...");
 //        this.ui.streamFooter.addClass('in');
         this.ui.streamFooter.find('.static-spinner').removeClass('hide');
         this.ui.streamFooter.removeClass('clickable');
-    }
+    };
 
     var hideLoadingMore = function() {
         this.ui.streamFooter.find('.static-spinner').addClass('hide');
         this.ui.streamFooter.addClass('clickable');
-    }
+    };
 
     var showNoMoreToLoad = function() {
         this.ui.streamFooter.find('.static-spinner').removeClass('hide');
         this.ui.streamFooter.removeClass('clickable');
         this.ui.streamFooter.text("That's all we have, folks.");
-    }
+    };
 
     var checkForMore = function() {
         if (noMoreItems || loadingMoreItems) {
@@ -182,20 +184,20 @@ define(function (require) {
         //Try and load some more stuff below
         var data = {
             before: oldestItemTime
-        }
+        };
 
         var request = $.get(streamUrl, data, 'json');
 
         var self = this;
         request.done(function (response) {
             if (typeof response === 'string') {
-                response = JSON.parse(response)
+                response = JSON.parse(response);
             }
 
             if (response.items > 0) {
                 //only update the time if there were items returned because otherwise it is undefined
                 oldestItemTime = response.time_from;
-                addItemsAtBottom.call(self, $(response.html))
+                addItemsAtBottom.call(self, $(response.html));
                 hideLoadingMore.apply(self);
             } else {
                 console.log('No more items');
@@ -212,7 +214,7 @@ define(function (require) {
 
             loadingMoreItems = false;
         });
-    }
+    };
 
     var addItemsAtBottom = function(items) {
         console.log("Loaded " + items.length + " old items");
@@ -230,11 +232,11 @@ define(function (require) {
 
         //Scroll to the new stuff
         var viewTop = $('.navbar').height() + 10;
-        var offset = items.first().offset().top
+        var offset = items.first().offset().top;
         $('html, body').animate({
             scrollTop: offset - viewTop
         }, 400);
-    }
+    };
 
     var updateStreamTimes = function () {
         this.ui.streamList.find(ITEM_CREATED_AT_SELECTOR).each(function () {
@@ -246,7 +248,7 @@ define(function (require) {
             created = dtutils.time_ago(created);
             $this.text(created);
         });
-    }
+    };
 
     var attachInteractions = function () {
         var self = this;
@@ -255,7 +257,7 @@ define(function (require) {
         };
 
         this.ui.streamHeader.delegate(STREAM_NOTIFY_SELECTOR, 'click', showPendingItemsProxy);
-    }
+    };
 
     var processItems = function (selection) {
         selection.each(function (index, element) {
@@ -269,7 +271,7 @@ define(function (require) {
             itemHash[$this.data('id')] = $this;
 
             //Process the created date if it exists
-            var timeElement = $this.find(ITEM_CREATED_AT_SELECTOR)
+            var timeElement = $this.find(ITEM_CREATED_AT_SELECTOR);
             var created = timeElement.data('created');
             if (created) {
                 timeElement.data('created', new Date(created * 1000));
@@ -287,7 +289,7 @@ define(function (require) {
         });
 
         updateStreamTimes.call(this);
-    }
+    };
 
     var attachEventHandlers = function () {
         this.on('show-pending-items', showPendingItems, this);
@@ -300,7 +302,7 @@ define(function (require) {
 
             checkForMore.apply(self);
         });
-    }
+    };
 
     var StreamPanel = function () {
         attachInteractions.call(this);

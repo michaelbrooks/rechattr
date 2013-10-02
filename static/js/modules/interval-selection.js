@@ -38,7 +38,7 @@ define(function(require) {
         this.attachWidgetEvents();
         
         this.attachTimezoneEvents();
-    }
+    };
     
     IntervalSelection.prototype.initDataModel = function() {
         this.model = {};
@@ -56,17 +56,17 @@ define(function(require) {
             this.setStartDateTime(this.model.startTime);
         } else {
             //Initialize to the next whole hour after the current time
-            var theHour = moment()
-            theHour.startOf('hour')
+            var theHour = moment();
+            theHour.startOf('hour');
             theHour.add('hours', 1);
         
             this.model.startTime = theHour;
             this.model.duration = DEFAULT_DURATION;
-            this.model.stopTime = moment.unix(theHour.unix() + DEFAULT_DURATION)
+            this.model.stopTime = moment.unix(theHour.unix() + DEFAULT_DURATION);
             
             this.setStartDateTime(this.model.startTime);
         }
-    }
+    };
     
     IntervalSelection.prototype.initUI = function() {
         this.ui = {};
@@ -88,7 +88,7 @@ define(function(require) {
         this.ui.timezoneSetButton = this.element.find(TIMEZONE_SET_BUTTON_SELECTOR);
         this.ui.timezoneShortCode = this.element.find(TIMEZONE_SHORT_CODE_SELECTOR);
         this.ui.timezoneSelect = this.element.find(TIMEZONE_SELECT_SELECTOR);
-    }
+    };
     
     IntervalSelection.prototype.setStopDateTime = function(time, dontUpdateStop) {
         //Calculate the difference against the start time
@@ -98,13 +98,13 @@ define(function(require) {
         this.checkValidity();
         
         dontUpdateStop || this.updateStop();
-    }
+    };
     
     IntervalSelection.prototype.checkValidity = function() {
         //Mark times invalid if needed
         this.validSelection = this.model.duration > 0;
         this.ui.intervalStopGroup.toggleClass(INVALID_CLASS, !this.validSelection);
-    }
+    };
 
     IntervalSelection.prototype.setStartDateTime = function(time, dontUpdateStop) {
         
@@ -142,12 +142,12 @@ define(function(require) {
         }
         
         dontUpdateStop || this.updateStop();
-    }
+    };
     
     IntervalSelection.prototype.updateStop = function() {
         
         //If it is the same day as the start, save a flag
-        this.sameDay = this.model.stopTime.isSame(this.model.startTime, 'day')
+        this.sameDay = this.model.stopTime.isSame(this.model.startTime, 'day');
         
         
         var dateStr = this.model.stopTime.format(DATE_FORMAT);
@@ -176,7 +176,7 @@ define(function(require) {
         
         this.ui.stopDate.toggleClass(INVALID_CLASS, false);
         this.ui.stopTime.toggleClass(INVALID_CLASS, false);
-    }
+    };
     
     function getDateOnly(mo) {
         return mo.clone().startOf('day');
@@ -225,7 +225,7 @@ define(function(require) {
             
             self.ui.startTimePicker.dropdownmenu('hide');
         });
-    }
+    };
     
     function parseDateTime(userDate, userTime) {
         var date = moment(userDate + ' ' + userTime, DATE_FORMAT + ' ' + TIME_FORMAT);
@@ -272,7 +272,7 @@ define(function(require) {
         })
         .on('change', function(e) {
             var timeOnly = $(this).val();
-            timeOnly = parseTime(timeOnly)
+            timeOnly = parseTime(timeOnly);
             if (timeOnly) {
                 var dateTime = setTimeOnly(self.model.startTime, timeOnly);
                 self.setStartDateTime(dateTime);
@@ -334,14 +334,14 @@ define(function(require) {
         .add(this.ui.startDate)
         .add(this.ui.startTime)
         .on('keydown', function(e) {
-            if (e.which == 13) {
+            if (e.which === 13) {
                 $(this).blur();            
                 e.preventDefault();
                 return false;
             }
         });
         
-    }
+    };
     
     function nextNearestTime(time, fromTimes, dateInsensitive) {
         var before = null;
@@ -359,7 +359,7 @@ define(function(require) {
     
     IntervalSelection.prototype.initPickers = function() {
         //Prepare the time pickers for menu-ization
-        var timePickers = this.ui.startTimePicker.add(this.ui.stopTimePicker)
+        var timePickers = this.ui.startTimePicker.add(this.ui.stopTimePicker);
         timePickers
         .addClass('dropdown');
     
@@ -386,9 +386,9 @@ define(function(require) {
                     if (minutes < 60) {
                         diff += minutes + ' mins';
                     } else {
-                        hours = minutes / 60;
+                        var hours = minutes / 60;
                         diff += hours;
-                        if (hours != 1) {
+                        if (hours !== 1) {
                             diff += " hrs";
                         } else {
                             diff += " hr";
@@ -413,13 +413,13 @@ define(function(require) {
             autoclose: true
         });
         
-    }
+    };
     
     IntervalSelection.prototype.attachTimezoneEvents = function() {
         var self = this;
         
         this.ui.timezoneSelect.on('change', function(e) {
-            var code = $(this).find(':selected').data(TIMEZONE_SHORT_CODE_DATA)
+            var code = $(this).find(':selected').data(TIMEZONE_SHORT_CODE_DATA);
             self.ui.timezoneShortCode.text(code);
         });
         
@@ -428,7 +428,7 @@ define(function(require) {
             e.preventDefault();
             return false;
         });
-    }
+    };
 
     return IntervalSelection;
 });

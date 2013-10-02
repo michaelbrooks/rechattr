@@ -4,8 +4,6 @@ define(function(require) {
     require('vendor/bootstrap');
     var flash = require('util/flash');
     var url = require('util/url');
-    var Editor = require('edit/editor');
-    var config = require('config');
 
     //Turn off []-appending to posted arrays
     //More: http://forum.jquery.com/topic/jquery-post-1-4-1-is-appending-to-vars-when-posting-from-array-within-array
@@ -52,36 +50,23 @@ define(function(require) {
         var self = this;
 
         this.ui.newQuestionButton.on('click', function(e) {
-            self.showEditor(null);
+            self.addQuestion();
         });
 
         this.ui.questionList.on('click', QUESTION_DELETE_SELECTOR, function(e) {
-            self.deleteQuestion($(this).parents(QUESTION_SELECTOR));
+            var questionElement = $(this).parents(QUESTION_SELECTOR);
+            self.deleteQuestion(questionElement);
+
             e.preventDefault();
             return false;
         });
-
-        //When a question is clicked, invoke the editor for that question
-        this.ui.questionList.on('click', QUESTION_SELECTOR, function(e) {
-            self.showEditor($(this));
-        });
-
-        this.editor.on('cancel', function(e) {
-            self.hideEditor();
-        });
-
-        this.editor.on('new-question', function(e, questionHtml) {
-            self.ui.questionList.append(questionHtml);
-        });
-
-
     };
 
     EditApp.prototype.deleteQuestion = function(question) {
         var id = question.data('id');
 
         $.ajax({
-            url: url.extend('question', id),
+            url: url.poll('questions', id),
             type: 'DELETE'
         })
             .done(function(response) {
@@ -99,7 +84,10 @@ define(function(require) {
     EditApp.prototype.addQuestion = function() {
         var self = this;
 
-        $.post(config.poll + '/questions', {})
+        $.ajax({
+            url: url.poll('questions'),
+            type: 'POST'
+        })
             .done(function(response) {
                 self.insertQuestion(response);
             })
@@ -108,8 +96,11 @@ define(function(require) {
             });
     };
 
-    EditApp.prototype.insertQuestion = function(questionHTML) {
-        console.log(questionHTML); 
+    EditApp.prototype.insertQuestion = function(questionHtml) {
+        var questionElement = $(questionHtml)
+            .appendTo(this.ui.questionList);
+
+        //TODO: Build apply the question behavior to the question element
     };
 
     EditApp.prototype.showEditor = function(question) {

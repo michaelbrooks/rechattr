@@ -64,7 +64,8 @@ module.exports = function (grunt) {
                 undef: true,
                 boss: true,
                 eqnull: true,
-                browser: true
+                browser: true,
+                expr: true
             },
 
             gruntfile: {
@@ -82,8 +83,23 @@ module.exports = function (grunt) {
                     }
                 },
                 src: [
-                    '<%=dirs.src_js%>/**.js',
-                    '!<%=dirs.src_js%>/vendor/**.js'
+                    '<%=dirs.src_js%>/**/*.js',
+                    '!<%=dirs.src_js%>/vendor/**/*.js'
+                ]
+            },
+
+            debug: {
+                options: {
+                    globals: {
+                        browser: true,
+                        define: true,
+                        console: true
+                    },
+                    devel: true
+                },
+                src: [
+                    '<%=dirs.src_js%>/**/*.js',
+                    '!<%=dirs.src_js%>/vendor/**/*.js'
                 ]
             }
         },
@@ -160,8 +176,8 @@ module.exports = function (grunt) {
                 tasks: ['jshint:gruntfile']
             },
             scripts: {
-                files: ['<%= jshint.dist.src %>'],
-                tasks: ['jshint:dist', 'copy:js']
+                files: ['<%= jshint.debug.src %>'],
+                tasks: ['jshint:debug', 'copy:js']
             },
             styles: {
                 files: ['<%= dirs.src_css %>/**/*.css', '<%= dirs.src_css %>/**/*.less'],

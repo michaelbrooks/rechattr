@@ -28,21 +28,21 @@ define(function(require) {
         this.ui.tweetLengthMessage.toggleClass(TWEET_LENGTH_WARNING_CLASS, remaining < 10);
         this.ui.tweetLengthMessage.toggleClass(TWEET_LENGTH_INVALID_CLASS, remaining < 0);
         
-        if (remaining < 0 || remaining == limit) {
+        if (remaining < 0 || remaining === limit) {
             this.ui.tweetSubmitButton.attr('disabled', 'disabled');
         } else {
             this.ui.tweetSubmitButton.removeAttr('disabled');
         }
-    }
+    };
     
     var activateTweetBox = function() {
         this.ui.tweetBox.collapse('show');
         this.ui.tweetInput.focus();
-    }
+    };
 
     var deactivateTweetBox = function() {
         this.ui.tweetBox.collapse('hide');
-    }
+    };
     
     var attachInteractions = function() {
         var self = this;
@@ -77,7 +77,7 @@ define(function(require) {
             activateTweetBox.call(this);
             updateTweetLengthMessage.call(this);
         }
-    }
+    };
     
     var TweetBox = function() {
         hashtag = this.ui.hashtagBox.data('hashtag');
@@ -86,7 +86,7 @@ define(function(require) {
         
         attachInteractions.call(this);
         // catchSubmit.call(this);
-    }
+    };
 
     return TweetBox;
 });

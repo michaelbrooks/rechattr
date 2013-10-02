@@ -8,7 +8,7 @@ define(function () {
         numHalfsToInclude = numHalfsToInclude | 0;
 
         var times = [];
-        var time = timeFrom.clone()
+        var time = timeFrom.clone();
         for (var h = time.hour(); h < 24; h++) {
             times.push(time.clone());
 
@@ -22,7 +22,7 @@ define(function () {
         }
 
         return times;
-    }
+    };
 
 
     var intervals = {
@@ -98,7 +98,7 @@ define(function () {
                     if (match) {
                         match = Number(match[matchIndex]);
                         if (!isNaN(match)) {
-                            return prev + match * unit[1] // multiply by the seconds conversion factor
+                            return prev + match * unit[1]; // multiply by the seconds conversion factor
                         }
                     }
 
@@ -132,13 +132,13 @@ define(function () {
                 });
 
                 //And a nice little hack to wrap things up
-                if (segments.length == 0) {
+                if (segments.length === 0) {
                     segments.push('0 seconds');
                 }
 
                 return segments.join(', ');
             }
-        }
+        };
     })();
 
     return dtutils;

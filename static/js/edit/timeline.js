@@ -4,7 +4,7 @@ define(function(require) {
 
     var TIME_FORMAT = 'h:mma';
     var DATE_FORMAT = 'M/DD/YYYY';
-    var DATE_PICKER_FORMAT = 'm/dd/yyyy'
+    var DATE_PICKER_FORMAT = 'm/dd/yyyy';
     
     var DEFAULT_DURATION = 60*60; //1 hour in seconds
     
@@ -17,7 +17,7 @@ define(function(require) {
         this.initUI(wrapper);
         
         this.attachEvents();
-    }
+    };
     
     Timeline.prototype.initUI = function(wrapper) {
         this.ui = {};
@@ -26,7 +26,7 @@ define(function(require) {
         this.ui.timeline = this.ui.wrapper.find(TIMELINE_SELECTOR);
         this.ui.timelineLine = this.ui.timeline.find(TIMELINE_LINE_SELECTOR);
         this.ui.timelineFocus = this.ui.timeline.find(TIMELINE_FOCUS_SELECTOR);
-    }
+    };
     
     Timeline.prototype.createBead = function(x, y) {
         var percentThrough = x / this.ui.wrapper.width();
@@ -40,18 +40,18 @@ define(function(require) {
         this.ui.timeline.append(bead);
         
         this.selectBead(bead);
-    }
+    };
     
     Timeline.prototype.deleteBead = function(bead) {
-        if (this.selected == bead) {
+        if (this.selected === bead) {
             this.selected = null;
         }
-        if (this.dragging == bead) {
+        if (this.dragging === bead) {
             this.dragging = null;
         }
         
         bead.remove();
-    }
+    };
     
     Timeline.prototype.selectBead = function(bead) {
         if (this.selected) {
@@ -63,7 +63,7 @@ define(function(require) {
         
         this.selected = bead;
         this.selected.addClass('selected');
-    }
+    };
 
     Timeline.prototype.startDragging = function(bead) {
         this.trigger('drag-start', bead);
@@ -73,14 +73,14 @@ define(function(require) {
         this.ui.timelineFocus.removeClass('in');
         
         this.selectBead(bead);
-    }
+    };
     
     Timeline.prototype.stopDragging = function(bead) {
         this.trigger('drag-stop', bead);
         
         this.dragging.removeClass('dragging');
         this.dragging = null;
-    }
+    };
     
     Timeline.prototype.attachEvents = function() {
         var self = this;
@@ -93,7 +93,7 @@ define(function(require) {
             if (x < 0) {
                 x = 0;
             } else if (x > width) {
-                x = width
+                x = width;
             }
             
             var positioned = self.ui.timelineFocus;
@@ -126,7 +126,7 @@ define(function(require) {
             return false;
         })
         .on('mousedown', TIMELINE_BEAD_SELECTOR, function(e) {
-            self.startDragging($(this))
+            self.startDragging($(this));
             
             e.preventDefault();
             return false;
@@ -138,9 +138,9 @@ define(function(require) {
             }
         });
         
-    }
+    };
 
-    events(Timeline)
+    events(Timeline);
 
     return Timeline;
 });

@@ -17,7 +17,6 @@ define(function (require) {
             if ($this.is('.disabled')) {
                 e.preventDefault();
                 return false;
-                return;
             }
 
             answerQuestion.call(self, $this);
@@ -32,7 +31,7 @@ define(function (require) {
             toggleQuestion.call(self, $(this));
         });
 
-    }
+    };
 
     var toggleQuestion = function (question, toggle) {
         if (question.is('.disabled')) {
@@ -57,7 +56,7 @@ define(function (require) {
             });
 
             //Get the amount we need to scroll by
-            var top = question.offset().top - $(window).scrollTop()
+            var top = question.offset().top - $(window).scrollTop();
             var bottom = top + height;
 
             //Buffers of 10px
@@ -72,13 +71,13 @@ define(function (require) {
                 newTop = Math.max(viewTop, viewBottom - height);
             }
 
-            if (newTop != top) {
+            if (newTop !== top) {
                 $('html, body').animate({
                     scrollTop: question.offset().top - newTop
                 }, 400);
             }
         }
-    }
+    };
 
     var fillQuestionModal = function (question) {
         question = question.clone();
@@ -96,7 +95,7 @@ define(function (require) {
             .addClass('btn');
 
         this.ui.questionWrapper.html(question);
-    }
+    };
 
     var answerQuestion = function (answer) {
         var self = this;
@@ -130,17 +129,17 @@ define(function (require) {
             question.data('mid-answer', false);
             question.removeClass('disabled');
         });
-    }
+    };
 
     var setSelectedAnswer = function(question, answer) {
         question.find('.selected').removeClass('selected');
         answer.addClass('selected');
-    }
+    };
 
     var QuestionBox = function () {
         attachInteractions.call(this);
         // catchSubmit.call(this);
-    }
+    };
 
     return QuestionBox;
 });

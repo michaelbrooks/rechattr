@@ -1,7 +1,7 @@
 define(function() {
     var twitter = {};
 
-    var tr = twitter.regex = {}
+    var tr = twitter.regex = {};
 
     //See https://raw.github.com/twitter/twitter-text-java/master/src/com/twitter/Regex.java
     tr.LATIN_ACCENTS_CHARS = "\\u00c0-\\u00d6\\u00d8-\\u00f6\\u00f8-\\u00ff" + // Latin-1
@@ -61,8 +61,8 @@ define(function() {
                                       "i");
         return function(inputStr) {
             return inputStr.match(hashtagRegex);
-        }
-    }
+        };
+    };
 
     return twitter;
 });

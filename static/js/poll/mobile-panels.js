@@ -10,15 +10,15 @@ define(function(require) {
 
     var getWidth = function() {
         return this.ui.container.width();
-    }
+    };
     
     var getTitleHeight = function() {
         return 32;
         //this.ui.feedbackPollTitle.height();
-    }
+    };
     
     var updateInOut = function() {
-        if (showing == 'feedback') {
+        if (showing === 'feedback') {
             this.ui.feedback.toggleClass(IN_CLASS, true);
             this.ui.feedback.toggleClass(OUT_CLASS, false);
             this.ui.chatter.toggleClass(IN_CLASS, false);
@@ -29,10 +29,10 @@ define(function(require) {
             this.ui.feedback.toggleClass(IN_CLASS, false);
             this.ui.feedback.toggleClass(OUT_CLASS, true);
         }
-    }
+    };
     
     var showChatter = function() {
-        if (showing != 'chatter') {
+        if (showing !== 'chatter') {
             showing = 'chatter';
             
             updateInOut.call(this);
@@ -41,17 +41,17 @@ define(function(require) {
             
             this.trigger('show-pending-items');
         }
-    }
+    };
     
     var showFeedback = function() {
-        if (showing != 'feedback') {
+        if (showing !== 'feedback') {
             showing = 'feedback';
             
             updateInOut.call(this);
             
             this.ui.feedbackNotify.toggleClass(IN_CLASS, false);
         }
-    }
+    };
     
     var attachInteractions = function() {
         var self = this;
@@ -74,8 +74,8 @@ define(function(require) {
             }
 
             // If feedback panel is active and is the target, don't continue
-            if (showing == 'feedback' &&
-                (self.ui.feedback[0] == e.target || self.ui.feedback.find(e.target).size() > 0)) {
+            if (showing === 'feedback' &&
+                (self.ui.feedback[0] === e.target || self.ui.feedback.find(e.target).size() > 0)) {
                 e.preventDefault();
                 return;
             }
@@ -93,7 +93,7 @@ define(function(require) {
             margin = getTitleHeight.call(self);
             leftBoundary = 100 * 2 * margin / width - squeezeRoom;
             rightBoundary = 100 + squeezeRoom;
-            if (showing == 'chatter') {
+            if (showing === 'chatter') {
                 self.ui.feedback.toggleClass(ALMOST_IN_CLASS, false);
                 self.ui.feedback.toggleClass(ALMOST_OUT_CLASS, true);
                 
@@ -112,7 +112,7 @@ define(function(require) {
             }
             
             updatePosition.call(this, e);
-        }
+        };
         
         var updatePosition = function(e) {
             // percent moved horizontally
@@ -134,7 +134,7 @@ define(function(require) {
             
             self.ui.feedback.toggleClass(ALMOST_IN_CLASS, physicalLeft >= 2 * margin);
             self.ui.feedback.toggleClass(ALMOST_OUT_CLASS, physicalLeft < 2 * margin);
-        }
+        };
         
         var moveEnded = function(e) {
             self.ui.chatter.removeClass('no-transition');
@@ -145,22 +145,22 @@ define(function(require) {
             self.ui.chatter.toggleClass(ALMOST_IN_CLASS + " " + ALMOST_OUT_CLASS, false);
             
             updateInOut.call(self);
-        }
+        };
         
         
         var showChatterProxy = function() {
             showChatter.call(self);
-        }
+        };
         
         var showFeedbackProxy = function() {
             showFeedback.call(self);
-        }
+        };
         
         var onSwipeDown = function() {
             if (showing = 'chatter') {
                 this.trigger('show-pending-items');
             }
-        }
+        };
         
         this.ui.chatter.on('click', showChatterProxy)
         .on('swipeleft', showChatterProxy)
@@ -175,24 +175,24 @@ define(function(require) {
         .on('move', updatePosition)
         .on('moveend', moveEnded);
         
-    }
+    };
     
     var onNewItems = function(items) {
-        if (showing == 'feedback') {
+        if (showing === 'feedback') {
             this.ui.chatterNotify.toggleClass(IN_CLASS, true);
         }
-    }
+    };
     
     var attachNotificationHandler = function() {
         this.on('new-items', onNewItems, this);
-    }
+    };
     
     var showing = null;
     var MobilePanels = function() {
         showFeedback.call(this);
         attachInteractions.call(this);
         attachNotificationHandler.call(this);
-    }
+    };
 
     return MobilePanels;
 });

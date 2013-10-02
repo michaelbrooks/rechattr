@@ -1,6 +1,6 @@
 define(['jquery'], function ($) {
 
-    'use strict'; // jshint ;_;
+    'use strict';
 
     // DropdownMenu PUBLIC CLASS DEFINITION
     var DropdownMenu = function (element, options) {
@@ -20,7 +20,7 @@ define(['jquery'], function ($) {
             var self = this;
 
             this.$toggle = this.$element.is('.dropdown-toggle') ? this.$element : this.$element.find('.dropdown-toggle');
-            if (!this.$toggle.length === 0) {
+            if (this.$toggle.length === 0) {
                 throw 'Could not find a .dropdown-toggle element';
             }
 
@@ -55,7 +55,7 @@ define(['jquery'], function ($) {
                     var display = self.display(item);
                     if (display) {
                         var choice = $('<li><a tabindex="-1" href="#">' + (display) + '</a></li>');
-                        if (item == self.selectedItem) {
+                        if (item === self.selectedItem) {
                             choice.addClass('active');
                             self.selectedChoice = choice;
                         }
@@ -75,7 +75,7 @@ define(['jquery'], function ($) {
         update: function (item) {
             var self = this;
             $.each(this.choices, function (index, value) {
-                if (value == item) {
+                if (value === item) {
                     var choices = self.$menu.children();
                     choices.removeClass('active');
 
@@ -102,7 +102,7 @@ define(['jquery'], function ($) {
         },
 
         show: function () {
-            this.buildMenu()
+            this.buildMenu();
             this.$element.addClass('open');
             this.scrollToSelected();
         }

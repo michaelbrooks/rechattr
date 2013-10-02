@@ -12,7 +12,7 @@ define(function (require) {
 
     var makeGifSpinner = function() {
         return $('<div class="static-spinner">');
-    }
+    };
 
     var makeOverlay = function (loading, lowBudget) {
         var $this = $(this);
@@ -35,7 +35,7 @@ define(function (require) {
             overlayEl.addClass('in');
 
             if (loading) {
-                overlayEl.addClass('.loading')
+                overlayEl.addClass('.loading');
                 if (lowBudget) {
                     overlayEl.append(makeGifSpinner());
                 } else {
@@ -73,7 +73,7 @@ define(function (require) {
             }
         }
         overlayEl.removeClass('in').remove();
-    }
+    };
 
     var overlay = {
         show: function (selection) {

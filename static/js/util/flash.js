@@ -6,14 +6,14 @@ define(function (require) {
     var FLASH_TYPE_MAP = {'error': 'alert-danger', 'warn': 'alert-warning', 'info': 'alert-info', 'success': 'alert-success'};
     var FLASH_TIMEOUT = 2000;
 
-    var closeButton = '<div class="close">&times;</div>'
+    var closeButton = '<div class="close">&times;</div>';
     var flashMessage = function (options) {
         var cls = FLASH_TYPE_MAP[options.type];
         var alert = $("<div>").addClass('alert fade ' + cls);
         alert.append(closeButton);
         alert.append(options.message);
         return alert;
-    }
+    };
 
     var flashBox = null;
     var flashTimeout = null;
@@ -44,7 +44,7 @@ define(function (require) {
         },
         flash: function (options) {
             if (!flashBox) {
-                console.log("util.flash() called before util.initFlash()")
+                console.log("util.flash() called before util.initFlash()");
                 return;
             }
             var alert = flashMessage(options);
@@ -58,7 +58,7 @@ define(function (require) {
 
             // Display a bit later to allow the element to exist first
             setTimeout(function () {
-                alert.addClass('in')
+                alert.addClass('in');
             }, 1);
 
             if (flashTimeout) {
@@ -82,7 +82,7 @@ define(function (require) {
             flashBox.find('.alert').addClass('very-slow-fade').alert('close');
             flashTimeout = null;
         }
-    }
+    };
 
     return flash;
 });
