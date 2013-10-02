@@ -38,6 +38,8 @@ define(function(require) {
         this.attachWidgetEvents();
         
         this.attachTimezoneEvents();
+
+        this._initialized = true;
     };
     
     IntervalSelection.prototype.initDataModel = function() {
@@ -96,8 +98,10 @@ define(function(require) {
         this.model.stopTime = time;
         
         this.checkValidity();
-        
+
         dontUpdateStop || this.updateStop();
+
+        this._initialized && this.element.trigger('change');
     };
     
     IntervalSelection.prototype.checkValidity = function() {
@@ -107,7 +111,7 @@ define(function(require) {
     };
 
     IntervalSelection.prototype.setStartDateTime = function(time, dontUpdateStop) {
-        
+
         this.model.startTime = time;
         
         if (!this.validSelection) {
@@ -135,13 +139,14 @@ define(function(require) {
         var selectedTime = nextNearestTime(this.model.startTime, timeSeries);
         this.ui.startTimePicker.dropdownmenu('menu', timeSeries);
         this.ui.startTimePicker.dropdownmenu('update', selectedTime);
-        
+
         if (!this.validSelection) {
             //Leave the stop time display alone if the duration is not valid
-            return;
+        } else {
+            dontUpdateStop || this.updateStop();
         }
-        
-        dontUpdateStop || this.updateStop();
+
+        this._initialized && this.element.trigger('change');
     };
     
     IntervalSelection.prototype.updateStop = function() {

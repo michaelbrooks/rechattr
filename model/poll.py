@@ -224,3 +224,10 @@ class Poll(model.Base):
         return session.query(Poll).\
                        filter(Poll.poll_url_code == poll_url_code.lower()).\
                        first()
+
+    @staticmethod
+    def clean_term(term, prefix):
+        term = term.strip()
+        if term.startswith(prefix):
+            return term
+        return "%s%s" %(prefix, term)

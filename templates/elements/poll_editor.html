@@ -4,6 +4,7 @@ $ tz_timezone_save = form.tz_timezone_save
 <form method="POST" class="poll-editor header-row">
     <div class="bottom">
         $:form.title.render()
+        <button type="submit" class="btn btn-large submit-button fade pull-right" disabled=disabled>Save Changes</button>
 
         <div class="interval-field clearfix">
             $:elements.interval_selector(form)

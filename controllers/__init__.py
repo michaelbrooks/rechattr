@@ -74,7 +74,6 @@ class AppUrls(object):
         '/([\w-]+)/(tweet)',      'poll', # for posting new tweets
         '/([\w-]+)/(answer)',     'poll', # for answering questions
         '/([\w-]+)/edit',             'edit',
-        '/([\w-]+)/edit/(\w+)/(\d*)', 'edit', #REST
         '/([\w-]+)/questions',        'question', #REST
         '/([\w-]+)/questions/',        'question', #REST
         '/([\w-]+)/questions/(\d+)',  'question', #REST

@@ -33,12 +33,6 @@ create_form = form.Form(
                 html="Create my event")
 )
 
-def clean_term(term, prefix):
-    term = term.strip()
-    if term.startswith(prefix):
-        return term
-    return "%s%s" %(prefix, term)
-
 class create:
     def _random_code(self, length):
         rand = os.urandom(16)
@@ -119,7 +113,7 @@ class create:
             poll.email = i.email
         
         # save the hashtag
-        poll.twitter_hashtag = clean_term(i.twitter_hashtag, '#')
+        poll.twitter_hashtag = Poll.clean_term(i.twitter_hashtag, '#')
         # poll.twitter_other_terms = i.twitter_other_terms
         
         # initialize the urls

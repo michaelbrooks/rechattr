@@ -23,7 +23,8 @@ define(function(require) {
     
     var NEW_QUESTION_BUTTON_SELECTOR = '.new-question-button';
     var QUESTION_DELETE_SELECTOR = '.question-delete';
-    
+    var POLL_EDITOR_SELECTOR = '.poll-editor';
+
     var EditApp = function() {
         var self = this;
         
@@ -44,6 +45,8 @@ define(function(require) {
         this.ui.intervalField = $(INTERVAL_FIELD_SELECTOR);
         this.ui.questionList = $(QUESTION_LIST_SELECTOR);
         this.ui.newQuestionButton = $(NEW_QUESTION_BUTTON_SELECTOR);
+        this.ui.pollEditor = $(POLL_EDITOR_SELECTOR);
+        this.ui.pollSubmitButton = this.ui.pollEditor.find('.submit-button');
     };
 
 
@@ -60,6 +63,12 @@ define(function(require) {
 
             e.preventDefault();
             return false;
+        });
+
+        this.ui.pollEditor.on('change', function() {
+            self.ui.pollSubmitButton
+                .prop('disabled', false)
+                .addClass('in');
         });
     };
 

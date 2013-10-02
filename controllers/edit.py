@@ -1,12 +1,10 @@
 import web
 
 from web import form
-from model import Poll
-import model
+from model import Poll, Question
 
 from utils import inputs, dtutils
 from . import pagerender as render
-from . import render_stream_item
 
 edit_form = form.Form(
     form.Textbox('email', inputs.nullable(inputs.valid_email),
@@ -28,55 +26,51 @@ edit_form = form.Form(
 )
 
 class edit:
-    def _get_poll(self, poll_url_code):
-        poll = Poll.get_by_url(web.ctx.orm, poll_url_code)
+    def _auth_poll(self, poll_url, require_login=False, require_own=False):
+
+        if require_own:
+            require_login=True
+
+        # look up the poll based on the url
+        poll = Poll.get_by_url(web.ctx.orm, poll_url)
         if poll is None:
             raise web.ctx.notfound()
+
+        user = web.ctx.auth.current_user()
+        if user is None and require_login:
+            url = web.ctx.urls.sign_in(web.ctx.urls.poll_edit(poll))
+            raise web.seeother(url) # go sign in and then come back
+
+        # make sure it belongs to the current user
+        if user and poll.user != user:
+            if require_own:
+                web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
+                raise web.forbidden()
+            user = None
+
         return poll
-    
-    def _post_question(self, poll, question=None):
-        # validate the input
-        input = web.input(answer_choices=[])
-        
-        if 'subject' not in input or len(input.subject.strip()) == 0:
-            raise web.badrequest('Question subject is required')
-        
-        if 'answer_choices' not in input or len(input.answer_choices) == 0:
-            raise web.badrequest('You must have some answer choices')
-        
-        if question is None:
-            question = model.Question()
-            question.poll = poll
-            web.ctx.orm.add(question)
-        
-        question.subject = input.subject
-        question.question_text = input.question_text
-        question.set_answer_choices(input['answer_choices'])
 
-        # Normalize the manual trigger
-        if input.trigger_manual == 'true':
-            input.trigger_manual = True
-        else:
-            input.trigger_manual = False
+    def _post_poll(self, user, poll):
+        input = web.input()
 
-        # Normalize the seconds trigger
-        if input.trigger_seconds:
-            try:
-                input.trigger_seconds = round(float(input.trigger_seconds))
-            except:
-                raise web.badrequest('Invalid trigger time for this question')
-        else:
-            input.trigger_seconds = None
+        # save the title
+        poll.title = input.title
 
-        question.update_trigger(input.trigger_manual, input.trigger_seconds)
+        # parse the provided date and time given the provided tz info
+        poll.olson_timezone = input.tz_timezone
+        poll.event_start = dtutils.user_to_datetime(input.start_date, input.start_time, input.tz_timezone)
+        poll.event_stop = dtutils.user_to_datetime(input.stop_date, input.stop_time, input.tz_timezone)
 
-        web.ctx.orm.flush()
-        
-        return render_stream_item(question)
-        
-        
-    def _post_poll(self, user, poll, input):
-        pass
+        # if they set to override the default, go ahead and set it on the user
+        if input.get('tz_timezone_save', None) and user.olson_timezone != input.tz_timezone:
+            user.olson_timezone = input.tz_timezone
+
+        # if they provided an email then save it
+        if input.email is not None and len(input.email) > 0:
+            poll.email = input.email
+
+        # save the hashtag
+        poll.twitter_hashtag = Poll.clean_term(input.twitter_hashtag, '#')
 
     @staticmethod
     def populate_form(poll):
@@ -105,77 +99,28 @@ class edit:
 
     def GET(self, poll_url):
         # look up the poll based on the url
-        poll = self._get_poll(poll_url)
-        
+        poll = self._auth_poll(poll_url, require_own=True)
         user = web.ctx.auth.current_user()
-        if user is None:
-            url = web.ctx.urls.sign_in(web.ctx.urls.poll_edit(poll))
-            raise web.seeother(url) # go sign in and then come back
-        
-        # make sure it belongs to the current user
-        if poll.user != user:
-            web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden()
 
         form = edit.populate_form(poll)
         
         # generate an edit form
         return render.edit(user, poll, form)
     
-    def POST(self, poll_url, type, id=None):
+    def POST(self, poll_url):
         # look up the poll based on the url
-        poll = self._get_poll(poll_url)
-        
+        poll = self._auth_poll(poll_url, require_own=True)
         user = web.ctx.auth.current_user()
-        if user is None:
-            url = web.ctx.urls.sign_in(web.ctx.urls.poll_edit(poll))
-            raise web.seeother(url) # go sign in and then come back
-        
-        # make sure it belongs to the current user
-        if poll.user != user:
-            web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden()
-        
-        # Check if it is a poll update or a question update
-        if type == 'question':
-            question = None
 
-            if id:
-                question = web.ctx.orm.query(model.Question).get(id)
-                # in case the question isn't for this poll!
-                if question.poll != poll:
-                    raise web.badrequest('Question not for this poll')
+        # validate the form
+        form = edit_form()
+        if not form.validates():
+            web.ctx.flash.error("Please check the form for problems.")
+            return render.edit(user, poll, form)
 
-            return self._post_question(poll, question)
+        self._post_poll(user, poll)
 
-        elif type == 'poll':
-            return self._post_poll(user, poll)
-        
-        raise web.badrequest('Unrecognized update type')
-            
-    def DELETE(self, poll_url, type, delete_id):
-        # look up the poll based on the url
-        poll = self._get_poll(poll_url)
-        
-        user = web.ctx.auth.current_user()
-        if user is None:
-            url = web.ctx.urls.sign_in(web.ctx.urls.poll_edit(poll))
-            raise web.seeother(url) # go sign in and then come back
-        
-        # make sure it belongs to the current user
-        if poll.user != user:
-            web.ctx.log.warn('Illegal poll access by user', user.id, poll.id)
-            raise web.forbidden()
-            
-        if type == 'question':
-            question = web.ctx.orm.query(model.Question).get(delete_id)
-            if question is None:
-                raise web.badrequest('No such question')
-            if question.poll != poll:
-                raise web.badrequest('Question not for this poll')
-            
-            result = web.ctx.orm.delete(question)
-            return web.ctx.json(type='success', message='Question deleted')
-        
-        raise web.badrequest()
-        
+        # on success, redirect to GET
+        web.ctx.flash.success("Event information updated.")
+        web.seeother(web.ctx.urls.poll_edit(poll))
+
