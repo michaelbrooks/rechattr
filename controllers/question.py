@@ -68,6 +68,9 @@ class question:
         if 'question_text' not in input or len(input.question_text) == 0:
             raise web.badrequest('Question text is required')
 
+        import time
+        time.sleep(1)
+
         if not input.trigger_seconds:
             raise web.badrequest('Offset in seconds is required')
 

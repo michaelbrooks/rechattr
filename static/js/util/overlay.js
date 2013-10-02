@@ -31,25 +31,24 @@ define(function (require) {
 
         $this.data('overlayId', overlayId);
 
-        setTimeout(function () {
-            overlayEl.addClass('in');
+        overlayEl[0].borderWidth;
+        overlayEl.addClass('in');
 
-            if (loading) {
-                overlayEl.addClass('.loading');
-                if (lowBudget) {
-                    overlayEl.append(makeGifSpinner());
-                } else {
-                    overlayEl.spin({
-                            color: '#333',
-                            hwaccel: true,
-                            position: 'absolute',
-                            radius: 8,
-                            width: 4,
-                            length: 13
-                        });
-                }
+        if (loading) {
+            overlayEl.addClass('.loading');
+            if (lowBudget) {
+                overlayEl.append(makeGifSpinner());
+            } else {
+                overlayEl.spin({
+                    color: '#333',
+                    hwaccel: true,
+                    position: 'absolute',
+                    radius: 8,
+                    width: 4,
+                    length: 13
+                });
             }
-        }, 1);
+        }
     };
 
     var hideOverlay = function () {

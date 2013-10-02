@@ -4,6 +4,7 @@ define(function(require) {
     require('vendor/bootstrap');
     var flash = require('util/flash');
     var url = require('util/url');
+    var overlay = require('util/overlay');
 
     var Question = require('edit/question');
     var IntervalSelection = require('modules/interval-selection');
@@ -77,6 +78,8 @@ define(function(require) {
 
         var id = questionElement.data('id');
 
+        overlay.showLoading(questionElement);
+
         $.ajax({
             url: url.poll('questions', id),
             type: 'DELETE'
@@ -86,6 +89,9 @@ define(function(require) {
             })
             .fail(function(xhr) {
                 flash.error(xhr.responseText);
+            })
+            .always(function() {
+                overlay.hide(questionElement);
             });
     };
 

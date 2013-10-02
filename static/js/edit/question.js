@@ -6,6 +6,7 @@ define(function(require) {
     var flash = require('util/flash');
     var dtutils = require('util/dtutils');
     var moment = require('moment');
+    var overlay = require('util/overlay');
 
     var QUESTION_SELECTOR = '.question-editor';
     var TEXT_INPUT_SELECTOR = '.question-text';
@@ -110,6 +111,9 @@ define(function(require) {
         var data = this.collect();
         var urlStr = url.poll('questions', data.id);
 
+        this.ui.find('input,textarea').prop('disabled', true);
+        overlay.showLoading(this.ui);
+
         return $.ajax({
             url: urlStr,
             type: 'PUT',
@@ -120,6 +124,10 @@ define(function(require) {
             })
             .fail(function (xhr) {
                 flash.flash(xhr);
+            })
+            .always(function() {
+                overlay.hide(this.ui);
+                self.ui.find('input,textarea').prop('disabled', false);
             });
     };
 
