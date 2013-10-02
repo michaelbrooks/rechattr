@@ -379,6 +379,6 @@ def nice_interval(start_dt, stop_dt):
             start_date = start_date.strftime("%m/%d").lstrip('0')
         else:
             start_date = start_date.strftime("%m/%d/%Y").lstrip('0')
-            
+
         stop_date = stop_date.strftime("%m/%d/%Y").lstrip('0')
         return "%s%s %s - %s%s %s" %(start_hour, start_ampm, start_date, stop_hour, stop_ampm, stop_date)

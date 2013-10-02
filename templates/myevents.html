@@ -37,7 +37,13 @@ $if len(polls):
                 <div class="right-content">
                     $:elements.poll_status_thumb(poll)
 
-                    <div class="poll-sample"><b>@example</b> A selected tweet would go here to show what is happening in the discussion.</div>
+                    <div class="event-links">
+                        <a class="btn" href="${poll_edit_url}">Edit Event</a>
+                        <a class="btn" href="${poll_url}">View Stream</a>
+                    </div>
+                    <div class="poll-sample">
+                        <b>@example</b> A selected tweet would go here to show what is happening in the discussion.
+                    </div>
                 </div>
             </div>
         </li>

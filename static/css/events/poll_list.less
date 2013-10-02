@@ -5,15 +5,18 @@
     margin: 0;
 
     li {
-        margin-bottom: @layoutMargins;
+        margin-bottom: 2 * @layoutMargins;
 
-        a {
-            display: block;
-            color: #333;
-            text-decoration: none;
+        .event-links {
+            width: 90px;
+            margin-right: @layoutMargins;
+            float: left;
 
-            &:hover, &.active {
-                background: #eee;
+            .btn {
+                font-size: 11px;
+                padding: 2px 4px;
+                margin-bottom: 6px;
+                display: block;
             }
         }
 
@@ -97,11 +100,11 @@
     }
 
     &.poll-status-ended {
-        background: blue;
+        background: #ccc;
     }
 
     &.poll-status-pending {
-        background: gray;
+        background: green;
     }
 }
 /*
