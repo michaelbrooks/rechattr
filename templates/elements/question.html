@@ -1,45 +1,38 @@
-$def with (question,newItem=False, highlight=False, mode="default")
+$def with (question, newItem=False)
 $ newItemClass = 'new-item' if newItem else ''
-$ highlightClass = 'highlight' if highlight else ''
 $ user = web.ctx.auth.current_user()
 $ response = user.first_response(question) if user is not None else None
 $ currentAnswer = response.answer if response is not None else None
 $ answeredClass = 'answered' if currentAnswer is not None else ''
-$ triggeredClass = 'triggered' if question.triggered() else ''
-<div class="question collapse in stream-item clearfix $newItemClass $highlightClass $answeredClass $triggeredClass"
-     data-type="question"
+<div class="question stream-item $newItemClass $answeredClass"
      data-id="${question.id}"
      data-trigger-manual="${'true' if question.trigger_manual else ''}"
      data-trigger-seconds="${question.trigger_seconds}">
-    <i class="icon-white icon-ok check-mark hide" title="You answered this."></i>
-    <span class="loading hide" title="Saving...">Saving...</span>
-    $ imgClass = 'has-image' if question.image_src is not None else ''
-    <div class="question-content $imgClass">
-        <div class="question-header">
-            <img class="question-image" src="$question.image_src" />
-            <strong class="question-subject">${question.subject}</strong>
-            $if mode == 'edit' and triggeredClass != '':
-                <span class="label label-success trigger-label">Active</span>
-            <div title="Delete this question" class="close question-delete">&times;</div>
-            $if mode == 'edit':
-                <span class="question-offset">@ ${question.nice_offset()}</span>
-        </div>
-        <div class="question-body">
+    <div class="question-content">
         <div class="question-text">${question.question_text}</div>
-        <ul class="answer-list">
         $ notSignedInClass = ''
         $if user is None:
             $ sign_in_url = urls.sign_in(urls.poll(question.poll))
-            <li class="sign-in-button"><a href="${sign_in_url}" class="btn btn-small">Sign in with Twitter to respond.</a></li>
+            <a class="sign-in-button btn btn-small" href="${sign_in_url}">Sign in to respond</a>
             $ notSignedInClass='disabled'
+        $else:
+            <ul class="answer-list">
+            $for choice in question.get_answer_choices():
+                $ selectedClass = 'selected' if currentAnswer == choice else ''
 
-        $for choice in question.get_answer_choices():
-            $ selectedClass = 'selected' if currentAnswer == choice else ''
+                <li class="$selectedClass $notSignedInClass">
+                    $if currentAnswer:
+                        <span class="count">34</span>
+                    $else:
+                        <label class="radio">
+                        <input type="radio" name="question-${question.id}"/>
 
-            <li class="answer-choice $selectedClass $notSignedInClass">
-            $:choice
-            </li>
-        </ul>
-        </div>
+                    <span class="answer-text">$choice</span>
+
+                    $if not currentAnswer:
+                        </label>
+                </li>
+            </ul>
+            <button class="reply-button btn btn-small"><i class="icon-comment"></i> Comment</button>
     </div>
 </div>

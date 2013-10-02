@@ -1,0 +1,23 @@
+@import 'mixins';
+
+.poll-status {
+    @status-size: 8px;
+    width: @status-size;
+    height: @status-size;
+    .border-radius(@status-size / 2);
+    margin-top: -2px;
+    display: inline-block;
+    vertical-align: middle;
+
+    &.poll-status-active {
+        background: red
+    }
+
+    &.poll-status-ended {
+        background: #ccc;
+    }
+
+    &.poll-status-pending {
+        background: green;
+    }
+}

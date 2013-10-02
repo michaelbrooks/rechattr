@@ -13,6 +13,9 @@ $def menu_item(name, text=None, url=None, body=None):
     </a>
 
     <ul class="nav bottom">
+    $if user:
+        <li>Signed in as <span class="screen-name">@${user.username}</span></li>
+
     $# No menu during the demo campaign
     $if 'demo' in campaigns:
         $if user is None:

@@ -38,9 +38,9 @@ from model import Tweet, Question
 def render_stream_item(item, newItem=False, highlight=False):
     itemType = type(item)
     if itemType is Tweet:
-        return elements.tweet(item, newItem, highlight)
+        return elements.tweet(item, newItem)
     elif itemType is Question:
-        return elements.question(item, newItem, highlight)
+        return elements.question(item, newItem)
 
 helpers['render_stream_item'] = render_stream_item
 

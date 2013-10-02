@@ -1,7 +1,6 @@
-$def with (tweet,newItem=False, highlight=False)
+$def with (tweet,newItem=False)
 $ newItemClass = 'new-item' if newItem else ''
-$ highlightClass = 'highlight' if highlight else ''
-<div class="tweet stream-item $newItemClass $highlightClass" data-type="tweet" data-id="${tweet.id}">
+<div class="tweet stream-item $newItemClass" data-type="tweet" data-id="${tweet.id}">
     <div class="tweet-content">
         <a class="twitter-author" target="_blank" href="https://twitter.com/${tweet.screen_name}">
             <img class="avatar" src="${tweet.profile_image_url}" alt="${tweet.user_name}" />

@@ -57,12 +57,21 @@
 
     .header-row {
         height: @headerHeight;
-        margin: @layoutMargins @layoutMargins @layoutMargins * 2 @layoutMargins;
+        margin: @layoutMargins;
         position: relative;
     }
 
     .bottom {
         position: absolute;
         bottom: 0;
+    }
+
+    .header {
+        .clearfix();
+
+        margin-bottom: @layoutMargins;
+    }
+    .body {
+        .clearfix();
     }
 }

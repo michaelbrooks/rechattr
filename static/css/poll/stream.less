@@ -1,0 +1,100 @@
+@import '../shared/mixins';
+
+.stream-page {
+    .right-content {
+        margin-left: @layoutMargins;
+    }
+
+    .stream {
+    }
+
+    .stream-header {
+        overflow: hidden;
+
+        height: 0;
+        visibility: hidden;
+
+        &.in {
+            height: 40px;
+            visibility: visible;
+
+            .transition(height 300ms ease-in-out);
+        }
+
+        div {
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0;
+
+            background-color: #96CAE2;
+            cursor: pointer;
+
+            .transition(background 300ms linear);
+
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
+
+            &:hover {
+                background-color: #70BFE4;
+            }
+
+            &:active {
+                color: #222;
+            }
+
+        }
+    }
+
+    .stream-item {
+        position: relative;
+        padding: 9px 12px;
+        .opacity(100);
+
+        .transition(background 2s linear);
+
+        &.new-item {
+            background-color: #96CAE2;
+        }
+
+        &.question {
+            padding: 15px;
+
+            margin: @layoutMargins 0;
+            .box-shadow(0 0 5px 1px #ddd);
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+            .question-text {
+                .golden(18px);
+            }
+
+            .reply-button {
+
+            }
+
+            .answer-list {
+                padding: 0;
+                margin: 0;
+                list-style-type: none;
+
+                li {
+                    margin: 3px;
+
+                }
+            }
+        }
+
+        &.tweet {
+
+        }
+    }
+
+
+
+}
+
