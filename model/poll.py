@@ -9,6 +9,7 @@ import simplejson as json
 # Get the shared base class for declarative ORM
 import model
 from utils.dtutils import utc_aware
+from utils import dtutils
 from decorators import UTCDateTime
 
 class Poll(model.Base):
@@ -186,7 +187,13 @@ class Poll(model.Base):
     def duration(self):
         return self.event_stop - self.event_start
         
-    
+    def iso_event_start(self):
+
+        tzone = dtutils.tz(self.olson_timezone)
+        local_start = dtutils.local_time(self.event_start, tzone)
+
+        return local_start.isoformat();
+
     @classmethod
     def date_format(cls, dt, withDate=True, tz=None):
         if tz is not None:

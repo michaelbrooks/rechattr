@@ -2,7 +2,9 @@ $def with (question)
 $ triggeredClass = 'triggered' if question.triggered() else ''
 <div class="question-editor $triggeredClass"
      data-id="${question.id}"
-     data-trigger-seconds="${question.trigger_seconds}">
+     data-event-start="${question.poll.iso_event_start()}"
+     data-trigger-seconds="${question.trigger_seconds}"
+     data-trigger-manual="${question.trigger_manual}">
     <div class="left-column">
         <div class="left-content muted">
             <div class="input-prepend input-append editable">

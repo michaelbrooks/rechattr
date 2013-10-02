@@ -76,6 +76,7 @@ class AppUrls(object):
         '/([\w-]+)/edit',             'edit',
         '/([\w-]+)/edit/(\w+)/(\d*)', 'edit', #REST
         '/([\w-]+)/questions',        'question', #REST
+        '/([\w-]+)/questions/',        'question', #REST
         '/([\w-]+)/questions/(\d+)',  'question', #REST
         '/([\w-]+)/stream',     'stream',
         '/([\w-]+)/results',    'results'

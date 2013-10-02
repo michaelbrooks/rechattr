@@ -35,13 +35,12 @@ class question:
     def _auth_question(self, question_id, poll):
         question = web.ctx.orm.query(Question).get(question_id)
         if not question:
-            raise web.ctx.notfound()
+            raise web.notfound("No such question")
 
         elif question.poll_id != poll.id:
             raise web.badrequest("Question does not go with that event")
 
         return question
-
 
     def _make_question(self, poll):
         question = Question()
@@ -61,6 +60,7 @@ class question:
         question.update_trigger(False, offset.total_seconds())
 
         web.ctx.orm.add(question)
+        web.ctx.orm.flush()
 
         return question
 
@@ -73,7 +73,7 @@ class question:
 
         question.question_text = input.question_text
         answer_choices = []
-        if len(input['answer_choices']):
+        if 'answer_choices' in input:
             answer_choices = [s.strip() for s in input['answer_choices'].splitlines()]
         question.set_answer_choices(answer_choices)
 
@@ -122,8 +122,11 @@ class question:
         result = elements.question_editor(question)
         raise web.created(data=result)
 
-    def DELETE(self, poll_url, question_id):
+    def DELETE(self, poll_url, question_id=None):
         poll = self._auth_poll(poll_url, require_own=True)
+
+        if question_id is None:
+            raise web.badrequest("No question given")
 
         question = self._auth_question(question_id, poll)
 

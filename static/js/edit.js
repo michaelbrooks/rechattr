@@ -5,6 +5,8 @@ define(function(require) {
     var flash = require('util/flash');
     var url = require('util/url');
 
+    var Question = require('edit/question');
+
     //Turn off []-appending to posted arrays
     //More: http://forum.jquery.com/topic/jquery-post-1-4-1-is-appending-to-vars-when-posting-from-array-within-array
     $.ajaxSettings.traditional = true;
@@ -29,11 +31,7 @@ define(function(require) {
         
         flash.initFlash();
 
-        // this.timeline = new rechattr.util.Timeline(this.ui.timelineWrapper);
-        
-        // this.attachTimelineEvents();
-        
-        // this.initQuestionList(); 
+        this.initQuestionList();
     };
     
     EditApp.prototype.initUI = function() {
@@ -63,6 +61,8 @@ define(function(require) {
     };
 
     EditApp.prototype.deleteQuestion = function(questionElement) {
+        var self = this;
+
         var id = questionElement.data('id');
 
         $.ajax({
@@ -70,10 +70,7 @@ define(function(require) {
             type: 'DELETE'
         })
             .done(function(response) {
-                questionElement.one('hidden', function() {
-                    questionElement.remove();
-                });
-                questionElement.collapse('hide');
+                self.removeQuestion(questionElement);
             })
             .fail(function(xhr) {
                 flash.error(xhr.responseText);
@@ -96,100 +93,39 @@ define(function(require) {
     };
 
     EditApp.prototype.insertQuestion = function(questionHtml) {
-        var questionElement = $(questionHtml)
-            .appendTo(this.ui.questionList);
+        var questionElement = $(questionHtml);
+        var questionWrapper = $('<div>')
+            .append(questionElement)
+            .addClass("collapse")
+            .appendTo(this.ui.questionList)
+            .collapse('show');
 
-        //TODO: Build apply the question behavior to the question element
+        $('html, body').animate({
+            scrollTop: questionElement.offset().top
+        }, 500);
+
+        this.addQuestionEvents(questionWrapper);
     };
 
-    EditApp.prototype.showEditor = function(question) {
+    EditApp.prototype.removeQuestion = function(questionElement) {
+        var wrapper = questionElement.parent();
+        //Listen for the collapse's end event
+        wrapper.one('hidden', function() {
+            wrapper.remove();
+        });
+        wrapper.collapse('hide');
+    };
 
+    EditApp.prototype.initQuestionList = function() {
         var self = this;
-
-        if (this.editor.isEditing(question)) {
-            return;
-        }
-
-        //if already showing, hide first
-        if (this.editor.isShowing()) {
-            this.hideEditor();
-
-            this.editor.ui.el.one('hidden', function() {
-                self.showEditor(question);
-            });
-
-            return;
-        }
-
-        this.editor.blank();
-
-        //Determine where in the question list the form should go
-        if (question) {
-            //Fill the editor with content
-            this.editor.fill(question);
-            //Position the editor
-            question.after(this.editor.ui.el);
-        } else {
-            //Just need a blank editor
-            this.ui.questionList.prepend(this.editor.ui.el);
-        }
-
-        this.editor.show(question);
-        if (question) {
-            question.collapse('hide');
-        }
+        this.ui.questionList.children().each(function() {
+            self.addQuestionEvents($(this));
+        });
     };
-    
-    EditApp.prototype.hideEditor = function() {
-        if (this.editor.currentQuestion) {
-            this.editor.currentQuestion.collapse('show');
-        }
-        this.editor.hide();
+
+    EditApp.prototype.addQuestionEvents = function(questionWrapper) {
+        var question = new Question(questionWrapper);
     };
-    
-//    EditApp.prototype.initQuestionList = function() {
-//        var questionElements = this.ui.questionList.find(QUESTION_SELECTOR);
-//        var self = this;
-//        questionElements.each(function(index, element) {
-//            var question = new Question($(element));
-//            var bead = self.ui.timelineWrapper.find('.timeline-bead[data-id=' + question.data.id + ']');
-//            self.bindQuestion(question, bead);
-//        });
-//    };
-//
-//    EditApp.prototype.bindQuestion = function(question, bead) {
-//        var self = this;
-//
-//        $(question).on('delete', function() {
-//            self.timeline.deleteBead(bead);
-//        });
-//
-//        bead.data('question', question);
-//    };
-//
-//    EditApp.prototype.attachTimelineEvents = function() {
-//        var self = this;
-//        $(this.timeline).on('new-bead', function(e, bead, percentThrough) {
-//
-//            var question = new Question();
-//            question.offsetSeconds(percentThrough * self.model.duration);
-//
-//            self.bindQuestion(question, bead);
-//
-//            self.ui.questionList.append(question.render());
-//            question.save();
-//        })
-//        .on('select', function(e, bead) {
-//            var question = bead.data('question');
-//            question.message = 'yay';
-//            question.render();
-//        })
-//        .on('deselect', function(e, bead) {
-//            var question = bead.data('question');
-//            question.message = 'aw...';
-//            question.render();
-//        });
-//    }
 
     window.app = new EditApp();
     return window.app;

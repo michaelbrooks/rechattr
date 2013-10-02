@@ -35,7 +35,9 @@ $var header: $:elements.poll_editor(poll, form)
 </div>
 <div class="question-list">
     $for question in poll.questions:
+        <div class="collapse in">
         $:elements.question_editor(question)
+        </div>
 </div>
 <!--
 <div class="question-editor light-on-dark collapse">

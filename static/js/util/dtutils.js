@@ -91,6 +91,7 @@ define(function () {
 
         //Export this value
         dtutils.offset = {
+            //Expects something like "5 minutes, 32 seconds", like is produced by offset.format()
             parse: function (timeStr) {
                 return units.reduce(function (prev, unit, index) {
                     var match = rexes[index].exec(timeStr);
@@ -138,6 +139,46 @@ define(function () {
 
                 return segments.join(', ');
             }
+        };
+    })();
+
+    (function() {
+        var regex = new RegExp("(\\d\\d?)(:(\\d\\d))? ?(am|pm)?");//"(^|,|\\s)(\\d+)\\s*(" + unit[0] + "|" + unit + "s?)($|,|\\s)");
+        var hourIndex = 1;
+        var minuteIndex = 3;
+        var ampmIndex = 4;
+
+        dtutils.time = {
+            //Expects times like "5:30pm", "2am", or "13:30"
+            parse: function(timeStr) {
+                var parts = timeStr.toLowerCase().match(regex);
+
+                var hour = Number(parts[hourIndex]);
+                var minute = Number(parts[minuteIndex] || 0);
+                var ampm = parts[ampmIndex] || 'am';
+
+                if (minute < 0 || minute > 59) {
+                    return false;
+                }
+
+                if (ampm !== 'am' && ampm !== 'pm') {
+                    return false;
+                }
+
+                if (ampm === 'pm') {
+                    hour += 12;
+                }
+
+                if (hour < 1 || hour > 23) {
+                    return false;
+                }
+
+                return {
+                    hour: hour,
+                    minute: minute
+                };
+            }
+
         };
     })();
 
