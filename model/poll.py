@@ -91,6 +91,17 @@ class Poll(model.Base):
 
         return query.all()
 
+    def sorted_questions(self, session=None):
+        if session is None:
+            session = Session.object_session(self)
+
+        query = session.query(model.Question). \
+            filter(model.Question.poll == self)
+
+        query = query.order_by(model.Question.trigger_seconds.desc())
+
+        return query.all()
+
     def triggered_questions(self, session=None, limit=10, older_than=None, newer_than=None):
 
         if older_than is None:

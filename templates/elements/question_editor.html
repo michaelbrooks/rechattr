@@ -1,5 +1,11 @@
 $def with (question)
-$ triggeredClass = 'triggered' if question.triggered() else ''
+$ triggeredClass = ''
+$ triggeredDisabled = ''
+$ editTitle = "Click to edit"
+$if question.triggered():
+    $ triggeredClass = 'triggered'
+    $ triggeredDisabled = 'disabled="disabled"'
+    $ editTitle = 'Question was already posted. Not editable.'
 <div class="question-editor $triggeredClass"
      data-id="${question.id}"
      data-event-start="${question.poll.iso_event_start()}"
@@ -7,28 +13,39 @@ $ triggeredClass = 'triggered' if question.triggered() else ''
      data-trigger-manual="${question.trigger_manual}">
     <div class="left-column">
         <div class="left-content muted">
-            <div class="input-prepend inpuzeroTimet-append editable">
+            <div class="input-prepend input-append editable">
                 <span class="add-on muted">posts at</span>
-                <input type="text" class="trigger-time editable" value="${question.nice_time()}" title="Click to edit"/>
+                <input type="text"
+                       class="trigger-time"
+                       value="${question.nice_time()}"
+                       title="${editTitle}"
+                       $triggeredDisabled />
                 <span class="add-on muted">or</span>
             </div>
             <br/>
             <div class="input-prepend input-append editable">
-                <input type="text" class="trigger-offset" value="${question.nice_offset()}" title="Click to edit"/>
+                <input type="text"
+                       class="trigger-offset"
+                       value="${question.nice_offset()}"
+                       title="${editTitle}"
+                       $triggeredDisabled />
                 <span class="add-on muted">after start</span>
             </div>
         </div>
     </div>
     <div class="right-column">
         <div class="right-content">
-            <input type="text" class="question-text editable"
+            <input type="text"
+                   class="question-text editable"
                    value="${question.question_text}"
-                   title="Click to edit"
-                   placeholder="Type your question here"/>
+                   title="${editTitle}"
+                   placeholder="Type your question here"
+                   $triggeredDisabled />
             $ answers = "\n".join(question.get_answer_choices())
             <textarea class="question-answers editable"
-                      title="Click to edit"
-                      placeholder="(optional) Type multiple choice answers on separate lines">${answers}</textarea>
+                      title="${editTitle}"
+                      placeholder="(optional) Type multiple choice answers on separate lines"
+                      $triggeredDisabled >${answers}</textarea>
             <div title="Delete this question" class="close question-delete">&times;</div>
         </div>
     </div>

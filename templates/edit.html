@@ -17,7 +17,7 @@ $var header: $:elements.poll_editor(poll, form)
             $if poll.is_active():
                 went live
                 <span class="time-since-start time-interval">
-                    $dtutils.full_delta(poll.event_start, long=True)
+                    $dtutils.full_delta(poll.event_start, long=True, smallest="minutes")
                 </span> ago. Ending in
                 <span class="time-before-end time-interval">
                     $dtutils.time_to(poll.event_stop, long=True, showDays=True)</span>.
@@ -34,7 +34,7 @@ $var header: $:elements.poll_editor(poll, form)
     </div>
 </div>
 <div class="question-list">
-    $for question in poll.questions:
+    $for question in poll.sorted_questions():
         <div class="collapse in">
         $:elements.question_editor(question)
         </div>

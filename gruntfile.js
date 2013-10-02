@@ -244,5 +244,6 @@ module.exports = function (grunt) {
 
     // Define your tasks here
     grunt.registerTask('dist', ['clean', 'buildjs', 'less', 'copy:images', 'cachebuster']);
+    grunt.registerTask('debug', ['clean', 'jshint:debug', 'copy:js', 'csslint', 'less', 'copy:images', 'cachebuster']);
     grunt.registerTask('default', ['clean', 'jshint', 'copy:js', 'csslint', 'less', 'copy:images', 'cachebuster']);
 };
