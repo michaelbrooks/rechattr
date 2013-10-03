@@ -6,7 +6,7 @@ define(function(require) {
     var url = require('util/url');
     var overlay = require('util/overlay');
 
-    var Question = require('edit/question');
+    var QuestionEditor = require('edit/question_editor');
     var IntervalSelection = require('modules/interval-selection');
 
     //Turn off []-appending to posted arrays
@@ -138,7 +138,7 @@ define(function(require) {
     };
 
     EditApp.prototype.addQuestionEvents = function(questionWrapper) {
-        var question = new Question(questionWrapper);
+        var question = new QuestionEditor(questionWrapper);
     };
 
     window.app = new EditApp();

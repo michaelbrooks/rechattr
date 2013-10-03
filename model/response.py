@@ -31,5 +31,5 @@ class Response(Base):
     user = relationship('User',
                         backref=backref('responses', order_by=created))
                         
-    answer = Column(String)
+    answer = Column(Integer)
     

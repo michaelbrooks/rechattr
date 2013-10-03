@@ -1,9 +1,9 @@
-$def with (user, poll, stream, tweetForm, stats, newest_item, oldest_item, lastQuestion=None)
+$def with (user, poll, stream, stats, newest_item, oldest_item, lastQuestion=None)
 $var css: poll.css
 $var js_app: poll
 $var nav: $:elements.nav('poll', user)
 $var poll: $poll.poll_url_code
-$var header: $:elements.comment_box(user, poll, tweetForm)
+$var header: $:elements.comment_box(user, poll)
 $var current_time: ${ dtutils.dt_timestamp(newest_item.get_time()) if newest_item else time.time()}
 $var end_of_stream: ${ dtutils.dt_timestamp(oldest_item.get_time()) if oldest_item > 0 else time.time()}
 <div class="stream-page">
@@ -33,10 +33,14 @@ $var end_of_stream: ${ dtutils.dt_timestamp(oldest_item.get_time()) if oldest_it
             <div class="stream">
                 <div class="stream-list">
                     $if lastQuestion:
+                        <div class="stream-item">
                         $:render_stream_item(lastQuestion)
+                        </div>
 
                     $for item in stream:
+                    <div class="stream-item">
                         $:render_stream_item(item)
+                    </div>
                 </div>
             </div>
             <div class="stream-footer muted clickable">

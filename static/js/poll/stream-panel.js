@@ -3,6 +3,7 @@ define(function (require) {
     var $ = require('jquery');
     var config = require('config');
     var dtutils = require('util/dtutils');
+    var Question = require('poll/question');
 
     var STREAM_NOTIFY_SELECTOR = '.stream-notify';
     var STREAM_INTERVAL_SECONDS = 20;
@@ -18,7 +19,7 @@ define(function (require) {
     var timeUpdateInterval = null;
     var pendingItems = null;
     var noMoreItems = null;
-    var itemHash = {}; //for storing maps from ids to elements
+
     var loadingMoreItems = null;
     var streamUrl = config.poll + "/stream";
 
@@ -70,13 +71,19 @@ define(function (require) {
         var tweets = items.filter('.tweet').size();
         var message = '';
         if (tweets > 0) {
-            message = tweets + " new tweets";
+            message = tweets + " new tweet";
+            if (tweets > 1) {
+                message += "s";
+            }
         }
         if (questions > 0) {
             if (tweets > 0) {
                 message += " & ";
             }
-            message += questions + " new questions";
+            message += questions + " new question";
+            if (questions > 1) {
+                message += "s";
+            }
         }
 
         var notify = getNotify(message);
@@ -95,34 +102,38 @@ define(function (require) {
             var pending = pendingItems;
             pendingItems = null;
 
-            // Remove any items we already have
-            var self = this;
+            var wrapped = [];
             pending.each(function(i, el) {
-                var id = $(el).data('id');
-                if (id in itemHash) {
-                    itemHash[id].remove();
-                }
+                var item = $(el);
+                wrapped.push(
+                    $('<div>')
+                        .addClass('stream-item')
+                        .append(item)
+                );
             });
 
             // Add the items to the stream list
-            this.ui.streamList.prepend(pending);
+            this.ui.streamList.prepend(wrapped);
 
-            //Find the first question and pull it to the top
-            var question = this.ui.streamList.find('.question').first();
+            //Find the first unanswered question and pull it to the top
+            var question = this.ui.streamList
+                .find('.question')
+                .filter(':not(.answered)')
+                .first();
+
             if (question.length) {
-                this.ui.streamList.prepend(question);
+                //actually pull the question's parent (wrapper)
+                this.ui.streamList.prepend(question.parent());
             }
 
             // Do any remaining processing on the items
-            processItems.call(this, pending);
+            processItems.call(this, $(wrapped));
 
 
             //Remove the new marking after a while
             setTimeout(function () {
                 pending.removeClass('new-item');
             }, NEW_ITEM_TIMEOUT);
-
-
 
             //Scroll to the new stuff
             var viewTop = $('.navbar').height() + 10;
@@ -197,7 +208,13 @@ define(function (require) {
             if (response.items > 0) {
                 //only update the time if there were items returned because otherwise it is undefined
                 oldestItemTime = response.time_from;
-                addItemsAtBottom.call(self, $(response.html));
+
+                //Filter out all text nodes
+                var newItems = $(response.html).filter(function(i, el) {
+                    return el.nodeType !== 3;
+                });
+
+                addItemsAtBottom.call(self, newItems);
                 hideLoadingMore.apply(self);
             } else {
                 console.log('No more items');
@@ -219,8 +236,18 @@ define(function (require) {
     var addItemsAtBottom = function(items) {
         console.log("Loaded " + items.length + " old items");
 
+        //Wrap each item in a wrapper
+        var wrapped = [];
+        items.each(function() {
+           wrapped.push(
+               $('<div>')
+                   .addClass('stream-item')
+                   .append($(this))
+           );
+        });
+
         // Add the items to the stream list
-        this.ui.streamList.append(items);
+        this.ui.streamList.append(wrapped);
 
         // Do any remaining processing on the items
         processItems.call(this, items);
@@ -261,29 +288,25 @@ define(function (require) {
 
     var processItems = function (selection) {
         selection.each(function (index, element) {
-            var $this = $(this);
-
-            $this.find('.answer-list')
-                //We already have css to hide the box, but this will let the collapse plugin function later
-                .addClass('collapse');
-
-            //Store a map from the id to the element
-            itemHash[$this.data('id')] = $this;
+            var wrapper = $(this);
+            var item = wrapper.children();
 
             //Process the created date if it exists
-            var timeElement = $this.find(ITEM_CREATED_AT_SELECTOR);
+            var timeElement = item.find(ITEM_CREATED_AT_SELECTOR);
             var created = timeElement.data('created');
             if (created) {
                 timeElement.data('created', new Date(created * 1000));
             }
 
-            var itemType = $this.data('type');
+            //have to use .children() to unbox the wrapper
+            var itemType = item.data('type');
             switch (itemType) {
                 case 'tweet':
                     //Tweet($this);
                     break;
                 case 'question':
-                    //Question($this);
+                    //$this is a wrapper
+                    new Question(wrapper);
                     break;
             }
         });

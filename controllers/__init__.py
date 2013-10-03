@@ -46,6 +46,8 @@ helpers['render_stream_item'] = render_stream_item
 
 from create import create
 from edit import edit
+from tweet import tweet
+from response import response
 from poll import poll
 from results import results
 from myevents import myevents
@@ -71,8 +73,8 @@ class AppUrls(object):
         '/sign_in',             'sign_in',
         '/sign_out',            'sign_in',
         '/([\w-]+)',            'poll',
-        '/([\w-]+)/(tweet)',      'poll', # for posting new tweets
-        '/([\w-]+)/(answer)',     'poll', # for answering questions
+        '/([\w-]+)/tweet',      'tweet', # for posting new tweets
+        '/([\w-]+)/answer',     'response', # for answering questions
         '/([\w-]+)/edit',             'edit',
         '/([\w-]+)/questions',        'question', #REST
         '/([\w-]+)/questions/',        'question', #REST
@@ -89,6 +91,8 @@ class AppUrls(object):
         'sign_in': sign_in,
         'poll': poll,
         'edit': edit,
+        'tweet': tweet,
+        'response': response,
         'stream': stream,
         'question': question,
         'results': results

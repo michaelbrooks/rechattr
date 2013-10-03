@@ -8,6 +8,8 @@
     .stream {
     }
 
+    @streamHeaderHeight: 40px;
+
     .stream-header {
         overflow: hidden;
 
@@ -15,22 +17,22 @@
         visibility: hidden;
 
         &.in {
-            height: 40px;
+            height: @streamHeaderHeight + @layoutMargins;
             visibility: visible;
 
             .transition(height 300ms ease-in-out);
         }
 
         div {
-            height: 40px;
-            line-height: 40px;
+            height: @streamHeaderHeight;
+            line-height: @streamHeaderHeight;
             text-align: center;
 
             font-size: 14px;
             font-weight: bold;
-            margin: 0;
+            margin: 0 0 @layoutMargins 0;
 
-            background-color: #96CAE2;
+            background-color: #D8E9FF;
             cursor: pointer;
 
             .transition(background 300ms linear);
@@ -38,7 +40,7 @@
             text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
 
             &:hover {
-                background-color: #70BFE4;
+                background-color: #B8D7FF;
             }
 
             &:active {
@@ -48,49 +50,55 @@
         }
     }
 
-    .stream-item {
-        position: relative;
-        padding: 9px 12px;
-        .opacity(100);
+    .stream-list {
 
-        .transition(background 2s linear);
+        .stream-item {
+            .question,
+            .tweet {
+                position: relative;
+                padding: 9px 12px;
+                .opacity(100);
 
-        &.new-item {
-            background-color: #96CAE2;
-        }
+                .transition(background 2s linear);
 
-        &.question {
-            padding: 15px;
-
-            margin: @layoutMargins 0;
-            .box-shadow(0 0 5px 1px #ddd);
-
-            &:first-child {
-                margin-top: 0;
-            }
-
-            .question-text {
-                .golden(18px);
-            }
-
-            .reply-button {
-
-            }
-
-            .answer-list {
-                padding: 0;
-                margin: 0;
-                list-style-type: none;
-
-                li {
-                    margin: 3px;
-
+                &.new-item {
+                    background-color: #C7EDFF;
                 }
             }
-        }
 
-        &.tweet {
+            .question {
+                padding: 15px;
 
+                margin: @layoutMargins 0;
+                .box-shadow(0 0 5px 1px #ddd);
+
+                .question-text {
+                    .golden(18px);
+                }
+
+                .reply-button {
+
+                }
+
+                .answer-list {
+                    padding: 0;
+                    margin: 0;
+                    list-style-type: none;
+
+                    li {
+                        margin: 3px;
+
+                    }
+                }
+            }
+
+            .tweet {
+
+            }
+
+            &:first-child .question {
+                margin-top: 0;
+            }
         }
     }
 

@@ -212,6 +212,7 @@ class Poll(model.Base):
 
         return dtutils.nice_interval(local_start, local_stop)
 
+
     @classmethod
     def date_format(cls, dt, withDate=True, tz=None):
         if tz is not None:

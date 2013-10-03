@@ -16,13 +16,13 @@ define(function(require) {
 
     //An object that collects data from the question display
     //The questionContainerElement is a element containing a .question-editor
-    var Question = function(questionContainerElement) {
+    var QuestionEditor = function(questionContainerElement) {
         this.ui = questionContainerElement;
 
         this.initEvents();
     };
 
-    Question.prototype.initEvents = function() {
+    QuestionEditor.prototype.initEvents = function() {
         var self = this;
 
         this.ui.on('change', TRIGGER_TIME_SELECTOR, function() {
@@ -46,7 +46,7 @@ define(function(require) {
         });
     };
 
-    Question.prototype.updateTimingData = function (valueSourceElement) {
+    QuestionEditor.prototype.updateTimingData = function (valueSourceElement) {
         var question = this.ui.find(QUESTION_SELECTOR);
 
         var value = $.trim(valueSourceElement.val());
@@ -82,7 +82,7 @@ define(function(require) {
         }
     };
 
-    Question.prototype.collect = function() {
+    QuestionEditor.prototype.collect = function() {
         var data = {
             question_text: "",
             image_src: "",
@@ -104,7 +104,7 @@ define(function(require) {
         return data;
     };
 
-    Question.prototype.submit = function() {
+    QuestionEditor.prototype.submit = function() {
         var self = this;
 
         //Scrape the data from the form
@@ -136,7 +136,7 @@ define(function(require) {
             });
     };
 
-    events(Question);
+    events(QuestionEditor);
 
-    return Question;
+    return QuestionEditor;
 });
