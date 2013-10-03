@@ -11,6 +11,7 @@ import model
 from utils.dtutils import utc_aware
 from utils import dtutils
 from decorators import UTCDateTime
+from sqlalchemy import func
 
 class Poll(model.Base):
     __tablename__ = 'polls'
@@ -67,7 +68,7 @@ class Poll(model.Base):
     def count_responses(self, session=None):
         if session is None:
             session = Session.object_session(self)
-        
+
         return session.query(model.Response).\
                        filter(model.Response.poll ==self).\
                        count()
@@ -101,6 +102,29 @@ class Poll(model.Base):
         query = query.order_by(model.Question.trigger_seconds.desc())
 
         return query.all()
+
+    # Gets the number of time each answer was chosen, for each question
+    def get_question_responses(self, session = None):
+        if session is None:
+            session = Session.object_session(self)
+
+        #shortcut
+        Response = model.Response
+
+        query = session.query(Response.question_id, Response.answer, func.count(Response.id)).\
+                        filter(Response.poll == self).\
+                        group_by(Response.question_id, Response.answer)
+
+        result = dict()
+        for question_id, answer, count in query.all():
+            if question_id not in result:
+                result[question_id] = dict()
+
+            question = result[question_id]
+
+            question[answer] = count
+
+        return result
 
     def triggered_questions(self, session=None, limit=10, older_than=None, newer_than=None):
 

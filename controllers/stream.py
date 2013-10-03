@@ -35,10 +35,15 @@ class stream:
 
         items = poll.get_stream(newer_than=since, older_than=before)
 
+        if len(items):
+            responseCounts = poll.get_question_responses()
+        else:
+            responseCounts = dict()
+
         # render any stream items
         html = ''
         for item in items:
-            html += str(render_stream_item(item, True))
+            html += str(render_stream_item(item, True, responses=responseCounts))
 
         if len(items):
             time_to = dt_timestamp(items[0].get_time())

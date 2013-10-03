@@ -1,9 +1,11 @@
-$def with (question, newItem=False)
+$def with (question, newItem=False, responses=dict())
 $ newItemClass = 'new-item' if newItem else ''
 $ user = web.ctx.auth.current_user()
 $ response = user.first_response(question) if user is not None else None
 $ currentAnswer = response.answer if response is not None else None
 $ answeredClass = 'answered' if currentAnswer is not None else ''
+$if question.id in responses:
+    $ answerCounts = responses[question.id]
 <div class="question $newItemClass $answeredClass"
      data-id="${question.id}"
      data-type="question"
@@ -20,8 +22,10 @@ $ answeredClass = 'answered' if currentAnswer is not None else ''
                 $ selectedClass = 'selected' if currentAnswer == choice else ''
 
                 <li class="$selectedClass">
-                    $if currentAnswer:
-                        <span class="count">34</span>
+                    $if currentAnswer is not None:
+                        <span class="count">
+                            ${answerCounts[idx] if idx in answerCounts else 0}
+                        </span>
                     $else:
                         <label class="radio">
                         <input type="radio" name="question-${question.id}" value="${idx}"/>

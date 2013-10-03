@@ -63,7 +63,7 @@ class response:
         answerChoices = question.get_answer_choices()
         if answer < 0 or answer > len(answerChoices):
             raise web.badrequest('Not a valid answer to this question')
-        web.ctx.log.warn("I am here! 3")
+
         # maybe they already answered it
         response = user.first_response(question)
         if response is None:
@@ -72,7 +72,7 @@ class response:
             response.question = question
             response.user = user
             web.ctx.orm.add(response)
-        web.ctx.log.warn("I am here! 4")
+
         # save the response
         response.visit = None;
         response.answer = answer
@@ -85,6 +85,8 @@ class response:
 
         question = self._process_response(poll)
 
-        result = elements.question(question)
+        responseCounts = poll.get_question_responses()
+
+        result = elements.question(question, responses=responseCounts)
         raise web.created(data=result)
 

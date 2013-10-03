@@ -1,13 +1,13 @@
-"""integer response type
+"""integer answer types
 
-Revision ID: 5307baf4e54c
+Revision ID: 2236aaffbe1d
 Revises: 211559e302c7
-Create Date: 2013-10-02 17:51:15.942000
+Create Date: 2013-10-02 19:54:48.524000
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '5307baf4e54c'
+revision = '2236aaffbe1d'
 down_revision = '211559e302c7'
 
 from alembic import op
@@ -19,6 +19,15 @@ def upgrade():
     op.alter_column('polls', u'user_id',
                existing_type=sa.INTEGER(),
                nullable=False)
+
+    # destructively remove any answers that cannot be cast to integers
+    op.execute('DELETE FROM responses WHERE answer !~ \'^[0-9]+$\'')
+
+    op.execute('ALTER TABLE responses '
+               'ALTER COLUMN answer '
+               'TYPE integer USING (trim(answer)::integer)')
+    # the USING part of that cannot be handled by alembic
+
     ### end Alembic commands ###
 
 
@@ -27,4 +36,8 @@ def downgrade():
     op.alter_column('polls', u'user_id',
                existing_type=sa.INTEGER(),
                nullable=True)
+
+    op.alter_column('responses', u'answer',
+                    existing_type=sa.INTEGER(),
+                    type_=sa.String())
     ### end Alembic commands ###

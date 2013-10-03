@@ -43,8 +43,12 @@ class poll:
             stats = user.poll_stats(web.ctx.orm, poll)
         else:
             stats = None
+
+        questionResponses = poll.get_question_responses()
+
         # display the poll
         return render.poll(user=user, poll=poll,
                            stream=stream, lastQuestion=lastQuestion,
                            newest_item=newest_item, oldest_item=oldest_item,
+                           responses=questionResponses,
                            stats=stats)
