@@ -175,6 +175,10 @@ module.exports = function (grunt) {
                 files: ['<%= jshint.gruntfile.src %>'],
                 tasks: ['jshint:gruntfile']
             },
+            images: {
+                files: ['<%= dirs.src %>/favicon.png', '<%= dirs.src %>/img/**'],
+                tasks: ['copy:images']
+            },
             scripts: {
                 files: ['<%= jshint.debug.src %>'],
                 tasks: ['jshint:debug', 'copy:js']
