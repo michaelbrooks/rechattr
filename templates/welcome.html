@@ -1,45 +1,29 @@
 $def with (user=None)
 $var css: welcome.css
-$var nav: $:elements.nav('welcome', user)
 $var layout: linear_layout
 $ sign_in_url = urls.sign_in(urls.home())
 $ sign_out_url = urls.sign_out()
 $ polls_url = urls.polls_list()
 <div class="jumbotron">
-    <h1>Welcome to re:chattr!</h1>
-    <p class="lead"><strong>re:chattr</strong> helps you manage feedback
-        and discussion about your presentations, talks, and other events.</p>
-
-    $if 'demo' in campaigns:
-        $if user is None:
-            <a class="btn btn-large btn-info sign-in-button" href="$sign_in_url">
-                <span class="twitter-icon light"></span>
-                    Sign me up!
-            </a>
-        $else:
-            <p class="user-welcome lead" style="margin-bottom: 0; font-size: 18px;">Thank you for your interest in <strong>re:chattr</strong>!</p>
-            <p style="font-size: 16px; margin-top: 5px;">We'll be in touch when we're ready for testing.</p>
+    <div class="splash clearfix">
+        <h1>
+            <div class="brand"></div>
+            Welcome to re:chattr!
+        </h1>
+        <p class="lead"><strong>re:chattr</strong> helps you manage feedback
+            and discussion about your presentations, talks, and other events.</p>
+    </div>
+    <div class="signup clearfix">
+        <div class="lead">
+            Follow
+            <a href="https://twitter.com/rechattr" target="_blank">@rechattr</a>
+            on Twitter to find out when we are ready for testing.
+        </div>
         <p class="social-media">
             <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://rechattr.com" data-text="Check out re:chattr - feedback and discussion for your event!" data-via="rechattr" data-size="large">Tweet</a>
             <a href="https://twitter.com/rechattr" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @rechattr</a>
         </p>
-    $elif user is None:
-        <a class="btn btn-large btn-info sign-in-button" href="$sign_in_url">
-            <span class="twitter-icon light"></span>
-            $if 'demo' in campaigns:
-                Sign me up!
-            $else:
-                Sign in with Twitter
-        </a>
-    $else:
-        <p class="user-welcome lead">Hello, <strong>@$user.username<span class="twitter-icon"></span></strong></p>
-        <p>
-            $:elements.create_button(class_="btn btn-success setup-new-button")
-            <a class="btn my-polls" href="$polls_url">
-                My Events</a>
-            <a class="btn sign-out" href="$sign_out_url">
-                Sign out</a>
-        </p>
+    </div>
 </div>
 <hr>
 <div class="row-fluid marketing">

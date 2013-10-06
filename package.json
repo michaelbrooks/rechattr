@@ -14,12 +14,11 @@
     "postinstall": "./node_modules/.bin/grunt dist"
   },
   "dependencies": {
-    "grunt-cli": "~0.1.7",
-    "grunt": "~0.4.0",
+    "grunt": "~0.4.1",
     "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-requirejs": "~0.4.0",
+    "grunt-contrib-requirejs": "~0.4.1",
     "grunt-contrib-clean": "~0.4.1",
-    "grunt-cachebuster": "~0.1.4",
+    "grunt-cachebuster": "~0.1.5",
     "grunt-contrib-less": "~0.7.0",
     "underscore": "~1.4.4"
   },

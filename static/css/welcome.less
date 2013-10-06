@@ -2,37 +2,50 @@
 @import (less) "vendor/bootstrap-responsive.css";
 @import (less) "modules/rechattr.css";
 @import (less) "modules/sticky-footer.css";
+@import 'shared/mixins';
 
 /* Main marketing message and sign up button */
 .jumbotron {
     margin: 30px 0;
-    text-align: center;
-}
+    text-align: left;
 
-.jumbotron h1 {
-    font-size: 40px;
-    line-height: 1em;
-}
+    h1 {
+        .golden(40px);
 
-.jumbotron .btn-large {
-    font-size: 21px;
-    line-height: 32px;
-}
+        font-weight: normal;
 
-.jumbotron .sign-in-button .twitter-icon {
-    width: 32px;
-    height: 32px;
-    vertical-align: top;
-}
+        .brand {
+            background: url(../img/logo_square_h200.png);
+            background-repeat: no-repeat;
+            width: 200px;
+            height: 200px;
 
-.jumbotron .user-welcome .twitter-icon {
-    width: 28px;
-    height: 28px;
-    vertical-align: bottom;
-}
+            float: left;
+            margin: 0 2 * @layoutMargins 2 * @layoutMargins 0;
+        }
+    }
 
-.container > hr {
-    margin: 20px 0 0 0;
+    .btn-large {
+        font-size: 21px;
+        line-height: 32px;
+    }
+
+    .container > hr {
+        margin: 20px 0 0 0;
+    }
+
+    .lead {
+        .golden(18px)
+    }
+
+    .signup {
+        margin-left: 200px + 2 * @layoutMargins;
+
+        .lead {
+            .golden(16px);
+            margin-bottom: 10px;
+        }
+    }
 }
 
 .marketing {
@@ -60,8 +73,4 @@
     .marketing {
         margin: 30px 0 20px 0;
     }
-}
-
-.social-media {
-    margin-top: 10px;
 }

@@ -6,8 +6,12 @@ $if user is None:
         <span class="twitter-icon light"></span> Sign in with Twitter
     </a>
 $else:
+    <h4>
+        Questions? Comments?
+        <span class="muted">Tweet as <span class="screen-name">@${user.username}</span></span>
+    </h4>
     $ tweet_url = urls.poll(poll) + '/tweet'
-    <form method="POST" action="${tweet_url}" class="tweet-form">
+    <form method="POST" action="${tweet_url}" class="tweet-form clearfix">
         <div class="tweet-input-wrapper">
 
             <textarea name="tweet" class="tweet-input"></textarea>
@@ -18,9 +22,8 @@ $else:
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary tweet-submit" disabled="disabled">Send Tweet</button>
+        <button type="submit" class="btn btn-primary tweet-submit" disabled="disabled"><i class="twitter-icon light"></i> Tweet</button>
 
         <div class="tweet-message-box"><span class="tweet-length-message"></span></div>
-        <button type="button" class="tweet-cancel btn">Cancel</button>
     </form>
 </div>

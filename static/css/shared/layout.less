@@ -37,8 +37,23 @@
 
         .brand {
             float: right;
+            position: relative;
             margin: @layoutMargins;
             height: @headerHeight;
+
+            .name {
+                background: url(@nameImage);
+                background-repeat: no-repeat;
+
+                width: @nameWidth;
+                height: @nameHeight;
+
+                background-size: contain;
+
+                position: absolute;
+                right: @logoWidth + @layoutMargins;
+                top: 0;
+            }
 
             .logo {
                 //background: #800000;//url("../../img/rechattr.png");
