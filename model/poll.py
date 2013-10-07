@@ -1,6 +1,6 @@
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer, String, BigInteger
+from sqlalchemy import Integer, String, BigInteger, Boolean
 from sqlalchemy.orm import relationship, backref, Session
 
 from datetime import datetime, timedelta
@@ -50,8 +50,11 @@ class Poll(model.Base):
                                       backref=backref('poll_announced',
                                                       uselist=False))
 
+    announce_enabled = Column(Boolean, default=True)
+
+
     def can_tweet(self):
-        return self.user.can_tweet()
+        return self.announce_enabled and self.user.can_tweet()
 
     def post_tweet(self, api):
 

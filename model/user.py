@@ -37,7 +37,9 @@ class User(model.Base):
     last_signed_in = Column(UTCDateTime, default=datetime.utcnow)
     tweet_count = Column(Integer, default=0)
     response_count = Column(Integer, default=0)
-    
+
+    announce_enabled = Column(Boolean, default=True)
+
     user_cache = Column(String)
 
     def __init__(self, oauth_user_id, oauth_provider='Twitter'):
@@ -45,7 +47,9 @@ class User(model.Base):
         self.oauth_provider = oauth_provider
 
     def can_tweet(self):
-        return self.oauth_key is not None and self.oauth_secret is not None
+        return self.announce_enabled and \
+               self.oauth_key is not None and \
+               self.oauth_secret is not None
 
     def post_tweet(self, text, api, session=None):
         api.auth.set_access_token(self.oauth_key, self.oauth_secret)
