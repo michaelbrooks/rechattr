@@ -1,0 +1,13 @@
+$def with (tag='a', class_="btn", html="A button", href=None, icon=None, flip=False)
+$ attrs = 'class="%s"' %(class_)
+$if href is not None:
+    $ attrs += ' href="%s"' %(href)
+<$tag $:attrs>
+$if icon and not flip:
+    <i class="$icon">
+    </i>
+$:html
+$if icon and flip:
+    <i class="$icon">
+    </i>
+</$tag>

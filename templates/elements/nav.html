@@ -13,24 +13,21 @@ $def menu_item(name, text=None, url=None, body=None):
         <div class="logo"></div>
     </a>
 
-    <ul class="nav bottom">
-    $if user:
-        <li>Signed in as <span class="screen-name">@${user.username}</span></li>
-
-    $# No menu during the demo campaign
-    $if 'demo' in campaigns:
-        $if user is None:
-            $:menu_item('sign_in', '<b>Sign me up!</b>', urls.sign_in())
-        $else:
-            $:menu_item('sign_out', 'Sign out', urls.sign_out())
-    $else:
-        $:menu_item('welcome', 'About', urls.home())
+    <ul class="navmenu">
         $if user is None:
             $:menu_item('sign_in', '<b>Sign in</b>', urls.sign_in())
         $else:
-            $ create_button = elements.create_button(class_="", html="New Event", white=False)
-            $:menu_item('create', body=create_button)
-            $:menu_item('myevents', 'My Events', urls.polls_list())
-            $:menu_item('sign_out', 'Sign out', urls.sign_out())
+            <li class="welcome-message">Hello, <span class="screen-name">@${user.username}</span>!</li>
+
+            $ create = elements.button(html="create event", href=urls.new_poll(), icon="icon-time", class_="", flip=True)
+            $:menu_item('create', body=create)
+
+            $ poll_list = elements.button(html="my events", href=urls.polls_list(), icon="icon-th-list", class_="", flip=True)
+            $:menu_item('myevents', body=poll_list)
+
+            $ sign_out = elements.button(html="sign out", class_="", href=urls.sign_out())
+            $:menu_item('sign_out', body=sign_out)
+
+        $:menu_item('welcome', 'about re:chattr', urls.home())
     </ul>
 </div>

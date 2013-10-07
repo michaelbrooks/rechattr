@@ -4,10 +4,10 @@ $var js_app: edit
 $var nav: $:elements.nav('edit', user)
 $var poll: $poll.poll_url_code
 $var header: $:elements.poll_editor(poll, form)
-<div class="question-controls clearfix">
+<div class="question-controls clearfix content-header">
     <div class="left-column">
         <div class="left-content">
-            <p class="status">
+            <p class="info">
                 $:elements.poll_status(poll)
                 Event
                 $if poll.is_active():
@@ -39,7 +39,7 @@ $var header: $:elements.poll_editor(poll, form)
                     and re:chattr url:
                     <input type="text" class="copy-me editable" value="${poll_url}" readonly="true"/>
                 </div>
-            <button type="button" class="new-question-button btn btn-success">
+            <button type="button" class="new-question-button action-button btn btn-success">
                 <i class="icon-plus icon-white"></i>
                 New Question
             </button>

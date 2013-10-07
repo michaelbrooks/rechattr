@@ -10,12 +10,18 @@ $ tz_timezone_save = form.tz_timezone_save
             $:elements.interval_selector(form)
         </div>
 
-        <div class="input-prepend">
-            <span class="add-on hashtag-hash">#</span>
-            $:form.twitter_hashtag.render()
-        </div>
+        <label class="hashtag-label">
+            Hashtag
+            <div class="input-prepend">
+                <span class="add-on hashtag-hash">#</span>
+                $:form.twitter_hashtag.render()
+            </div>
+        </label>
 
-        $:form.email.render()
+        <label class="email-label">
+            Notifications
+            $:form.email.render()
+        </label>
 
         $:csrf_token_input()
     </div>

@@ -3,15 +3,29 @@
 
 .poll-editor {
 
+    .bottom {
+        width: 100%;
+    }
+
+    .interval-field {
+        text-align: left;
+
+        .interval-start {
+            .date-time-label {
+                margin-left: 0;
+            }
+        }
+    }
 
     .event-title {
-        .golden(20px);
-        height: @phi * 20px;
+        font-size: 38.5px;
+        line-height:42px;
+        height: 42px;
 
         padding: 6px 9px;
         font-weight: bold;
 
-        width: 250px;
+        width: 350px;
     }
 
     .submit-button {
@@ -24,5 +38,31 @@
         &.in {
             .opacity(65);
         }
+    }
+
+    label.hashtag-label,
+    label.email-label {
+        font-size: 14px;
+        display: inline-block;
+        margin: 0 0 0 8px;
+
+        input,
+        .input-prepend,
+        .input-append {
+            margin-bottom: 0;
+        }
+    }
+
+    label.hashtag-label {
+        margin: 0;
+    }
+
+    .event-hashtag {
+        width: 60px;
+    }
+
+    .hashtag-hash {
+        padding-left: 0;
+        padding-right: 0;
     }
 }

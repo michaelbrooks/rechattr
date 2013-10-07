@@ -2,12 +2,24 @@ $def with (user, polls)
 $var css: myevents.css
 $var nav: $:elements.nav('myevents', user)
 $var header: $:elements.account_summary(user, polls)
-<div class="event-list-controls clearfix">
+<div class="event-list-controls clearfix content-header">
     <div class="left-column">
-        $:elements.create_button(class_="btn btn-success create-event-button")
+        <div class="left-content">
+            <p class="info">Have another event coming up?</p>
+        </div>
+
     </div>
     <div class="right-column">
-        <p class="lead">Have another event coming up?</p>
+        <div class="right-content">
+            $:elements.button(html="New Event", icon="icon-white icon-time", href=urls.new_poll(), class_="btn btn-success action-button create-event-button")
+            <div class="help">
+                Create a new event for your talk, presentation, or whatever!<br/>
+                <span class="muted">
+                    Use re:chattr to interact with your audience and
+                    gather a permanent record of discussions.
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 $if len(polls):

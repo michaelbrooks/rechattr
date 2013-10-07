@@ -65,10 +65,24 @@
             }
         }
 
-        .nav {
+        .navmenu {
             text-align: right;
             margin: @layoutMargins 0 @layoutMargins;
             right: @logoWidth + 2 * @layoutMargins;
+            position: absolute;
+            top: @nameHeight + @layoutMargins;
+            right: @logoWidth + @layoutMargins * 2;
+            list-style: none;
+
+            .welcome-message {
+                .screen-name {
+                    font-weight: bold;
+                }
+            }
+
+            li {
+                padding: 3px;
+            }
         }
     }
 
@@ -76,6 +90,8 @@
         height: @headerHeight;
         margin: @layoutMargins;
         position: relative;
+
+        width: percentage(1 / @phi);
     }
 
     .bottom {
@@ -90,5 +106,36 @@
     }
     .body {
         .clearfix();
+    }
+
+    .content-header {
+        margin: 0 0 2 * @layoutMargins 0;
+
+        .left-content {
+            margin-right: @layoutMargins;
+
+            .info {
+                .golden(16px)
+            }
+        }
+
+        .right-content {
+            margin-left: @layoutMargins;
+
+            .action-button {
+                float: left;
+                margin-right: @layoutMargins;
+            }
+
+            .help {
+                font-size: 15px;
+                line-height: 20px;
+
+                .muted {
+                    font-size: 13px;
+                    line-height: 16px;
+                }
+            }
+        }
     }
 }
