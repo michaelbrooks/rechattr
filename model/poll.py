@@ -13,7 +13,7 @@ from decorators import UTCDateTime
 from sqlalchemy import func
 
 from string import Template
-poll_tweet_template = Template('${title} is starting with official hashtag ${hashtag} on @rechattr ${link}')
+poll_tweet_template = Template('${title} is starting with official hashtag ${hashtag} via @rechattr ${link}')
 
 class Poll(model.Base):
     __tablename__ = 'polls'
@@ -102,7 +102,7 @@ class Poll(model.Base):
                         filter(model.Tweet.polls.contains(self)).\
                         filter(model.Tweet.retweet_of_status_id == None)
                         # return no retweets
-        
+
         if older_than:
             query = query.filter(model.Tweet.created < older_than)
         if newer_than:
