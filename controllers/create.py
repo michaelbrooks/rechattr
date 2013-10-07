@@ -117,7 +117,7 @@ class create:
         # initialize the urls
         poll.poll_url_human = self._create_poll_url(poll)
         poll.poll_url_code = poll.poll_url_human.lower()
-        poll.absolute_url = web.ctx.urls.absolute(urls.poll(poll))
+        poll.absolute_url = web.ctx.urls.absolute(web.ctx.urls.poll(poll))
 
         #poll.short_url = ???
         
