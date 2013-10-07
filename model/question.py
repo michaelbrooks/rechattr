@@ -1,6 +1,6 @@
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer, String, Boolean, Float
+from sqlalchemy import Integer, String, Boolean, Float, BigInteger
 from sqlalchemy.orm import relationship, backref
 from datetime import datetime, timedelta
 import simplejson as json
@@ -12,6 +12,8 @@ from utils import dtutils
 from utils.dtutils import utc_aware
 from decorators import UTCDateTime
 
+from string import Template
+question_tweet_template = Template('${hashtag} ${question} via @rechattr ${link}')
 
 class Question(Base):
     __tablename__ = 'questions'
@@ -28,10 +30,31 @@ class Question(Base):
     # Question info
     trigger_manual = Column(Boolean, default=False)
     trigger_seconds = Column(Float, default=None)
+
     image_src = Column(String)
     subject = Column(String)
     question_text = Column(String)
     answer_choices = Column(String)
+
+    announcement_tweet_id = Column(BigInteger, ForeignKey('tweets.id'), default=None)
+    announcement_tweet = relationship('Tweet',
+                                      backref=backref('question_announced',
+                                                      uselist=False))
+
+    def post_tweet(self, api):
+
+        text = question_tweet_template.substitute(
+            question=self.question_text,
+            hashtag=self.poll.twitter_hashtag,
+            link=self.poll.absolute_url
+        )
+
+        tweet = self.poll.user.post_tweet(text, api=api)
+        if tweet:
+            self.announcement_tweet = tweet
+            tweet.polls.append(self.poll)
+
+            return tweet
 
     def get_answer_choices(self):
         if not hasattr(self, '_cached_answers'):

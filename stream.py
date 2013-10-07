@@ -8,6 +8,7 @@ import time
 
 from twittermon import TermChecker, DynamicTwitterStream, JsonStreamListener, tlog
 from tweepy import OAuthHandler, Status
+import tweepy
 
 if conf.DEBUG:
     try:
@@ -57,9 +58,10 @@ class DbListener(JsonStreamListener):
 
 class PollTermChecker(TermChecker):
     
-    def __init__(self, dbsession):
+    def __init__(self, dbsession, tweet_api):
         super(PollTermChecker, self).__init__()
-        
+
+        self.tweet_api = tweet_api
         self.lock = Lock()
         self.tweets = []
         self.trackingPolls = set()
@@ -212,8 +214,9 @@ class PollTermChecker(TermChecker):
         newTrackingPolls = set()
         
         trackingTermsChanged = False
+        tweeted = False
         for poll in activePolls:
-        
+
             pollTermList = poll.twitter_track_list()
             
             # add all the terms to the map
@@ -226,11 +229,35 @@ class PollTermChecker(TermChecker):
                 
                 newTrackingTerms.add(term)
                 newTrackingPolls.add(poll)
-        
+
+            if poll.can_tweet():
+                # make sure it has been advertised!
+                if not poll.announcement_tweet_id:
+                    tw = poll.post_tweet(self.tweet_api)
+                    if tw:
+                        tlog("posted tweet for poll %d" % poll.id)
+                        tweeted = True
+                    else:
+                        tlog("ERROR: posting tweet for poll %d" % poll.id)
+
+                activeQuestions = poll.triggered_questions(session=self.orm, limit=None)
+                for question in activeQuestions:
+                    if not question.announcement_tweet_id:
+                        # tweet any that have not yet been tweeted
+                        tw = question.post_tweet(self.tweet_api)
+                        if tw:
+                            tlog("posted tweet for question %d" % question.id)
+                            tweeted = True
+                        else:
+                            tlog("ERROR: posting tweet for question %d" % question.id)
+
+        if tweeted:
+            self.orm.commit()
+
         # Go ahead and store the new data (polls may have changed)
         self.trackingPolls = newTrackingPolls
         self.termsToPolls = newTermsToPolls
-        
+
         return newTrackingTerms
 
 if __name__ == '__main__':
@@ -238,15 +265,17 @@ if __name__ == '__main__':
 
     dbsession = db.db_session()
 
-    checker = PollTermChecker(dbsession)
+    # a tweepy instance for tweeting on behalf of users
+    user_oauth = OAuthHandler(conf.TWITTER_STREAM_CONSUMER_KEY, conf.TWITTER_STREAM_CONSUMER_SECRET)
+    tweet_api = tweepy.API(user_oauth)
+    checker = PollTermChecker(dbsession, tweet_api)
 
     listener = DbListener(checker)
 
+    oauth = OAuthHandler(conf.TWITTER_STREAM_CONSUMER_KEY, conf.TWITTER_STREAM_CONSUMER_SECRET)
+    oauth.set_access_token(conf.TWITTER_STREAM_ACCESS_KEY, conf.TWITTER_STREAM_ACCESS_SECRET)
 
-    auth = OAuthHandler(conf.TWITTER_STREAM_CONSUMER_KEY, conf.TWITTER_STREAM_CONSUMER_SECRET)
-    auth.set_access_token(conf.TWITTER_STREAM_ACCESS_KEY, conf.TWITTER_STREAM_ACCESS_SECRET)
-
-    tracker = DynamicTwitterStream(auth, listener, checker)
+    tracker = DynamicTwitterStream(oauth, listener, checker)
 
     errorCount = 0
 

@@ -1,9 +1,4 @@
 import web
-import simplejson as json
-from tweepy import TweepError
-
-import utils
-from utils import twttr
 
 from . import pagerender as render
 from model import Poll, Response, Tweet, Question

@@ -53,7 +53,10 @@ class Auth(object):
         # update with any changes from Twitter
         self._user.update(twitter_user, auth.access_token)
         self._user.last_signed_in = utc_aware()
-        
+
+        # mark them good to go
+        self._user.force_signout = False
+
         try:
             web.ctx.orm.commit()
         except:
@@ -90,6 +93,10 @@ class Auth(object):
 
             # configure the access token for auth
             self._oauth.set_access_token(key, secret)
+
+            if self._user.force_signout:
+                self.sign_out()
+                return None
         
         return self._user
         

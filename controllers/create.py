@@ -1,10 +1,7 @@
 import web
 from web import form
 
-import simplejson as json
 import re
-
-from datetime import datetime
 import time
 
 from model import Poll
@@ -119,8 +116,8 @@ class create:
         # initialize the urls
         poll.poll_url_human = self._create_poll_url(poll)
         poll.poll_url_code = poll.poll_url_human.lower()
-        poll.results_url_code = self._random_code(Poll.RESULTS_URL_CODE_LENGTH)
-        poll.edit_url_code = self._random_code(Poll.EDIT_URL_CODE_LENGTH)
+        poll.absolute_url = web.ctx.urls.absolute(urls.poll(poll))
+
         #poll.short_url = ???
         
         # TODO: send a confirmation email

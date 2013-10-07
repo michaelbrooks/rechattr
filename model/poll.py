@@ -1,10 +1,9 @@
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer, String, DateTime
+from sqlalchemy import Integer, String, BigInteger
 from sqlalchemy.orm import relationship, backref, Session
 
 from datetime import datetime, timedelta
-import simplejson as json
 
 # Get the shared base class for declarative ORM
 import model
@@ -13,12 +12,13 @@ from utils import dtutils
 from decorators import UTCDateTime
 from sqlalchemy import func
 
+from string import Template
+poll_tweet_template = Template('${title} is starting with official hashtag ${hashtag} on @rechattr ${link}')
+
 class Poll(model.Base):
     __tablename__ = 'polls'
     
     POLL_URL_CODE_LENGTH = 6
-    RESULTS_URL_CODE_LENGTH = 10
-    EDIT_URL_CODE_LENGTH = 10
     
     # Record info
     id = Column(Integer, primary_key=True)
@@ -43,10 +43,31 @@ class Poll(model.Base):
     # Urls
     poll_url_human = Column(String)
     poll_url_code = Column(String)
-    results_url_code = Column(String)
-    edit_url_code = Column(String)
-    poll_short_url = Column(String)
-    
+    absolute_url = Column(String)
+
+    announcement_tweet_id = Column(BigInteger, ForeignKey('tweets.id'), default=None)
+    announcement_tweet = relationship('Tweet',
+                                      backref=backref('poll_announced',
+                                                      uselist=False))
+
+    def can_tweet(self):
+        return self.user.can_tweet()
+
+    def post_tweet(self, api):
+
+        text = poll_tweet_template.substitute(
+            title=self.title,
+            hashtag=self.twitter_hashtag,
+            link=self.absolute_url
+        )
+
+        tweet = self.user.post_tweet(text, api=api)
+        if tweet:
+            self.announcement_tweet = tweet
+            tweet.polls.append(self)
+
+            return tweet
+
     def twitter_other_terms_list(self):
         if self.twitter_other_terms is not None:
             return self.twitter_other_terms.split(',')
@@ -126,7 +147,7 @@ class Poll(model.Base):
 
         return result
 
-    def triggered_questions(self, session=None, limit=10, older_than=None, newer_than=None):
+    def triggered_questions(self, session=None, limit=10, older_than=None, newer_than=None, untweeted_only=False):
 
         if older_than is None:
             older_than = utc_aware()
@@ -154,9 +175,14 @@ class Poll(model.Base):
             newer_than_offset = (newer_than - self.event_start).total_seconds()
             query = query.filter(model.Question.trigger_seconds > newer_than_offset)
 
+        if untweeted_only:
+            query = query.filter(model.Question.announcement_tweet_id == None)
+
         # Conditions for select
-        query = query.order_by(model.Question.trigger_seconds.desc()).\
-                      limit(limit)
+        query = query.order_by(model.Question.trigger_seconds.desc())\
+
+        if limit is not None:
+            query = query.limit(limit)
 
         return query.all()
 
@@ -254,14 +280,19 @@ class Poll(model.Base):
         return str
     
     @staticmethod
-    def get_active(session):
+    def get_active(session, untweeted_only=False):
         # Check the database for events that are happening right now
         now = datetime.utcnow()
         
         #TODO: add buffer to beginning and end
-        return session.query(Poll).\
-                       filter(Poll.event_start <= now, Poll.event_stop >= now).\
-                       all()
+        query = session.query(Poll).\
+                        filter(Poll.event_start <= now, Poll.event_stop >= now);
+
+        if untweeted_only:
+            query = query.filter(Poll.announcement_tweet_id is None)
+
+        return query.all()
+
     @staticmethod
     def get_by_url(session, poll_url_code):
         return session.query(Poll).\

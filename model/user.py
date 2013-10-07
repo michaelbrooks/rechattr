@@ -1,14 +1,19 @@
 from sqlalchemy import Column
-from sqlalchemy import Integer, String, DateTime, BigInteger
+from sqlalchemy import Integer, String, Boolean, BigInteger
 from sqlalchemy.orm import Session
 from datetime import datetime
 from dateutil.tz import tzoffset
 import cPickle as pickle
 
 # Get the shared base class for declarative ORM
+import tweepy
+from tweepy import TweepError
 import model
 from utils import dtutils
 from decorators import UTCDateTime
+import utils
+from utils.logger import Logger
+
 
 class User(model.Base):
     __tablename__ = 'users'
@@ -17,6 +22,8 @@ class User(model.Base):
     created = Column(UTCDateTime, default=datetime.utcnow)
     
     oauth_key = Column(String)
+    oauth_secret = Column(String)
+    force_signout = Column(Boolean, default=True)
 
     oauth_user_id = Column(BigInteger)
     oauth_provider = Column(String)
@@ -32,13 +39,41 @@ class User(model.Base):
     response_count = Column(Integer, default=0)
     
     user_cache = Column(String)
-    
+
     def __init__(self, oauth_user_id, oauth_provider='Twitter'):
         self.oauth_user_id = oauth_user_id
         self.oauth_provider = oauth_provider
-        
+
+    def can_tweet(self):
+        return self.oauth_key is not None and self.oauth_secret is not None
+
+    def post_tweet(self, text, api, session=None):
+        api.auth.set_access_token(self.oauth_key, self.oauth_secret)
+
+        try:
+            status = api.update_status(text);
+        except TweepError, e:
+            code, message = utils.parse_tweep_error(e)
+            log = Logger()
+            log.error('Tweepy error posting tweet', e)
+            return None
+
+        # go ahead and add it
+        # we will link it to the current poll,
+        # but potentially miss any concurrent overlapping polls
+        # unsure whether the subsequent stream arrival will overwrite.
+        tweet = model.Tweet(status)
+
+        if session is None:
+            session = Session.object_session(self)
+
+        session.add(tweet)
+
+        return tweet
+
     def update(self, user_info, oauth_token):
         self.oauth_key = oauth_token.key
+        self.oauth_secret = oauth_token.secret
         
         self.user_cache = pickle.dumps(user_info)
         

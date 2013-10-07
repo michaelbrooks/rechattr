@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Table
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer, String, DateTime, BigInteger
+from sqlalchemy import Integer, String, BigInteger
 from sqlalchemy.orm import relationship, backref    
 from datetime import datetime
 
@@ -73,8 +73,8 @@ class Tweet(Base):
         
         if hasattr(tweepyStatus, 'retweeted_status'):
             self.retweet_of_status_id = tweepyStatus.retweeted_status.id
-        
-    
+
+
     @classmethod
     def fromJSON(cls, statusJson, tweepy):
         raise Exception("Does not work right now!")
