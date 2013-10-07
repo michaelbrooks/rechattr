@@ -2,12 +2,13 @@
 
 .main-layout {
     height: 100%;
-    margin-top: @layoutMargins;
 
     .left-column,.right-column {
         height: 100%;
         float: left;
         position: relative;
+        box-sizing: border-box;
+        padding: 0 @layoutMargins;
     }
 
     @contentWidth: percentage(1 / @phi);
@@ -15,6 +16,7 @@
     .left-column {
         width: 100 - @contentWidth;
         text-align:right;
+        padding-left: 2 * @layoutMargins;
 
         .left-content {
             height: 100%;
@@ -25,21 +27,29 @@
     }
     .right-column {
         width: @contentWidth;
+        padding-right: 2 * @layoutMargins;
+
 
         .right-content {
             height: 100%;
             width: percentage(1 / @phi);
+
+            @media (max-width: 1509px) {
+                width: 570px;
+            }
+
         }
     }
 
+
     .navigation {
         position: relative;
+        margin: @layoutMargins 0;
         .clearfix();
 
         .brand {
             float: right;
             position: relative;
-            margin: @layoutMargins;
             height: @headerHeight;
 
             .name {
@@ -68,11 +78,10 @@
 
         .navmenu {
             text-align: right;
-            margin: @layoutMargins 0 @layoutMargins;
-            right: @logoWidth + 2 * @layoutMargins;
             position: absolute;
             top: @nameHeight + @layoutMargins;
-            right: @logoWidth + @layoutMargins * 3;
+            right: @logoWidth + @layoutMargins * 2;
+            margin: 0;
             list-style: none;
 
             .welcome-message {
@@ -89,10 +98,14 @@
 
     .header-row {
         height: @headerHeight;
-        margin: @layoutMargins;
+        margin: @layoutMargins 0;
         position: relative;
 
         width: percentage(1 / @phi);
+
+        @media (max-width: 1509px) {
+            width: 570px;
+        }
     }
 
     .bottom {
@@ -106,7 +119,7 @@
 
     .header {
         .clearfix();
-
+        padding-top: @layoutMargins;
         margin-bottom: @layoutMargins;
     }
     .body {
@@ -117,7 +130,6 @@
         margin: 0 0 2 * @layoutMargins 0;
 
         .left-content {
-            margin-right: @layoutMargins;
 
             .info {
                 .golden(16px)
@@ -125,7 +137,6 @@
         }
 
         .right-content {
-            margin-left: @layoutMargins;
 
             .action-button {
                 float: left;
