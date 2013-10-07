@@ -25,9 +25,9 @@ class poll:
         else:
             newest_item = None
             oldest_item = None
-            
+
         lastQuestion = poll.triggered_questions(limit=1)
-        if len(lastQuestion):
+        if len(lastQuestion) and (not user or not user.first_response(lastQuestion[0])):
             lastQuestion = lastQuestion[0]
             if lastQuestion in stream:
                 stream.remove(lastQuestion)
