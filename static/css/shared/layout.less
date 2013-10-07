@@ -2,6 +2,7 @@
 
 .main-layout {
     height: 100%;
+    margin-top: @layoutMargins;
 
     .left-column,.right-column {
         height: 100%;
@@ -51,7 +52,7 @@
                 background-size: contain;
 
                 position: absolute;
-                right: @logoWidth + @layoutMargins;
+                right: @logoWidth + 2 * @layoutMargins;
                 top: 0;
             }
 
@@ -71,7 +72,7 @@
             right: @logoWidth + 2 * @layoutMargins;
             position: absolute;
             top: @nameHeight + @layoutMargins;
-            right: @logoWidth + @layoutMargins * 2;
+            right: @logoWidth + @layoutMargins * 3;
             list-style: none;
 
             .welcome-message {

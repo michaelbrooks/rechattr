@@ -2,6 +2,9 @@ $def with(user, poll)
 $ sign_in_url = urls.sign_in(urls.poll(poll))
 <div class="comment-box header-row right-content">
 $if user is None:
+    <h4>
+        Questions? Comments?
+    </h4>
     <a class="sign-in-button btn btn-info" href="${sign_in_url}">
         <span class="twitter-icon light"></span> Sign in with Twitter
     </a>
