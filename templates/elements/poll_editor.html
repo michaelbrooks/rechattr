@@ -10,7 +10,7 @@ $ tz_timezone_save = form.tz_timezone_save
             $:elements.interval_selector(form)
         </div>
 
-        <label class="hashtag-label">
+        <label class="hashtag-label" title="Choose a hashtag for your event">
             Hashtag
             <div class="input-prepend">
                 <span class="add-on hashtag-hash">#</span>
@@ -18,7 +18,7 @@ $ tz_timezone_save = form.tz_timezone_save
             </div>
         </label>
 
-        <label class="email-label">
+        <label class="email-label" title="Provide your email address for notifications about your event.">
             Notifications
             $:form.email.render()
         </label>

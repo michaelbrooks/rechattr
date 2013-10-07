@@ -15,14 +15,15 @@ sha1 = hashlib.sha1
 
 create_form = form.Form(
     form.Textbox('email', inputs.nullable(inputs.valid_email),
-                 class_="input-large", placeholder="Email"),
+                 class_="input-large", placeholder="My email address"),
     form.Textbox('title', form.notnull,
                  class_='input-large', placeholder="My Awesome Event"),
     inputs.Datebox('start_date', 'Event Start', 'start-date'),
     inputs.Timebox('start_time', '', 'start-time'),
     inputs.Datebox('stop_date', 'Event Stop', 'stop-date'),
     inputs.Timebox('stop_time', '', 'stop-time'),
-    form.Textbox('twitter_hashtag', form.notnull, inputs.valid_hashtag, inputs.legal_url_validator),
+    form.Textbox('twitter_hashtag', form.notnull, inputs.valid_hashtag, inputs.legal_url_validator,
+                 placeholder="MyHashtag"),
     inputs.TZTimezone('tz_timezone', form.notnull, inputs.valid_timezone),
     form.Checkbox('tz_timezone_save', value="yes"),
     form.Button('submit', type='submit', 
