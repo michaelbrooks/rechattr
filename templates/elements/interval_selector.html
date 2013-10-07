@@ -29,12 +29,11 @@ $ tz_timezone_save = form.tz_timezone_save
     <a href="#" class="timezone-short show-timezone-button" title="Set the timezone for this event">
         $if tz_timezone.show:
             $tz_timezone.show
+        $else:
+            SELECT A TIMEZONE
     </a>
 </div>
-    $if tz_timezone.value:
-        <div class="timezone-selector modal hide fade">
-    $else:
-        <div class="timezone-selector modal fade in">
+    <div class="timezone-selector modal hide fade">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3>Event timezone</h3>

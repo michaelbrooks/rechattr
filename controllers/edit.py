@@ -8,7 +8,7 @@ from . import pagerender as render
 
 edit_form = form.Form(
     form.Textbox('email', inputs.nullable(inputs.valid_email),
-                 class_="editable event-email", placeholder="Email",
+                 class_="editable event-email", placeholder="My email address",
                  title="Click to edit"),
     form.Textbox('title', form.notnull,
                  class_='editable event-title', autocomplete="off",
@@ -22,7 +22,7 @@ edit_form = form.Form(
     form.Checkbox('tz_timezone_save', value="yes"),
     form.Textbox('twitter_hashtag', form.notnull, inputs.valid_hashtag, inputs.legal_url_validator,
                  class_='editable event-hashtag',
-                 title="Click to edit")
+                 title="Note: choosing a new hashtag will not change your event's re:chattr url")
 )
 
 class edit:

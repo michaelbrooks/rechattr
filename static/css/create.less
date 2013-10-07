@@ -4,20 +4,40 @@
 @import (less) "modules/sticky-footer.css";
 @import (less) "modules/bootstrap-datepicker.css";
 @import (less) "modules/time-picker.css";
+@import 'shared/layout';
+@import 'shared/mixins';
+@import 'shared/inputs';
+
+.left-content {
+    margin-right: @layoutMargins;
+    max-width: 300px;
+
+    &.instructions {
+        text-align: left;
+
+        li {
+            .golden(13px);
+            margin-bottom: @layoutMargins;
+        }
+    }
+}
+.right-content {
+    margin-left: @layoutMargins;
+}
 
 .create-field {
     margin-bottom: 20px;
-}
 
-.create-field input,
-.create-field .input-prepend .add-on,
-.create-field .input-append .btn {
-    font-size: 16px;
-    line-height: 22px;
-}
+    input,
+    .input-prepend .add-on,
+    .input-append .btn {
+        font-size: 16px;
+        line-height: 22px;
+    }
 
-.create-field .field-note {
-    font-weight: bold;
+    .field-note {
+        font-weight: bold;
+    }
 }
 
 .event-title input {
@@ -30,6 +50,10 @@
 
 .event-hashtag {
     margin-top: 20px;
+
+    input {
+        width: 120px;
+    }
 }
 
 .event-email {

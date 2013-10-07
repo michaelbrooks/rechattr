@@ -2,19 +2,57 @@ $def with (user, form)
 $var css: create.css
 $var js_app: create
 $var nav: $:elements.nav('create', user=user)
+$var header: $:elements.create_header(user)
 <form method="POST">
-<div class="row-fluid">
-    <div class="span12">
-        <div class="page-header">
-            <h2 class="page-title">Create My Event</h2>
-            <p class="lead">Register your event to track discussion and get feedback.</p>
+    <div class="left-column">
+        <div class="left-content instructions">
+            <p class="lead muted">How it works</p>
+            <ol>
+                <li><p>
+                    Fill out this form to set up your event.
+                </p>
+                </li>
+                <li><p>
+                    On the next page, create some questions
+                    to ask your attendees during the event.
+                </p>
+                </li>
+                <li><p>
+                    Get your attendees involved!
+                    </p>
+                    <p>
+                    If people are tweeting, make sure they use your hashtag,
+                    and tell them about your event's page on re:chattr.
+                </p>
+                </li>
+                <li><p>
+                    Once your event starts, re:chattr
+                    will monitor Twitter for posts
+                    mentioning <strong>@${user.username}</strong> or
+                    your <strong>hashtag</strong>.
+                </p><p>
+                    It will also send out your questions
+                    and collect people's answers.
+                </p>
+                </li>
+                <li><p>
+                    After the event is over, browse through the comments posted
+                    on Twitter and see the answers
+                    to your questions.
+                </p><p>
+                    Respond to your feedback and participate
+                    in discussions with your attendees.
+                </p>
+                </li>
+            </ol>
         </div>
     </div>
-</div>
+    <div class="right-column">
+        <div class="right-content">
 <div class="row-fluid create-field">
     <div class="span6">
         <h4 class="help-big">What is your event?</h4>
-        <p class="help-small">Choose a punchy, recognizable title for your event.</p>
+        <p class="help-small">Choose a title your attendees will recognize.</p>
     </div>
     <div class="span6">
         <div class="event-title">$:form.title.render()</div>
@@ -23,9 +61,8 @@ $var nav: $:elements.nav('create', user=user)
 </div>
 <div class="row-fluid create-field">
     <div class="span12">
-        <h4 class="help-big">When's it going down?</h4>
-        <p class="help-small">We'll send out requests 
-            for feedback and monitor Twitter discussion during this time.</p>
+        <h4 class="help-big">When is your event happening?</h4>
+        <p class="help-small">This determines when re:chattr posts your questions and collects audience feedback.</p>
             
         <div class="interval-field clearfix">
             $:elements.interval_selector(form)
@@ -34,8 +71,12 @@ $var nav: $:elements.nav('create', user=user)
 </div>
 <div class="row-fluid create-field">
     <div class="span6">
-        <h4 class="help-big">Collect Twitter discussion</h4>
-        <p class="help-small">Create a hashtag for your event: short, meaningful, and unique.</p>
+        <h4 class="help-big">Monitor Twitter discussion</h4>
+        <p class="help-small">
+            Choose a short, meaningful, and unique hashtag.
+            <a href="https://support.twitter.com/articles/49309-using-hashtags-on-twitter"
+               target="_blank">More about hashtags.</a>
+        </p>
     </div>
     <div class="span6">
         <div class="event-hashtag">
@@ -50,7 +91,7 @@ $var nav: $:elements.nav('create', user=user)
 <div class="row-fluid create-field">
     <div class="span6">
         <h4 class="help-big">Receive email notifications</h4>
-        <p class="help-small">You may provide an email so that you can receive updates about your event.</p>
+        <p class="help-small">You may provide an email to receive updates about your event. (optional)</p>
     </div>
     <div class="span6">
         <div class="event-email">
@@ -71,4 +112,6 @@ $var nav: $:elements.nav('create', user=user)
         </div>
     </div>
 </div>
+        </div>
+    </div>
 </form>
