@@ -6,31 +6,51 @@ $var poll: $poll.poll_url_code
 $var header: $:elements.poll_editor(poll, form)
 <div class="question-controls clearfix">
     <div class="left-column">
-        <div class="new-question-button btn btn-success">
-            <i class="icon-plus icon-white"></i>
-            Add New Question
+        <div class="left-content">
+            <p class="status">
+                $:elements.poll_status(poll)
+                Event
+                $if poll.is_active():
+                    went live
+                    <span class="time-since-start time-interval">
+                        $dtutils.full_delta(poll.event_start, long=True, smallest="minutes")
+                    </span> ago. Ending in
+                    <span class="time-before-end time-interval">
+                    $dtutils.time_to(poll.event_stop, long=True, showDays=True)</span>.
+                $elif poll.has_started():
+                    ended
+                    <span class="time-since-end time-interval">
+                        $dtutils.time_ago(poll.event_stop, long=True, showDays=True)
+                    </span> ago.
+                $else:
+                    goes live in
+                    <span class="time-before-start time-interval">
+                    $dtutils.time_to(poll.event_start, long=True, showDays=True)</span>.
+            </p>
         </div>
     </div>
     <div class="right-column">
-        <p class="lead">
-            This event
-            $if poll.is_active():
-                went live
-                <span class="time-since-start time-interval">
-                    $dtutils.full_delta(poll.event_start, long=True, smallest="minutes")
-                </span> ago. Ending in
-                <span class="time-before-end time-interval">
-                    $dtutils.time_to(poll.event_stop, long=True, showDays=True)</span>.
-            $elif poll.has_started():
-                ended
-                <span class="time-since-end time-interval">
-                    $dtutils.time_ago(poll.event_stop, long=True, showDays=True)
-                </span> ago.
-            $else:
-                goes live in
-                <span class="time-before-start time-interval">
-                    $dtutils.time_to(poll.event_start, long=True, showDays=True)</span>.
-        </p>
+        <div class="right-content">
+            $if not poll.has_ended():
+                $ poll_url = urls.absolute(urls.poll(poll))
+                <div class="reminder">
+                    <strong>Don't forget!</strong> Share your hashtag
+                    <input type="text" class="copy-me editable hashtag" value="${poll.twitter_hashtag}" readonly="true"/>
+                    and re:chattr url:
+                    <input type="text" class="copy-me editable" value="${poll_url}" readonly="true"/>
+                </div>
+            <button type="button" class="new-question-button btn btn-success">
+                <i class="icon-plus icon-white"></i>
+                New Question
+            </button>
+            <div class="help">
+                Create timed questions for your audience<br/>
+                <span class="muted">
+                    Questions are posted on re:chattr and Twitter
+                    at a specific time during your event.
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 <div class="question-list">
@@ -39,67 +59,3 @@ $var header: $:elements.poll_editor(poll, form)
         $:elements.question_editor(question)
         </div>
 </div>
-<!--
-<div class="question-editor light-on-dark collapse">
-    <div class="main-fields">
-        <div class="image-panel">
-            <div class="image-box">
-                <img src="" class="question-image hide"/>
-            </div>
-
-            <div class="old-uploader">
-                <label for="old-file-upload">Upload an image</label>
-                <input type="file" name="image" class="question-image-input" id="old-file-upload"/>
-            </div>
-
-        </div>
-        <div class="text-fields clearfix">
-            <label class="question-label" for="question-subject">Q:</label>
-            <input type="text" name="subject" id="question-subject" autocomplete="off" class="question-subject editable" value="" placeholder="Magnets"/>
-            <input type="text" name="question_text" class="question-text editable" autocomplete="off" value="" placeholder="How do they work?"/>
-        </div>
-        <div class="answer-controls">
-            <div class="answers-wrapper clearfix">
-                <div class="answers-label">A:</div>
-                <div class="trash-bin" title="drag here to delete"><i class="icon-trash icon-white"></i></div>
-                <ul class="answer-list noselect"></ul>
-            </div>
-            <div class="palette-wrapper">
-                <div class="prev-button btn noselect" disabled="disabled">
-                    <i class="icon-white icon-chevron-left"></i>
-                </div>
-                <div class="next-button btn noselect">
-                    <i class="icon-white icon-chevron-right"></i>
-                </div>
-                <div class="answer-palette noselect">
-                    <ul class="palette-items" title="Click to add">
-                        <li class="answer-choice"><div class="value">[text]</div></li>
-                        <li class="answer-choice"><div class="value">:)</div></li>
-                        <li class="answer-choice"><div class="value">:(</div></li>
-                        <li class="answer-choice"><div class="value">:P</div></li>
-                        <li class="answer-choice"><div class="value">:|</div></li>
-                        <li class="answer-choice"><div class="icon"><i class="icon-thumbs-up"></i></div></li>
-                        <li class="answer-choice"><div class="icon"><i class="icon-thumbs-down"></i></div></li>
-                        <li class="answer-choice"><div class="icon"><i class="icon-heart"></i></div></li>
-                        <li class="answer-choice"><div class="icon"><i class="icon-star"></i></div></li>
-                        <li class="answer-choice img"><div class="image"><img src="/static/img/grumpy-64.png"/></div></li>
-                        <li class="answer-choice img"><div class="image"><img src="/static/img/grumpy-64.png"/></div></li>
-                        <li class="answer-choice img"><div class="image"><img src="/static/img/grumpy-64.png"/></div></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="form-controls">
-            <div class="trigger-controls form-inline">
-                <input type="text" name="trigger_time" class="question-trigger-time editable" autocomplete="off" value="" placeholder="Launch offset"/>
-                <span>or</span>
-                <label class="checkbox">
-                    <input type="checkbox" class="question-trigger-manual" />Ask it now
-                </label>
-            </div>
-            <button class="question-save btn btn-large btn-primary">Save</button>
-            <button class="question-cancel btn-large btn">Cancel</button>
-        </div>
-    </div>
-</div>
--->

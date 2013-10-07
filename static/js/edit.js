@@ -48,11 +48,17 @@ define(function(require) {
         this.ui.newQuestionButton = $(NEW_QUESTION_BUTTON_SELECTOR);
         this.ui.pollEditor = $(POLL_EDITOR_SELECTOR);
         this.ui.pollSubmitButton = this.ui.pollEditor.find('.submit-button');
+
+        this.ui.copyMeBoxes = $('input.copy-me');
     };
 
 
     EditApp.prototype.attachEvents = function() {
         var self = this;
+
+        this.ui.copyMeBoxes.on('click', function(e) {
+            this.select();
+        });
 
         this.ui.newQuestionButton.on('click', function(e) {
             self.addQuestion();

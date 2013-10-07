@@ -7,6 +7,7 @@
 @import (less) "edit/timeline.css";
 @import "edit/poll_editor";
 @import "edit/question_editor";
+@import 'shared/poll_status';
 @import 'shared/layout';
 @import 'shared/mixins';
 @import 'shared/inputs';
@@ -20,12 +21,57 @@
     margin-bottom: @layoutMargins;
 
     .left-column {
-        .new-question-button {
+        .left-content {
             margin-right: @layoutMargins;
+
+            .status {
+                .golden(16px)
+            }
         }
     }
-    .lead {
-        margin-left: @layoutMargins;
-        margin-bottom: 0;
+
+    .right-column {
+        .right-content {
+            margin-left: @layoutMargins;
+
+            .new-question-button {
+                float: left;
+                margin-right: @layoutMargins;
+            }
+
+            .reminder {
+                .golden(16px);
+                margin-bottom: 20px;
+
+                .hashtag {
+                    background: #ccc;
+                    width: 40px;
+                }
+
+                .copy-me {
+                    height: 20px;
+                    line-height: 12px;
+                    padding: 3px 4px 2px;
+                    font-size: 14px;
+                    margin: 0;
+                    cursor: default;
+                    background-color: #FFF;
+                    color: #333;
+
+                    vertical-align: top;
+                }
+
+            }
+
+            .help {
+                font-size: 15px;
+                line-height: 20px;
+
+                .muted {
+                    font-size: 13px;
+                    line-height: 16px;
+                }
+            }
+        }
     }
 }

@@ -10,16 +10,16 @@
         .trigger-time,
         .trigger-offset,
         .add-on {
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .trigger-time {
-            width: 80px;
+            width: 60px;
             text-align: right;
         }
 
         .trigger-offset {
-            width: 160px;
+            width: 100px;
             text-align: right;
         }
 
@@ -32,13 +32,34 @@
         margin-left: @layoutMargins;
         .box-sizing(border-box);
 
-        .question-text {
-            width: 100%;
-        }
+        label {
+            position: relative;
+            margin-left: 80px;
 
-        .question-answers {
-            width: 100%;
-            .resizable(vertical)
+            .text {
+                position: absolute;
+                right: 100%;
+                top: 0;
+
+                width: 80px;
+                text-align: right;
+                padding: 5px 6px;
+            }
+
+            .question-answers {
+                width: 100%;
+                .resizable(vertical)
+            }
+
+            &.question-label {
+                .golden(16px);
+            }
+
+            .question-text {
+                width: 100%;
+                .golden(16px);
+                height: @phi * 16px;
+            }
         }
 
         .close {

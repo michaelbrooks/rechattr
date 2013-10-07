@@ -14,15 +14,14 @@ $if question.triggered():
     <div class="left-column">
         <div class="left-content muted">
             <div class="input-prepend input-append editable">
-                <span class="add-on muted">posts at</span>
+                <span class="add-on muted">Post at</span>
                 <input type="text"
                        class="trigger-time"
                        value="${question.nice_time()}"
                        title="${editTitle}"
                        $triggeredDisabled />
                 <span class="add-on muted">or</span>
-            </div>
-            <br/>
+            </div><br/>
             <div class="input-prepend input-append editable">
                 <input type="text"
                        class="trigger-offset"
@@ -35,17 +34,29 @@ $if question.triggered():
     </div>
     <div class="right-column">
         <div class="right-content">
-            <input type="text"
-                   class="question-text editable"
-                   value="${question.question_text}"
-                   title="${editTitle}"
-                   placeholder="Type your question here"
-                   $triggeredDisabled />
-            $ answers = "\n".join(question.get_answer_choices())
-            <textarea class="question-answers editable"
-                      title="${editTitle}"
-                      placeholder="(optional) Type multiple choice answers on separate lines"
-                      $triggeredDisabled >${answers}</textarea>
+            <label title="Type a question here" class="question-label">
+                <span class="text"><strong>Question</strong></span>
+                <input type="text"
+                       class="question-text editable"
+                       value="${question.question_text}"
+                       title="${editTitle}"
+                       placeholder="Type your question here"
+                       $triggeredDisabled />
+            </label>
+            $ answer_choices = question.get_answer_choices()
+            $ answers = "\n".join(answer_choices)
+            $ boxHeight = len(answer_choices) if len(answer_choices) > 0 else 3
+            <label title="Type answer choices on separate lines">
+                <span class="text">
+                    <strong>Answers</strong><br/>
+                    <span class="muted">optional</span>
+                </span>
+                <textarea class="question-answers editable"
+                          title="${editTitle}"
+                          rows="${boxHeight}"
+                          placeholder="(optional) Type multiple choice answers on separate lines"
+                          $triggeredDisabled >${answers}</textarea>
+            </label>
             <div title="Delete this question" class="close question-delete">&times;</div>
         </div>
     </div>
