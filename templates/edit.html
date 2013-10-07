@@ -34,9 +34,8 @@ $var header: $:elements.poll_editor(poll, form)
             $if not poll.has_ended():
                 $ poll_url = urls.absolute(urls.poll(poll))
                 <div class="reminder">
-                    <strong>Don't forget!</strong> Share your hashtag
-                    <input type="text" class="copy-me editable hashtag" value="${poll.twitter_hashtag}" readonly="true"/>
-                    and re:chattr url:
+                    <strong>Don't forget!</strong> Share
+                    your hashtag and url:
                     <input type="text" class="copy-me editable" value="${poll_url}" readonly="true"/>
                 </div>
             <button type="button" class="new-question-button action-button btn btn-success">
@@ -46,8 +45,8 @@ $var header: $:elements.poll_editor(poll, form)
             <div class="help">
                 Create timed questions for your audience<br/>
                 <span class="muted">
-                    Questions are posted on re:chattr and Twitter
-                    at a specific time during your event.
+                    Questions will be posted on re:chattr and Twitter
+                    during your event.
                 </span>
             </div>
         </div>

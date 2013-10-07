@@ -38,6 +38,8 @@ $if question.id in responses:
             </ul>
     </div>
     $if user is not None:
-        <span class="already-answered"><i class="icon-ok"></i> Answered</span>
         <button class="reply-button btn btn-small"><i class="icon-comment"></i> Post Reply</button>
+        $if currentAnswer is not None:
+            <span class="already-answered"><i class="icon-ok"></i> Answered</span>
+
 </div>
