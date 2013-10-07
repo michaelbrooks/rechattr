@@ -14,7 +14,7 @@ $var header: $:elements.poll_editor(poll, form)
                     went live
                     <span class="time-since-start time-interval">
                         $dtutils.full_delta(poll.event_start, long=True, smallest="minutes")
-                    </span> ago. Ending in
+                    </span> ago.<br/> Ending in
                     <span class="time-before-end time-interval">
                     $dtutils.time_to(poll.event_stop, long=True, showDays=True)</span>.
                 $elif poll.has_started():
