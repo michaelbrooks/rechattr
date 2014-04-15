@@ -6,9 +6,9 @@ distribute==0.6.31
 gunicorn==0.17.2
 psycopg2==2.4.6
 python-dateutil==2.1
-pytz==2013b
+pytz==2014.2
 simplejson==3.1.0
 six==1.2.0
 sqltap==0.2
-tweepy==2.0
+tweepy==2.2
 web.py==0.37
